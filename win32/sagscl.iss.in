@@ -19,8 +19,8 @@
 ; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ;
 ; $Source: /home/pablo/Desarrollo/sags-cvs/client/win32/sagscl.iss.in,v $
-; $Revision: 1.5 $
-; $Date: 2004/08/19 01:34:40 $
+; $Revision: 1.6 $
+; $Date: 2005/02/15 22:16:05 $
 ;
 
 [Setup]
@@ -52,8 +52,8 @@ Source: "..\COPYING"; DestDir: "{app}"; DestName: "License.txt"; Flags: ignoreve
 Source: "..\NEWS"; DestDir: "{app}"; DestName: "News.txt"; Flags: ignoreversion
 Source: "..\README"; DestDir: "{app}"; DestName: "Readme.txt"; Flags: ignoreversion isreadme
 Source: "..\ChangeLog"; DestDir: "{app}"; DestName: "ChangeLog.txt"; Flags: ignoreversion
-Source: "..\doc\tutorial-0.3es\*.html"; DestDir: "{app}\doc\tutorial-0.3es"; Flags: ignoreversion
-Source: "..\doc\tutorial-0.3es\*.png"; DestDir: "{app}\doc\tutorial-0.3es"; Flags: ignoreversion
+Source: "..\doc\html\*.html"; DestDir: "{app}\doc\html"; Flags: ignoreversion
+Source: "..\doc\html\*.png"; DestDir: "{app}\doc\html"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\SAGS Client"; Filename: "{app}\sagscl.exe"; WorkingDir: "{app}"

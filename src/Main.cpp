@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.7 $
+// $Date: 2005/02/15 22:16:03 $
 //
 
 #include "Main.hpp"
@@ -40,10 +40,14 @@ bool Application::OnInit (void)
 #endif
 	AppLocale.AddCatalog (GETTEXT_PACKAGE);
 
+	wxString hl = AppLocale.GetCanonicalName ();
+	hl = hl.Left (2);
+
 	MainWindow *AppWindow = new MainWindow (wxString::Format (_("SAGS Client %s"),
 								  VERSION),
 						wxDefaultPosition,
-						wxDefaultSize);
+						wxDefaultSize,
+						hl);
 	AppWindow->Show (TRUE);
 	SetTopWindow (AppWindow);
 

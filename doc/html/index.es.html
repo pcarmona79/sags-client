@@ -2,30 +2,37 @@
 <html>
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>Tutorial del Cliente SAGS</title>
+  <title>Documentación del Cliente SAGS</title>
+  <meta content="Pablo Carmona Amigo" name="author">
 </head>
 <body>
-<h1><a class="mozTocH1" name="mozTocId35885"></a>Tutorial del Cliente
-SAGS 0.3.x<br>
+<h1><a class="mozTocH1" name="mozTocId35885"></a>Documentación del
+Cliente SAGS<br>
 </h1>
-© 2004 Pablo Carmona Amigo<br>
+© 2004, 2005 Pablo Carmona Amigo<br>
 <ol id="mozToc">
 <!--mozToc h2 1 h3 2 h4 3--><li><a href="#mozTocId551282">Introducción</a></li>
   <li><a href="#mozTocId525310">Características</a></li>
   <li><a href="#mozTocId609325">Cómo obtener el
-Cliente SAGS </a></li>
+Cliente SAGS
+    </a></li>
   <li><a href="#mozTocId741975">Modo de uso</a>
     <ol>
-      <li><a href="#mozTocId963935">Conexión </a></li>
-      <li><a href="#mozTocId805103">Sesión </a></li>
-      <li><a href="#mozTocId739549">Terminando</a></li>
+      <li><a href="#mozTocId963935">Conexión
+        </a></li>
+      <li><a href="#mozTocId805103">Sesión
+        </a></li>
+      <li><a href="#mozTocId619967">Conversación</a></li>
+      <li><a href="#mozTocId739549">Terminando
+        </a></li>
     </ol>
   </li>
 </ol>
 <h2><a class="mozTocH2" name="mozTocId551282"></a>Introducción</h2>
 <p><span style="font-weight: bold;">SAGS</span> o <span
  style="font-weight: bold;">Secure Administrator of Game
-Servers</span> es un proyecto Open Source que tiene como finalidad
+Servers</span> (Administrador Seguro de Servidores de Juegos) es un
+proyecto Open Source que tiene como finalidad
 producir una solución para administrar servidores de juegos bajo
 GNU/Linux.<br>
 </p>
@@ -51,7 +58,13 @@ las consolas.<br>
   <li>Se puede cambiar la fuente de las consolas.</li>
   <li>El diálogo de login almacena hasta cinco servidores.</li>
   <li>Los mensajes de la consola pueden ser guardados a un archivo.</li>
-  <li>La versión para Linux soporta IPv6.<br>
+  <li>La versión para Linux soporta IPv6.</li>
+  <li>Posee soporte de chat como IRC.</li>
+  <li>La ventana de chat maneja mensajes normales, acciones (<span
+ style="font-family: monospace;">/me</span>), noticias (<span
+ style="font-family: monospace;">/notice</span>) y mensajes privados de
+otros usuarios. También se puede cambiar el tópico del canal (<span
+ style="font-family: monospace;">/topic</span>).<br>
   </li>
   <li>Es portable a la plataforma Windows (se necesita <a
  href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> para
@@ -68,7 +81,8 @@ la
 sección "<span style="font-style: italic;">Downloads</span>". En el
 final de la página encontrará el título "<span
  style="font-style: italic;">Precompilated binaries</span>" junto con
-un enlace al instalador o a paquetes RPM. La descarga se realiza usando
+un enlace al instalador (para win32) o a paquetes RPM. La descarga se
+realiza usando
 el sistema
 normal de descargas de <a href="http://sourceforge.net/">Sourceforge.net</a>
 por lo que probablemente tendrá que escoger un mirror antes de
@@ -83,7 +97,7 @@ o desde la lista de archivos del proyecto en Sourceforge.net: <a
 tres elementos principales que son la <span style="font-style: italic;">Lista
 de procesos</span>, el panel de <span style="font-style: italic;">Información
 del proceso</span> y varias pestañas que muestran las consolas de los
-procesos e información del programa.<br>
+procesos, el canal de chat e información del programa.<br>
 </p>
 <div style="text-align: center;"><img title="Main window's elements"
  style="width: 760px; height: 527px;" alt="Main window's elements"
@@ -141,12 +155,15 @@ entrada de abajo y luego pulse el botón <span
 tecla Enter. Los comandos ingresados son enviados al servidor y pasados
 directamente al proceso del juego. En la consola queda destacado el
 comando enviado al servidor y la salida es mostrada en
-la consola unos instantes después.<br>
+la consola unos instantes después. El comando enviado es guardado en el
+menú desplegable de esa entrada para que pueda ser usado posteriormente.<br>
 </p>
 <p>Se puede cambiar la fuente de la consola escogiendo <span
- style="font-weight: bold;"><span style="text-decoration: underline;">P</span>roceso
-/ Cambiar <span style="text-decoration: underline;">F</span>uente...</span>
-en el menú.<br>
+ style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
+/ <span style="text-decoration: underline;">P</span>referencias<span
+ style="text-decoration: underline;"></span>...</span>
+en el menú y luego presionando el botón correspondiente a <span
+ style="font-style: italic;">Fuente de las consolas</span>.<br>
 </p>
 <p>Para guardar los mensajes de la consola actual a un archivo hay que
 seleccionar <span style="font-weight: bold;"><span
@@ -157,10 +174,55 @@ archivo...</span> en el menú.<br>
 <p>En la pestaña <span style="font-weight: bold;">Registros</span> se
 pueden ver las distintas acciones que realiza el cliente y se muestran
 los nombres de algunos de los paquetes enviados por el servidor. Se
-puede ocultar esta pestaña seleccionando <span
- style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
+pueden guardar los registros en un archivo de texto seleccionando <span
+ style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>aña
+/ Guardar <span style="text-decoration: underline;">r</span>egistros
+en archivo...</span> en el menú. Se
+puede ocultar esta pestaña escogiendo <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">V</span>er
 / Mostrar <span style="text-decoration: underline;">r</span>egistros</span>
 en el menú. Este estado será recordado por el programa.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId619967"></a>Conversación<br>
+</h3>
+<p>La pestaña <span style="font-style: italic;">Conversación</span>
+muestra a todos los usuarios conectados al servidor y permite que se
+puedan comunicar entre ellos. Los usuarios administradores son
+indicados con una ampolletita verde.<br>
+</p>
+<p>Los mensajes son enviados al resto de los clientes con sólo
+escribirlo en la entrada inferior y presionando Enter o haciendo clic
+en el botón <span style="font-weight: bold;">Enviar</span>. También
+están disponibles los siguientes comandos para enviar otros tipos de
+mensaje:<br>
+</p>
+<ul>
+  <li><span style="font-family: monospace;">/me</span>: envía un
+mensaje al canal como una acción.<br>
+  </li>
+  <li><span style="font-family: monospace;">/notice</span>: envía un
+mensaje al canal como una noticia.<br>
+  </li>
+  <li><span style="font-family: monospace;">/topic</span>: cambia el
+tópico del canal sólo si el usuario que invoca el comando es
+administrador.<br>
+  </li>
+  <li><span style="font-family: monospace;">/to nick text</span>: envía
+    <span style="font-family: monospace;">text</span> al usuario <span
+ style="font-family: monospace;">nick</span> como un mensaje privado
+(sólo lo recibe <span style="font-family: monospace;">nick</span>).</li>
+</ul>
+<p>Se puede cambiar la fuente del canal escogiendo <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
+/ <span style="text-decoration: underline;">P</span>referencias<span
+ style="text-decoration: underline;"></span>...</span>
+en el menú y luego presionando el botón correspondiente a <span
+ style="font-style: italic;">Fuente del canal de chat</span>.<br>
+</p>
+<p>Para guardar los mensajes del canal de chat se escoge <span
+ style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>aña
+/ Guardar <span style="text-decoration: underline;">c</span>onversación
+en archivo...</span> del menú.<br>
 </p>
 <h3><a class="mozTocH3" name="mozTocId739549"></a>Terminando<br>
 </h3>

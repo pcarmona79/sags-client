@@ -1,11 +1,12 @@
 ## Process this file with automake to produce Makefile.in
 
-sagscl_tutorialdir = @PACKAGE_DOC_DIR@/tutorial-0.2es
+sagscl_tutorialdir = @PACKAGE_DOC_DIR@/html
 
 sagscl_tutorial_DATA = \
-			  elements.jpg   \
+			  logs.png       \
 			  index.html     \
-			  login.jpg      \
-			  mainwindow.jpg
+			  index.es.html  \
+			  login.png      \
+			  mainwindow.png
 
 EXTRA_DIST = $(sagscl_tutorial_DATA)

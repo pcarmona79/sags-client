@@ -65,8 +65,12 @@ fi
 
 dnl Set PACKAGE DATA & DOC DIR
 packagedatadir=share/${PACKAGE}
-packagedocdir=share/doc/${PACKAGE}
 packagemandir=share/man/man1
+if test "x${enable_redhat_docdir}" = "xyes"; then
+  packagedocdir=share/doc/${PACKAGE}-${VERSION}
+else
+  packagedocdir=share/doc/${PACKAGE}
+fi
 
 dnl Set PACKAGE DIRS in config.h.
 packagepixmapsdir=share/pixmaps/${PACKAGE}
@@ -122,7 +126,7 @@ Makefile
 sagscl.spec
 debian/Makefile
 doc/Makefile
-doc/tutorial-0.3es/Makefile
+doc/html/Makefile
 intl/Makefile
 m4/Makefile
 pixmaps/Makefile

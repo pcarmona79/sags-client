@@ -103,6 +103,7 @@ MSGMERGE = @MSGMERGE@
 NO_PREFIX_PACKAGE_DATA_DIR = @NO_PREFIX_PACKAGE_DATA_DIR@
 NO_PREFIX_PACKAGE_DOC_DIR = @NO_PREFIX_PACKAGE_DOC_DIR@
 NO_PREFIX_PACKAGE_HELP_DIR = @NO_PREFIX_PACKAGE_HELP_DIR@
+NO_PREFIX_PACKAGE_MAN_DIR = @NO_PREFIX_PACKAGE_MAN_DIR@
 NO_PREFIX_PACKAGE_MENU_DIR = @NO_PREFIX_PACKAGE_MENU_DIR@
 NO_PREFIX_PACKAGE_PIXMAPS_DIR = @NO_PREFIX_PACKAGE_PIXMAPS_DIR@
 OBJEXT = @OBJEXT@
@@ -111,6 +112,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_DATA_DIR = @PACKAGE_DATA_DIR@
 PACKAGE_DOC_DIR = @PACKAGE_DOC_DIR@
 PACKAGE_HELP_DIR = @PACKAGE_HELP_DIR@
+PACKAGE_MAN_DIR = @PACKAGE_MAN_DIR@
 PACKAGE_MENU_DIR = @PACKAGE_MENU_DIR@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_PIXMAPS_DIR = @PACKAGE_PIXMAPS_DIR@
@@ -177,17 +179,18 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
-sagscl_tutorialdir = @PACKAGE_DOC_DIR@/tutorial-0.2es
+sagscl_tutorialdir = @PACKAGE_DOC_DIR@/html
 
 sagscl_tutorial_DATA = \
-			  elements.jpg   \
+			  logs.png       \
 			  index.html     \
-			  login.jpg      \
-			  mainwindow.jpg
+			  index.es.html  \
+			  login.png      \
+			  mainwindow.png
 
 
 EXTRA_DIST = $(sagscl_tutorial_DATA)
-subdir = doc/tutorial-0.2es
+subdir = doc/html
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -201,7 +204,7 @@ all: all-am
 .SUFFIXES:
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  doc/tutorial-0.2es/Makefile
+	  $(AUTOMAKE) --gnu  doc/html/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
 

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.39 $
-// $Date: 2005/02/10 21:56:59 $
+// $Revision: 1.40 $
+// $Date: 2005/02/15 22:16:05 $
 //
 
 #include <wx/wx.h>
@@ -29,6 +29,7 @@
 #include <wx/filedlg.h>
 #include <wx/menuitem.h>
 #include <wx/fontdlg.h>
+#include <wx/mimetype.h>
 #include "Window.hpp"
 #include "Login.hpp"
 #include "About.hpp"
@@ -44,7 +45,8 @@
 
 MainWindow::MainWindow (const wxString& title,
 			const wxPoint& position,
-			const wxSize& size)
+			const wxSize& size,
+			const wxString& help_lang)
 	: wxFrame ((wxWindow*) NULL, -1, title, position, size)
 {
 	wxMenuBar *MenuBar = new wxMenuBar;
@@ -60,6 +62,9 @@ MainWindow::MainWindow (const wxString& title,
 	// no se muestra ningún proceso
 	Net = NULL;
 	ProcessShown = NULL;
+
+	// el lenguaje a utilizar en la ayuda
+	HelpLanguage = help_lang;
 
 #ifdef __WXMSW__
 	SetIcon (wxICON(A));
@@ -422,9 +427,42 @@ void MainWindow::OnQuit (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnHelp (wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox (_("No help available yet."),
-		      _("Information"),
-		      wxOK | wxICON_EXCLAMATION, this);
+	wxString html_cmd;
+	bool html_ok;
+	wxFileType *html = wxTheMimeTypesManager->GetFileTypeFromExtension ("html");
+	wxString help_filename = "index.html";
+
+	// TODO: falta probar si existe el archivo a abrir
+	if (HelpLanguage.Length () > 0 && HelpLanguage != "en")
+		help_filename = "index." + HelpLanguage + ".html";
+
+#ifdef __WXMSW__
+	wxString url = wxGetCwd () + "\\doc\\html\\" + help_filename;
+	url.Replace (wxString (wxFILE_SEP_PATH), wxString ("/"));
+#else
+	wxString url = "file://" PACKAGE_DOC_DIR "/html/" + help_filename;
+#endif
+
+	if (html == NULL)
+	{
+		wxMessageBox (_("Couldn't get file type for text/html"),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+	}
+
+	html_ok = html->GetOpenCommand (&html_cmd, wxFileType::MessageParameters (url, ""));
+	delete html;
+
+	if (!html_ok)
+	{
+		wxMessageBox (_("Couldn't get command for running web browser"),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+	}
+
+	wxExecute (html_cmd, wxEXEC_ASYNC);
 }
 
 void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))

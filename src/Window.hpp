@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.16 $
-// $Date: 2005/02/03 22:03:40 $
+// $Revision: 1.17 $
+// $Date: 2005/02/15 22:16:05 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -65,10 +65,13 @@ private:
 
 	Channel *GeneralChannel;
 
+	wxString HelpLanguage;
+
 public:
 	MainWindow (const wxString& title,
 		    const wxPoint& position,
-		    const wxSize& size);
+		    const wxSize& size,
+		    const wxString& help_lang);
 	~MainWindow ();
 	void Disconnect (void);
 

@@ -1,3 +1,28 @@
+2005-02-15  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* configure.in: Added --enable-redhat-docdir option to assign
+	correctly PACKAGE_DOC_DIR.
+
+	* doc/html/: Contains new documentation. Replaces old
+	doc/tutorial-0.2es and doc/tutorial-0.3es documentations.
+	(index.html): English documentation.
+	(index.es.html): Spanish documentation.
+
+	* sagscl.spec.in: Added --enable-redhat-docdir.
+
+	* src/Main.cpp: Gets the system language to be used on
+	MainWindow's constructor.
+
+	* src/Window.cpp, src/Window.hpp: [HelpLanguage]: New
+	var. Represents system language and is used to select the HTML
+	help file.
+	(MainWindow): Constructor has been changed to get new string
+	representing system language.
+	(OnHelp): Now launches the default web browser with the
+	documentation HTML file.
+
+	* win32/sagscl.iss.in: Updated to install doc/html documentation.
+
 2005-02-10  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* po/es.po: Updated spanish translation.
