@@ -1,3 +1,8 @@
+2004-06-04  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.2.2 version.
+
+
 2004-06-03  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Console.cpp: The replace string method looks ugly. Back to
