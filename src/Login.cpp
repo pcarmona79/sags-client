@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/18 18:45:03 $
 //
 
 #include "Login.hpp"
@@ -40,13 +40,7 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 				 -1,
 				 "",
 				 wxDefaultPosition,
-				 wxDefaultSize);
-
-	Port = new wxTextCtrl (this,
-			       -1,
-			       "47777",
-			       wxDefaultPosition,
-			       wxDefaultSize);
+				 wxSize (200, 30));
 
 	Username = new wxTextCtrl (this,
 				   -1,
@@ -70,19 +64,6 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 
 	ServerSizer->Add (Server,
 			  1,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALL,
-			  5);
-
-	ServerSizer->Add (new wxStaticText (this, -1, _("Port:")),
-			  0,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALIGN_RIGHT |
-			  wxALL,
-			  5);
-
-	ServerSizer->Add (Port,
-			  0,
 			  wxALIGN_CENTER_VERTICAL |
 			  wxALL,
 			  5);
@@ -171,12 +152,57 @@ LoginDialog::~LoginDialog ()
 
 wxString LoginDialog::GetServer (void)
 {
-	return Server->GetValue ();
+	wxString server = "", all = Server->GetValue ();
+	int colon;
+	bool is_ipv6 = FALSE;
+
+	if (all.Find ('[') != -1 && all.Find (']') != -1)
+		is_ipv6 = TRUE;
+
+	if (is_ipv6)
+	{
+		colon = all.Find (']', TRUE);
+		server = all.Mid (1, colon - 1);
+	}
+	else
+	{
+		colon = all.Find (':', TRUE);
+		if (colon == -1)
+			server = all;
+		else
+			server = all.Mid (0, colon);
+	}
+
+	return server;
 }
 
 wxString LoginDialog::GetPort (void)
 {
-	return Port->GetValue ();
+	wxString port = "", all = Server->GetValue ();
+	int colon;
+	bool is_ipv6 = FALSE;
+
+	if (all.Find ('[') != -1 && all.Find (']') != -1)
+		is_ipv6 = TRUE;
+
+	if (is_ipv6)
+	{
+		colon = all.Find (':', TRUE);
+		if (colon < all.Find (']'))
+			return "47777";  // el puerto por defecto
+		else
+			port = all.Mid (colon + 1);
+	}
+	else
+	{
+		colon = all.Find (':', TRUE);
+		if (colon == -1)
+			return "47777";  // el puerto por defecto
+		else
+			port = all.Mid (colon + 1);
+	}
+
+	return port;
 }
 
 wxString LoginDialog::GetUsername (void)
