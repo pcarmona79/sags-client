@@ -1,0 +1,118 @@
+dnl Process this file with autoconf to produce a configure script.
+
+AC_INIT([sagscl], 0.1.0)
+AM_INIT_AUTOMAKE
+AM_CONFIG_HEADER(config.h)
+
+AC_SUBST(CXXFLAGS,$CXXFLAGS)
+AC_PROG_CXX
+AC_HEADER_STDC
+AC_PROG_LIBTOOL
+
+dnl Checks for library functions.
+AC_CHECK_LIB([ssl], [main], ,
+	     AC_MSG_ERROR([
+			   OpenSSL library not found!
+			   Install it before compile this program.]))
+AC_CHECK_HEADERS([openssl/ssl.h openssl/err.h], ,
+		 AC_MSG_ERROR([
+			       Basic OpenSSL headers not found!
+			       Without this headers the program can't be compiled.]))
+
+AC_CHECK_FUNCS([memset getaddrinfo freeaddrinfo gai_strerror], ,
+	       AC_MSG_ERROR([
+			     Without this functions the program can't be compiled.]))
+
+AM_OPTIONS_WXCONFIG
+AM_PATH_WXCONFIG(2.3.4, wxWin=1)
+if test "$wxWin" != 1; then
+	AC_MSG_ERROR([
+		      wxWindows must be installed on your system.
+
+		      Please check that wx-config is in path, the directory
+		      where wxWindows libraries are installed (returned by
+		      'wx-config --libs' or 'wx-config --static --libs' command)
+		      is in LD_LIBRARY_PATH or equivalent variable and
+		      wxWindows version is 2.3.4 or above.
+		      ])
+else
+	CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
+	CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS_ONLY"
+	CFLAGS="$CFLAGS $WX_CFLAGS_ONLY"
+	LDFLAGS="$LDFLAGS $WX_LIBS"
+fi
+
+AM_PATH_GTK(1.2.7, ,
+            AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?),
+            gthread)
+
+dnl Set PACKAGE_LOCALE_DIR in config.h.
+if test "x${prefix}" = "xNONE"; then
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${ac_default_prefix}/${DATADIRNAME}/locale", [Locale dir])
+else
+  AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "${prefix}/${DATADIRNAME}/locale", [Locale dir])
+fi
+
+
+dnl Set PACKAGE SOURCE DIR in config.h.
+packagesrcdir=`cd $srcdir && pwd`
+
+dnl Set PACKAGE PREFIX
+if test "x${prefix}" = "xNONE"; then
+  packageprefix=${ac_default_prefix}
+else
+  packageprefix=${prefix}
+fi
+
+dnl Set PACKAGE DATA & DOC DIR
+packagedatadir=share/${PACKAGE}
+packagedocdir=doc/${PACKAGE}
+
+dnl Set PACKAGE DIRS in config.h.
+packagepixmapsdir=${packagedatadir}/pixmaps
+packagehelpdir=${packagedatadir}/help
+packagemenudir=${packagedatadir}
+
+dnl Subst PACKAGE_DATA_DIR.
+NO_PREFIX_PACKAGE_DATA_DIR="${packagedatadir}"
+AC_SUBST(NO_PREFIX_PACKAGE_DATA_DIR)
+PACKAGE_DATA_DIR="${packageprefix}/${packagedatadir}"
+AC_SUBST(PACKAGE_DATA_DIR)
+
+dnl Subst PACKAGE_DOC_DIR.
+NO_PREFIX_PACKAGE_DOC_DIR="${packagedocdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_DOC_DIR)
+PACKAGE_DOC_DIR="${packageprefix}/${packagedocdir}"
+AC_SUBST(PACKAGE_DOC_DIR)
+
+dnl Subst PACKAGE_PIXMAPS_DIR.
+NO_PREFIX_PACKAGE_PIXMAPS_DIR="${packagepixmapsdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_PIXMAPS_DIR)
+PACKAGE_PIXMAPS_DIR="${packageprefix}/${packagepixmapsdir}"
+AC_SUBST(PACKAGE_PIXMAPS_DIR)
+
+dnl Subst PACKAGE_HELP_DIR.
+NO_PREFIX_PACKAGE_HELP_DIR="${packagehelpdir}"
+AC_SUBST(NO_PREFIX_PACKAGE_HELP_DIR)
+PACKAGE_HELP_DIR="${packageprefix}/${packagehelpdir}"
+AC_SUBST(PACKAGE_HELP_DIR)
+
+dnl Subst PACKAGE_MENU_DIR.
+NO_PREFIX_PACKAGE_MENU_DIR="${packagemenudir}"
+AC_SUBST(NO_PREFIX_PACKAGE_MENU_DIR)
+PACKAGE_MENU_DIR="${packageprefix}/${packagemenudir}"
+AC_SUBST(PACKAGE_MENU_DIR)
+
+AC_DEFINE_UNQUOTED(PACKAGE_DATA_DIR, "${packageprefix}/${packagedatadir}", [Data dir])
+AC_DEFINE_UNQUOTED(PACKAGE_DOC_DIR, "${packageprefix}/${packagedocdir}", [Docs dir])
+AC_DEFINE_UNQUOTED(PACKAGE_PIXMAPS_DIR, "${packageprefix}/${packagepixmapsdir}", [Pixmaps dir])
+AC_DEFINE_UNQUOTED(PACKAGE_HELP_DIR, "${packageprefix}/${packagehelpdir}", [Help dir])
+AC_DEFINE_UNQUOTED(PACKAGE_MENU_DIR, "${packageprefix}/${packagemenudir}", [Menu dir])
+AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Source dir])
+
+AC_OUTPUT([
+Makefile
+src/Makefile
+win32/Makefile
+])
+

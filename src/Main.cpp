@@ -19,20 +19,26 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/24 20:04:43 $
 //
 
 #include "Main.hpp"
 #include "Window.hpp"
 
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
+
 IMPLEMENT_APP (Application)
 
 bool Application::OnInit (void)
 {
-	MainWindow *AppWindow = new MainWindow ("Secure Administrator of Game Servers",
-						wxDefaultPosition, wxSize (650, 500));
-//wxPoint (70, 50)
+	wxString windowtitle;
+	windowtitle.Printf ("SAGS Client %s", VERSION);
+
+	MainWindow *AppWindow = new MainWindow (windowtitle, wxDefaultPosition,
+						wxSize (650, 500));
 	AppWindow->Show (TRUE);
 	SetTopWindow (AppWindow);
 

@@ -1,7 +1,12 @@
+2004-04-23  Pablo Carmona Amigo  <kernel@dday.cl>
+
+	* Converted to autotools.
+
+
 2004-04-21  Pablo Carmona Amigo  <kernel@dday.cl>
 
 	* Now we use the wxConfig to read and save the font of the console and
 	five servers typed into the Login dialog.
 	* The Login dialog implements a history of typed servers.
 	* About dialog now shows the version and license of program.
-	* This is the 0.1 version.
+	* This is the 0.1.0 version.

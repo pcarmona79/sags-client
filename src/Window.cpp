@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/04/21 04:45:46 $
+// $Revision: 1.6 $
+// $Date: 2004/04/24 20:04:43 $
 //
 
 #include <wx/wx.h>
@@ -33,8 +33,9 @@
 #include "Login.hpp"
 #include "Packet.hpp"
 
-#define PACKAGE "sagscl"
-#define VERSION "0.1"
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 MainWindow::MainWindow (const wxString& title,
 			const wxPoint& position,
@@ -46,7 +47,7 @@ MainWindow::MainWindow (const wxString& title,
 	wxMenu *MenuEdit = new wxMenu;
 	wxMenu *MenuHelp = new wxMenu;
 
-	AppConfig = new wxConfig ("sagscl");
+	AppConfig = new wxConfig (PACKAGE);
 
 	// al comienzo no tenemos red
 	Net = NULL;
