@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.26 $
-// $Date: 2005/02/10 21:56:59 $
+// $Revision: 1.27 $
+// $Date: 2005/02/25 22:50:25 $
 //
 
 #include "Console.hpp"
@@ -187,8 +187,27 @@ void Console::Add (wxString text, bool memorize)
 #ifdef __WXMSW__
 	// en win98 el widget de texto no hace bien el scroll
 	// por lo que lo forzaremos cambiando el foco antes
-	// de poner el texto
-	Output->SetFocus ();
+	// de poner el texto (memorizando la posicion del cursor
+	// de la consola que esta seleccionada)
+	wxNotebookPage *CurrentNBP = NULL;
+	int pos;
+
+	if (ParentNB->GetPageCount () > 0)
+	{
+		CurrentNBP = ParentNB->GetPage (ParentNB->GetSelection ());
+
+		if (CurrentNBP->GetId () != Ids::WindowChat &&
+		    CurrentNBP->GetId () != Ids::WindowLogs)
+			pos = ((Console *)CurrentNBP)->InputGetInsertionPoint ();
+		else if (CurrentNBP->GetId () == Ids::WindowChat)
+			pos = ((Channel *)CurrentNBP)->InputGetInsertionPoint ();
+		else
+			pos = InputGetInsertionPoint ();
+	}
+	else
+		pos = InputGetInsertionPoint ();
+
+	OutputSetFocus ();
 #endif
 
 	if (!text.IsEmpty ())
@@ -200,23 +219,31 @@ void Console::Add (wxString text, bool memorize)
 
 #ifdef __WXMSW__
 	// el foco debe estar en el widget de entrada, pero
-	// de la consola que esta seccionada
-	wxNotebookPage *CurrentNBP;
-
+	// de la consola que esta seleccionada
 	if (ParentNB->GetPageCount () > 0)
 	{
-		CurrentNBP = ParentNB->GetPage (ParentNB->GetSelection ());
-
 		if (CurrentNBP->GetId () != Ids::WindowChat &&
 		    CurrentNBP->GetId () != Ids::WindowLogs)
+		{
 			((Console *)CurrentNBP)->InputSetFocus ();
+			((Console *)CurrentNBP)->InputSetInsertionPoint (pos);
+		}
 		else if (CurrentNBP->GetId () == Ids::WindowChat)
+		{
 			((Channel *)CurrentNBP)->InputSetFocus ();
+			((Channel *)CurrentNBP)->InputSetInsertionPoint (pos);
+		}
 		else
-			Input->SetFocus ();
+		{
+			InputSetFocus ();
+			InputSetInsertionPoint (pos);
+		}
 	}
 	else
-		Input->SetFocus ();
+	{
+		InputSetFocus ();
+		InputSetInsertionPoint (pos);
+	}
 #endif
 
 	if (memorize)
@@ -302,6 +329,16 @@ void Console::OnSend (wxCommandEvent& WXUNUSED(event))
 		Net->AddBufferOut (index, Session::ConsoleInput, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
 	}
+}
+
+int Console::InputGetInsertionPoint (void)
+{
+	return Input->GetInsertionPoint ();
+}
+
+void Console::InputSetInsertionPoint (int p)
+{
+	Input->SetInsertionPoint (p);
 }
 
 void Console::InputSetFocus (void)

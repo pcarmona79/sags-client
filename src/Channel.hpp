@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.10 $
-// $Date: 2005/02/10 21:56:58 $
+// $Revision: 1.11 $
+// $Date: 2005/02/25 22:50:25 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -101,6 +101,8 @@ public:
 	void ClearOutput (void);
 	void ClearInput (void);
 	void ScrollToBottom (void);
+	int InputGetInsertionPoint (void);
+	void InputSetInsertionPoint (int p);
 	void InputSetFocus (void);
 	void OutputSetFocus (void);
 

@@ -9,19 +9,23 @@
 <h1><a class="mozTocH1" name="mozTocId35885"></a>SAGS Client
 Documentation<br>
 </h1>
-© 2004, 2005 Pablo Carmona Amigo<br>
+&copy; 2004, 2005 Pablo Carmona Amigo<br>
 <ol id="mozToc">
 <!--mozToc h2 1 h3 2 h4 3--><li><a href="#mozTocId551282">Introduction</a></li>
   <li><a href="#mozTocId525310">Features</a></li>
   <li><a href="#mozTocId609325">How to get SAGS Client</a></li>
   <li><a href="#mozTocId741975">How to use</a>
     <ol>
-      <li><a href="#mozTocId963935">Connection </a></li>
-      <li><a href="#mozTocId805103">Session </a></li>
-      <li><a href="#mozTocId619967">Chat </a></li>
+      <li><a href="#mozTocId963935">Connection
+        </a></li>
+      <li><a href="#mozTocId805103">Session
+        </a></li>
+      <li><a href="#mozTocId619967">Chat
+        </a></li>
       <li><a href="#mozTocId739549">Finishing</a></li>
     </ol>
   </li>
+  <li><a href="#mozTocId673182">Maintenance Mode</a></li>
 </ol>
 <h2><a class="mozTocH2" name="mozTocId551282"></a>Introduction</h2>
 <p><span style="font-weight: bold;">SAGS</span> or <span
@@ -206,8 +210,37 @@ from the menu.<br>
 <p>To get disconnected, select <span style="font-weight: bold;"><span
  style="text-decoration: underline;">S</span>ession
 / <span style="text-decoration: underline;">D</span>isconnect</span>
-from the menu or just close the application from its title bar's icon.
+from the menu or just close the application from its title bar's icon.<br>
 </p>
+<h2><a class="mozTocH2" name="mozTocId673182"></a>Maintenance Mode<br>
+</h2>
+<p>This is a feature added to 0.5 version of SAGS Server and Client.
+Its main function is to impede that a game server to be restarted if it
+is in maintenace, in other words, this mode will not consider the <span
+ style="font-family: monospace;">Respawn</span> variable from server's
+configuration file. This allow to an administrator user to maintain a
+game server (ex. to edit game's configuration files, to add maps, etc.)
+after to stop it.<br>
+</p>
+<p>To use this mode, first select the game server and then choose <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">P</span>rocess
+/ <span style="text-decoration: underline;">M</span>aintenance mode OFF</span>
+from the menu to change the status to <span style="font-style: italic;">Maintenance
+mode ON</span>.
+Then you can stop the process using <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">P</span>rocess / <span
+ style="text-decoration: underline;">K</span>ill</span> from the menu
+to proceed to do the maintenance.<br>
+</p>
+The <span style="font-style: italic;">Process's information</span>
+panel shows maintenance information sent by the server. This
+information consist of activation status of maintenance mode (<span
+ style="font-family: monospace;">MaintenanceMode</span>), date of last
+maintenance (<span style="font-family: monospace;">MaintenanceLastStart</span>),
+its duration (<span style="font-family: monospace;">MaintenanceDuration</span>)
+and the number of maintenances done finished (<span
+ style="font-family: monospace;">MaintenanceCount</span>).
+<p></p>
 </div>
 </div>
 </body>

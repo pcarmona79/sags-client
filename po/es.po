@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.5.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-02-16 01:40-0300\n"
-"PO-Revision-Date: 2005-02-16 01:41-0300\n"
+"POT-Creation-Date: 2005-02-23 17:34-0300\n"
+"PO-Revision-Date: 2005-02-21 23:45-0300\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -30,27 +30,27 @@ msgstr "Enviar"
 msgid "Channel's topic:"
 msgstr "Tópico del canal:"
 
-#: src/Channel.cpp:325
+#: src/Channel.cpp:354
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr "---> %s ha entrado al canal\n"
 
-#: src/Channel.cpp:332
+#: src/Channel.cpp:361
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr "<--- %s deja el canal\n"
 
-#: src/Channel.cpp:340
+#: src/Channel.cpp:369
 #, c-format
 msgid ">>> The channel's topic is: %s\n"
 msgstr ">>> El tópico del canal es: %s\n"
 
-#: src/Channel.cpp:348
+#: src/Channel.cpp:377
 #, c-format
 msgid ">>> %s sets topic to: %s\n"
 msgstr ">>> %s cambia el tópico a: %s\n"
 
-#: src/Channel.cpp:530
+#: src/Channel.cpp:559
 msgid "To: "
 msgstr "Para: "
 
@@ -59,12 +59,12 @@ msgid "Close"
 msgstr "Cerrar"
 
 #: src/Config.cpp:94
-msgid "Console font"
+msgid "Console's font"
 msgstr "Fuente de las consolas"
 
 #: src/Config.cpp:106
-msgid "Chat font"
-msgstr "Fuente del canal de chat"
+msgid "Chat channel's font"
+msgstr "Cambia la fuente de la consola"
 
 #: src/Login.cpp:68
 msgid "Server:"
@@ -510,14 +510,14 @@ msgstr "Guardar en archivo"
 msgid "Preferences"
 msgstr "Preferencias"
 
+#~ msgid "Chat font"
+#~ msgstr "Fuente del canal de chat"
+
 #~ msgid "No help available yet."
 #~ msgstr "Aún no hay ayuda disponible."
 
 #~ msgid "Information"
 #~ msgstr "Información"
-
-#~ msgid "Change the console's font"
-#~ msgstr "Cambia la fuente de la consola"
 
 #, fuzzy
 #~ msgid "Process %d"

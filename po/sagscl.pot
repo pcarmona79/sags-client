@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-02-16 01:40-0300\n"
+"POT-Creation-Date: 2005-02-23 17:34-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,27 +28,27 @@ msgstr ""
 msgid "Channel's topic:"
 msgstr ""
 
-#: src/Channel.cpp:325
+#: src/Channel.cpp:354
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr ""
 
-#: src/Channel.cpp:332
+#: src/Channel.cpp:361
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr ""
 
-#: src/Channel.cpp:340
+#: src/Channel.cpp:369
 #, c-format
 msgid ">>> The channel's topic is: %s\n"
 msgstr ""
 
-#: src/Channel.cpp:348
+#: src/Channel.cpp:377
 #, c-format
 msgid ">>> %s sets topic to: %s\n"
 msgstr ""
 
-#: src/Channel.cpp:530
+#: src/Channel.cpp:559
 msgid "To: "
 msgstr ""
 
@@ -57,11 +57,11 @@ msgid "Close"
 msgstr ""
 
 #: src/Config.cpp:94
-msgid "Console font"
+msgid "Console's font"
 msgstr ""
 
 #: src/Config.cpp:106
-msgid "Chat font"
+msgid "Chat channel's font"
 msgstr ""
 
 #: src/Login.cpp:68

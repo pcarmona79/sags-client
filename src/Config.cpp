@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Config.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2005/02/03 22:03:40 $
+// $Revision: 1.4 $
+// $Date: 2005/02/25 22:50:25 $
 //
 
 #include "Config.hpp"
@@ -91,7 +91,7 @@ ConfigDialog::ConfigDialog (wxConfig *AppCfg, ProcessTree *ProcLst, Channel *Gen
 	ButtonChannelFont = new wxButton (this, Ids::ConfigChannelFont, ChannelFontName +
 					  wxString::Format (" %ld", ChannelFontSize));
 
-	DataSizer->Add (new wxStaticText (this, -1, _("Console font")),
+	DataSizer->Add (new wxStaticText (this, -1, _("Console's font")),
 			1,
 			wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT |
 			wxALL,
@@ -103,7 +103,7 @@ ConfigDialog::ConfigDialog (wxConfig *AppCfg, ProcessTree *ProcLst, Channel *Gen
 			wxALL,
 			5);
 
-	DataSizer->Add (new wxStaticText (this, -1, _("Chat font")),
+	DataSizer->Add (new wxStaticText (this, -1, _("Chat channel's font")),
 			1,
 			wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT |
 			wxALL,

@@ -2,27 +2,33 @@
 <html>
 <head>
   <meta content="text/html; charset=UTF-8" http-equiv="content-type">
-  <title>Documentación del Cliente SAGS</title>
+  <title>Documentaci&oacute;n del Cliente SAGS</title>
   <meta content="Pablo Carmona Amigo" name="author">
 </head>
 <body>
-<h1><a class="mozTocH1" name="mozTocId35885"></a>Documentación del
+<h1><a class="mozTocH1" name="mozTocId35885"></a>Documentaci&oacute;n del
 Cliente SAGS<br>
 </h1>
-© 2004, 2005 Pablo Carmona Amigo<br>
+&copy; 2004, 2005 Pablo Carmona Amigo<br>
 <ol id="mozToc">
 <!--mozToc h2 1 h3 2 h4 3--><li><a href="#mozTocId551282">Introducción</a></li>
   <li><a href="#mozTocId525310">Características</a></li>
   <li><a href="#mozTocId609325">Cómo obtener el
-Cliente SAGS </a></li>
+Cliente SAGS
+    </a></li>
   <li><a href="#mozTocId741975">Modo de uso</a>
     <ol>
-      <li><a href="#mozTocId963935">Conexión </a></li>
-      <li><a href="#mozTocId805103">Sesión </a></li>
-      <li><a href="#mozTocId619967">Conversación</a></li>
-      <li><a href="#mozTocId739549">Terminando </a></li>
+      <li><a href="#mozTocId963935">Conexión
+        </a></li>
+      <li><a href="#mozTocId805103">Sesión
+        </a></li>
+      <li><a href="#mozTocId619967">Conversación
+        </a></li>
+      <li><a href="#mozTocId739549">Terminando
+        </a></li>
     </ol>
   </li>
+  <li><a href="#mozTocId826022">Modo de Mantenimiento</a></li>
 </ol>
 <h2><a class="mozTocH2" name="mozTocId551282"></a>Introducción</h2>
 <p><span style="font-weight: bold;">SAGS</span> o <span
@@ -37,29 +43,29 @@ conexión SSL para la transferencia de información tanto del juego
 como
 la necesaria para administrarlo.<br>
 </p>
-<p>Está disponible bajo los términos de la <a
- href="http://www.gnu.org/licenses/gpl.html">Licencia Pública General
+<p>Est&aacute; disponible bajo los t&eacute;rminos de la <a
+ href="http://www.gnu.org/licenses/gpl.html">Licencia P&uacute;blica General
 de GNU</a>.<br>
 </p>
-<p>La página del proyecto se encuentra alojada en Sourceforge.net y la
-dirección es <a href="http://sags.sourceforge.net/">http://sags.sourceforge.net/</a>.<br>
+<p>La p&aacute;gina del proyecto se encuentra alojada en Sourceforge.net y la
+direcci&oacute;n es <a href="http://sags.sourceforge.net/">http://sags.sourceforge.net/</a>.<br>
 </p>
-<h2><a class="mozTocH2" name="mozTocId525310"></a>Características</h2>
+<h2><a class="mozTocH2" name="mozTocId525310"></a>Caracter&iacute;sticas</h2>
 <ul>
   <li>Provee una interfaz directa a las consolas de los procesos
 manejados en el servidor.</li>
-  <li>Contiene paneles para mostrar la lista de procesos, información y
+  <li>Contiene paneles para mostrar la lista de procesos, informaci&oacute;n y
 las consolas.<br>
   </li>
   <li>Se puede cambiar la fuente de las consolas.</li>
-  <li>El diálogo de login almacena hasta cinco servidores.</li>
+  <li>El di&aacute;logo de login almacena hasta cinco servidores.</li>
   <li>Los mensajes de la consola pueden ser guardados a un archivo.</li>
-  <li>La versión para Linux soporta IPv6.</li>
+  <li>La versi&oacute;n para Linux soporta IPv6.</li>
   <li>Posee soporte de chat como IRC.</li>
   <li>La ventana de chat maneja mensajes normales, acciones (<span
  style="font-family: monospace;">/me</span>), noticias (<span
  style="font-family: monospace;">/notice</span>) y mensajes privados de
-otros usuarios. También se puede cambiar el tópico del canal (<span
+otros usuarios. Tambi&eacute;n se puede cambiar el t&oacute;pico del canal (<span
  style="font-family: monospace;">/topic</span>).<br>
   </li>
   <li>Es portable a la plataforma Windows (se necesita <a
@@ -69,68 +75,68 @@ para ejecutarlo) porque tiene una GUI escrita con <a
  href="http://www.wxwidgets.org/">wxWidgets</a>.<br>
   </li>
 </ul>
-<h2><a class="mozTocH2" name="mozTocId609325"></a>Cómo obtener el
+<h2><a class="mozTocH2" name="mozTocId609325"></a>C&oacute;mo obtener el
 Cliente SAGS<br>
 </h2>
-<p>Vaya a la sitio web del proyecto (indicado más arriba) y entre en
+<p>Vaya a la sitio web del proyecto (indicado m&aacute;s arriba) y entre en
 la
-sección "<span style="font-style: italic;">Downloads</span>". En el
-final de la página encontrará el título "<span
+secci&oacute;n "<span style="font-style: italic;">Downloads</span>". En el
+final de la p&aacute;gina encontrar&aacute; el t&iacute;tulo "<span
  style="font-style: italic;">Precompilated binaries</span>" junto con
 un enlace al instalador (para win32) o a paquetes RPM. La descarga se
 realiza usando
 el sistema
 normal de descargas de <a href="http://sourceforge.net/">Sourceforge.net</a>
-por lo que probablemente tendrá que escoger un mirror antes de
+por lo que probablemente tendr&aacute; que escoger un mirror antes de
 comenzar a descargarlo.<br>
 </p>
-<p>El código fuente tanto del cliente como del servidor se pueden
-obtener directamente de la sección "<span style="font-style: italic;">Downloads</span>"
+<p>El c&oacute;digo fuente tanto del cliente como del servidor se pueden
+obtener directamente de la secci&oacute;n "<span style="font-style: italic;">Downloads</span>"
 o desde la lista de archivos del proyecto en Sourceforge.net: <a
  href="http://sourceforge.net/project/showfiles.php?group_id=106892">http://sourceforge.net/project/showfiles.php?group_id=106892</a>.</p>
 <h2><a class="mozTocH2" name="mozTocId741975"></a>Modo de uso</h2>
 <p>En la imagen siguiente se muestra la ventana principal. Contiene
 tres elementos principales que son la <span style="font-style: italic;">Lista
-de procesos</span>, el panel de <span style="font-style: italic;">Información
-del proceso</span> y varias pestañas que muestran las consolas de los
-procesos, el canal de chat e información del programa.<br>
+de procesos</span>, el panel de <span style="font-style: italic;">Informaci&oacute;n
+del proceso</span> y varias pesta&ntilde;as que muestran las consolas de los
+procesos, el canal de chat e informaci&oacute;n del programa.<br>
 </p>
 <div style="text-align: center;"><img title="Main window's elements"
  style="width: 747px; height: 527px;" alt="Main window's elements"
  src="logs.png"><br>
 <div style="text-align: left;">
-<h3><a class="mozTocH3" name="mozTocId963935"></a>Conexión<br>
+<h3><a class="mozTocH3" name="mozTocId963935"></a>Conexi&oacute;n<br>
 </h3>
 <p>Lo primero que debe hacer es conectarse al servidor remoto usando el
-nombre de usuario y la contraseña asignadas a Ud. por el
+nombre de usuario y la contrase&ntilde;a asignadas a Ud. por el
 administrador.
-Para ingresar los datos vaya al menú <span style="font-weight: bold;"><span
- style="text-decoration: underline;">S</span>esión
+Para ingresar los datos vaya al men&uacute; <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">S</span>esi&oacute;n
 / <span style="text-decoration: underline;">C</span>onectar...</span>.
-A continuación aparecerá una ventana como la
+A continuaci&oacute;n aparecer&aacute; una ventana como la
 siguiente.</p>
 <div style="text-align: center;"><img
  style="width: 300px; height: 170px;" alt="Login window"
  title="Login window" src="login.png"><br>
 </div>
 <p>Ingrese los datos del servidor de la forma <span
- style="font-style: italic;">&lt;dirección IP&gt;</span><span
+ style="font-style: italic;">&lt;direcci&oacute;n IP&gt;</span><span
  style="font-weight: bold;">:</span><span style="font-style: italic;">&lt;puerto&gt;</span>
-y luego su nombre de usuario y la contraseña. En la versión para
+y luego su nombre de usuario y la contrase&ntilde;a. En la versi&oacute;n para
 Linux
 se pueden usar direcciones IPv6 encerradas entre corchetes de la forma <span
- style="font-weight: bold;">[</span><span style="font-style: italic;">&lt;dirección
+ style="font-weight: bold;">[</span><span style="font-style: italic;">&lt;direcci&oacute;n
 IPv6&gt;</span><span style="font-weight: bold;">]:</span><span
- style="font-style: italic;">&lt;puerto&gt;</span>, sólo si el sistema
+ style="font-style: italic;">&lt;puerto&gt;</span>, s&oacute;lo si el sistema
 operativo soporta el nuevo protocolo.<br>
 </p>
-<p>Si se está conectando a un servidor en el puerto <span
+<p>Si se est&aacute; conectando a un servidor en el puerto <span
  style="font-weight: bold;">47777</span>, no es necesario agregar este
-valor y sólo basta con ingresar la dirección IP.<br>
+valor y s&oacute;lo basta con ingresar la direcci&oacute;n IP.<br>
 </p>
-<h3><a class="mozTocH3" name="mozTocId805103"></a>Sesión<br>
+<h3><a class="mozTocH3" name="mozTocId805103"></a>Sesi&oacute;n<br>
 </h3>
-<p>Durante la sesión la ventana principal puede parecerse a la
+<p>Durante la sesi&oacute;n la ventana principal puede parecerse a la
 siguiente que muestra varios servidores de Quake II con D-Day: Normandy
 en la <span style="font-style: italic;">Lista de procesos</span>.<br>
 </p>
@@ -139,95 +145,126 @@ en la <span style="font-style: italic;">Lista de procesos</span>.<br>
  src="mainwindow.png"><br>
 </p>
 <p>Seleccionando un nombre de la <span style="font-style: italic;">Lista
-de procesos</span> se mostrará la consola de ese proceso y la
-información de él aparecerá en el panel de <span
- style="font-style: italic;">Información del proceso</span>. Sólo los
-procesos autorizados para el usuario serán mostrados por el cliente.<br>
+de procesos</span> se mostrar&aacute; la consola de ese proceso y la
+informaci&oacute;n de &eacute;l aparecer&aacute; en el panel de <span
+ style="font-style: italic;">Informaci&oacute;n del proceso</span>. S&oacute;lo los
+procesos autorizados para el usuario ser&aacute;n mostrados por el cliente.<br>
 </p>
-<p>Para enviar un comando al servidor del juego seleccionado, sólo
-escríbalo en la
-entrada de abajo y luego pulse el botón <span
+<p>Para enviar un comando al servidor del juego seleccionado, s&oacute;lo
+escr&iacute;balo en la
+entrada de abajo y luego pulse el bot&oacute;n <span
  style="font-weight: bold;">Enviar</span> o simplemente presione la
 tecla Enter. Los comandos ingresados son enviados al servidor y pasados
 directamente al proceso del juego. En la consola queda destacado el
 comando enviado al servidor y la salida es mostrada en
-la consola unos instantes después. El comando enviado es guardado en el
-menú desplegable de esa entrada para que pueda ser usado posteriormente.<br>
+la consola unos instantes despu&eacute;s. El comando enviado es guardado en el
+men&uacute; desplegable de esa entrada para que pueda ser usado posteriormente.<br>
 </p>
 <p>Se puede cambiar la fuente de la consola escogiendo <span
  style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
 / <span style="text-decoration: underline;">P</span>referencias<span
  style="text-decoration: underline;"></span>...</span>
-en el menú y luego presionando el botón correspondiente a <span
+en el men&uacute; y luego presionando el bot&oacute;n correspondiente a <span
  style="font-style: italic;">Fuente de las consolas</span>.<br>
 </p>
 <p>Para guardar los mensajes de la consola actual a un archivo hay que
 seleccionar <span style="font-weight: bold;"><span
  style="text-decoration: underline;">P</span>roceso / <span
  style="text-decoration: underline;">G</span>uardar en
-archivo...</span> en el menú.<br>
+archivo...</span> en el men&uacute;.<br>
 </p>
-<p>En la pestaña <span style="font-weight: bold;">Registros</span> se
+<p>En la pesta&ntilde;a <span style="font-weight: bold;">Registros</span> se
 pueden ver las distintas acciones que realiza el cliente y se muestran
 los nombres de algunos de los paquetes enviados por el servidor. Se
 pueden guardar los registros en un archivo de texto seleccionando <span
- style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>aña
+ style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>a&ntilde;a
 / Guardar <span style="text-decoration: underline;">r</span>egistros
-en archivo...</span> en el menú. Se
-puede ocultar esta pestaña escogiendo <span style="font-weight: bold;"><span
+en archivo...</span> en el men&uacute;. Se
+puede ocultar esta pesta&ntilde;a escogiendo <span style="font-weight: bold;"><span
  style="text-decoration: underline;">V</span>er
 / Mostrar <span style="text-decoration: underline;">r</span>egistros</span>
-en el menú. Este estado será recordado por el programa.<br>
+en el men&uacute;. Este estado ser&aacute; recordado por el programa.<br>
 </p>
-<h3><a class="mozTocH3" name="mozTocId619967"></a>Conversación<br>
+<h3><a class="mozTocH3" name="mozTocId619967"></a>Conversaci&oacute;n<br>
 </h3>
-<p>La pestaña <span style="font-style: italic;">Conversación</span>
+<p>La pesta&ntilde;a <span style="font-style: italic;">Conversaci&oacute;n</span>
 muestra a todos los usuarios conectados al servidor y permite que se
 puedan comunicar entre ellos. Los usuarios administradores son
 indicados con una ampolletita verde.<br>
 </p>
-<p>Los mensajes son enviados al resto de los clientes con sólo
+<p>Los mensajes son enviados al resto de los clientes con s&oacute;lo
 escribirlo en la entrada inferior y presionando Enter o haciendo clic
-en el botón <span style="font-weight: bold;">Enviar</span>. También
-están disponibles los siguientes comandos para enviar otros tipos de
+en el bot&oacute;n <span style="font-weight: bold;">Enviar</span>. Tambi&eacute;n
+est&aacute;n disponibles los siguientes comandos para enviar otros tipos de
 mensaje:<br>
 </p>
 <ul>
-  <li><span style="font-family: monospace;">/me</span>: envía un
-mensaje al canal como una acción.<br>
+  <li><span style="font-family: monospace;">/me</span>: env&iacute;a un
+mensaje al canal como una acci&oacute;n.<br>
   </li>
-  <li><span style="font-family: monospace;">/notice</span>: envía un
+  <li><span style="font-family: monospace;">/notice</span>: env&iacute;a un
 mensaje al canal como una noticia.<br>
   </li>
   <li><span style="font-family: monospace;">/topic</span>: cambia el
-tópico del canal sólo si el usuario que invoca el comando es
+t&oacute;pico del canal s&oacute;lo si el usuario que invoca el comando es
 administrador.<br>
   </li>
-  <li><span style="font-family: monospace;">/to nick text</span>: envía
+  <li><span style="font-family: monospace;">/to nick text</span>: env&iacute;a
     <span style="font-family: monospace;">text</span> al usuario <span
  style="font-family: monospace;">nick</span> como un mensaje privado
-(sólo lo recibe <span style="font-family: monospace;">nick</span>).</li>
+(s&oacute;lo lo recibe <span style="font-family: monospace;">nick</span>).</li>
 </ul>
 <p>Se puede cambiar la fuente del canal escogiendo <span
  style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
 / <span style="text-decoration: underline;">P</span>referencias<span
  style="text-decoration: underline;"></span>...</span>
-en el menú y luego presionando el botón correspondiente a <span
+en el men&uacute; y luego presionando el bot&oacute;n correspondiente a <span
  style="font-style: italic;">Fuente del canal de chat</span>.<br>
 </p>
 <p>Para guardar los mensajes del canal de chat se escoge <span
- style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>aña
-/ Guardar <span style="text-decoration: underline;">c</span>onversación
-en archivo...</span> del menú.<br>
+ style="font-weight: bold;">Pes<span style="text-decoration: underline;">t</span>a&ntilde;a
+/ Guardar <span style="text-decoration: underline;">c</span>onversaci&oacute;n
+en archivo...</span> del men&uacute;.<br>
 </p>
 <h3><a class="mozTocH3" name="mozTocId739549"></a>Terminando<br>
 </h3>
-<p>Para desconectarse sólo basta con seleccionar <span
- style="font-weight: bold;"><span style="text-decoration: underline;">S</span>esión
+<p>Para desconectarse s&oacute;lo basta con seleccionar <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">S</span>esi&oacute;n
 / <span style="text-decoration: underline;">D</span>esconectar</span>
-en el menú o
-simplemente cerrar la aplicación desde su ícono en la barra de
-título.<br>
+en el men&uacute; o
+simplemente cerrar la aplicaci&oacute;n desde su &iacute;cono en la barra de
+t&iacute;tulo.<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId826022"></a>Modo de Mantenimiento<br>
+</h2>
+<p>Esta es una caracter&iacute;stica agregada en la versi&oacute;n 0.5 tanto del
+servidor SAGS como del cliente. Su funci&oacute;n principal es impedir que un
+servidor se reinicie si es que est&aacute; en mantenimiento, es decir que en
+este modo no se considerar&aacute; la variable <span
+ style="font-family: monospace;">Respawn</span> del archivo de
+configuraci&oacute;n del servidor. Esto permite a un usuario administrador
+hacerle mantenimiento a un servidor de juego (ej. editar los archivos
+de configuraci&oacute;n del juego, agregar mapas, etc.) luego de detenerlo.<br>
+</p>
+<p>Para utilizar este modo, primero hay que tener seleccionado el
+servidor de juego a hacerle mantenimiento y luego elegir <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">P</span>roceso
+/ <span style="text-decoration: underline;">M</span>odo de
+mantenimiento apagado</span> en el men&uacute; para cambiar el estado a <span
+ style="font-style: italic;">Modo de mantenimiento encendido</span>.
+Luego puede detener el proceso usando <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">P</span>roceso / <span
+ style="text-decoration: underline;">T</span>erminar</span> en el men&uacute;
+para proceder a hacerle mantenimiento.<br>
+</p>
+<p>En el panel de <span style="font-style: italic;">Informaci&oacute;n del
+proceso</span> aparece informaci&oacute;n de mantenimiento enviada por el
+servidor. Esta informaci&oacute;n comprende si est&aacute; activado o no (<span
+ style="font-family: monospace;">MaintenanceMode</span>), la fecha del
+&uacute;ltimo mantenimiento hecho (<span style="font-family: monospace;">MaintenanceLastStart</span>),
+su duraci&oacute;n (<span style="font-family: monospace;">MaintenanceDuration</span>)
+y el n&uacute;mero de veces que se ha hecho mantenimiento (<span
+ style="font-family: monospace;">MaintenanceCount</span>).<br>
 </p>
 </div>
 </div>

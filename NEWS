@@ -7,7 +7,7 @@ This new version includes:
 2) Chat's users list is now resizable.
 3) Console's input widget has been changed to a combo box to allow
 storing of typed commands by the user.
-4) Topic widget is editable when the user is a administrator.
+4) Topic widget is editable when the user is an administrator.
 5) Managing of private messaging. The user must use /to command to send
 a private message. Its usage is like: /to nick message.
 6) Added HTML help accessible from Help menu.
