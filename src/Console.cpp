@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/05/18 05:37:31 $
+// $Revision: 1.9 $
+// $Date: 2004/05/23 21:12:50 $
 //
 
 #include "Console.hpp"
@@ -107,9 +107,9 @@ Console::~Console ()
 void Console::Add (wxString text, bool memorize)
 {
 	bool have_newline;
-	wxString text_copy;
-	int i;
-	char str[2];
+	wxString text_copy, rstr;
+	int n = 0;
+	char c, str[2];
 
 	if (text.Last () == '\n')
 		have_newline = TRUE;
@@ -122,7 +122,7 @@ void Console::Add (wxString text, bool memorize)
 	// borramos el texto repetido
 	text_copy = text;
 	if (!memorize && !last_input.IsEmpty ())
-		text.Replace (last_input, "", FALSE);
+		n = text.Replace (last_input, "", FALSE);
 
 	// borramos el primer y el último LF
 	if (text.GetChar (0) == '\n')
@@ -131,15 +131,16 @@ void Console::Add (wxString text, bool memorize)
 		text.RemoveLast ();
 
 	// borrar caracteres especiales emitidos por servers de Q2
-	for (i = 1; i < 32; ++i)
+	for (c = 1; c < 32; ++c)
 	{
-		str[0] = (char) i;
-		str[1]= '\0';
+		str[0] = c;
+		str[1] = '\0';
 
 		if (str[0] == '\n')
 			continue;
-		
-		text.Replace (str, "*");
+
+		rstr.Printf ("[%02x]", c);
+		text.Replace (str, rstr.c_str ());
 	}
 
 	// en win98 el widget de texto no hace bien el scroll
@@ -160,7 +161,8 @@ void Console::Add (wxString text, bool memorize)
 	if (memorize)
 		last_input = text_copy;
 	else
-		last_input.Empty ();
+		if (n > 0)
+			last_input.Empty ();
 
 	last_had_newline = have_newline;
 }

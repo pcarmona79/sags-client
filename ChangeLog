@@ -1,3 +1,14 @@
+2004-05-23  Pablo Carmona Amigo  <kernel@dday.cl>
+
+	* Version 0.2.1.
+	* src/About.cpp: BigFont now have a relative point size.
+	* src/Console.cpp: Now we check if the memorized text is replaced. If
+	no replacement happen, the memorized text is not cleared.
+	* src/Console.cpp: The specials characters are now replaced by a
+	string representing its hexadecimal representation.
+	* win32/sagscl.iss.in: Added a entry to install the NEWS file.
+
+
 2004-05-21  Pablo Carmona Amigo  <kernel@dday.cl>
 
 	* Version 0.2.0

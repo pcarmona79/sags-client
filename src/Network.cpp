@@ -19,12 +19,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/05/21 22:18:28 $
+// $Revision: 1.4 $
+// $Date: 2004/05/23 21:12:50 $
 //
 
 #include <cstdio>
 #include <cstring>
+#include <cmath>
 #include <wx/socket.h>
 
 #include "Network.hpp"

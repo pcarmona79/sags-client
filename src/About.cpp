@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/About.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/05/06 00:39:58 $
+// $Revision: 1.2 $
+// $Date: 2004/05/23 21:12:50 $
 //
 
 #include "About.hpp"
@@ -62,10 +62,11 @@ AboutDialog::AboutDialog (wxWindow *parent, const wxString& title, const wxStrin
 			    10);
 
 	wxStaticText *BigLabel = new wxStaticText (this, -1, bigtext);
+	wxFont LastFont = BigLabel->GetFont ();
 #ifdef __WXMSW__
-	wxFont BigFont (10, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
+	wxFont BigFont (LastFont.GetPointSize () + 2, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
 #else
-	wxFont BigFont (18, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
+	wxFont BigFont (LastFont.GetPointSize () + 6, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
 #endif
 	BigLabel->SetFont (BigFont);
 	
