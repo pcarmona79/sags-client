@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-01-26 17:04-0300\n"
+"POT-Creation-Date: 2005-02-04 17:04-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,30 +20,30 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Channel.cpp:114 src/Console.cpp:87
+#: src/Channel.cpp:119 src/Console.cpp:87
 msgid "Send"
 msgstr ""
 
-#: src/Channel.cpp:116
+#: src/Channel.cpp:121
 msgid "Channel's topic:"
 msgstr ""
 
-#: src/Channel.cpp:280
+#: src/Channel.cpp:282
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr ""
 
-#: src/Channel.cpp:287
+#: src/Channel.cpp:289
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr ""
 
-#: src/Channel.cpp:295
+#: src/Channel.cpp:297
 #, c-format
 msgid ">>> The channel's topic is: %s\n"
 msgstr ""
 
-#: src/Channel.cpp:303
+#: src/Channel.cpp:305
 #, c-format
 msgid ">>> %s sets topic to: %s\n"
 msgstr ""
@@ -52,11 +52,11 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/Config.cpp:88
+#: src/Config.cpp:94
 msgid "Console font"
 msgstr ""
 
-#: src/Config.cpp:100
+#: src/Config.cpp:106
 msgid "Chat font"
 msgstr ""
 
@@ -129,8 +129,8 @@ msgstr ""
 msgid "Save console's messages to a file"
 msgstr ""
 
-#: src/Window.cpp:87 src/Window.cpp:735 src/Window.cpp:1052
-#: src/Window.cpp:1186
+#: src/Window.cpp:87 src/Window.cpp:735 src/Window.cpp:1023
+#: src/Window.cpp:1157
 msgid "&Maintenance mode OFF"
 msgstr ""
 
@@ -230,7 +230,7 @@ msgstr ""
 msgid "&Help"
 msgstr ""
 
-#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1066
+#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1037
 msgid "Logs"
 msgstr ""
 
@@ -313,7 +313,7 @@ msgstr ""
 msgid " Server: ["
 msgstr ""
 
-#: src/Window.cpp:654 src/Window.cpp:1021
+#: src/Window.cpp:654 src/Window.cpp:992
 #, c-format
 msgid "Process %d: "
 msgstr ""
@@ -342,7 +342,7 @@ msgstr ""
 msgid "Process %d start: \"%s\""
 msgstr ""
 
-#: src/Window.cpp:715 src/Window.cpp:1047 src/Window.cpp:1181
+#: src/Window.cpp:715 src/Window.cpp:1018 src/Window.cpp:1152
 msgid "&Maintenance mode ON"
 msgstr ""
 
@@ -452,10 +452,10 @@ msgid ""
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:929 src/Window.cpp:1209 src/Window.cpp:1221
+#: src/Window.cpp:929 src/Window.cpp:1180 src/Window.cpp:1192
 msgid "Save to file"
 msgstr ""
 
-#: src/Window.cpp:1085
+#: src/Window.cpp:1056
 msgid "Preferences"
 msgstr ""

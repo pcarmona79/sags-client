@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.3.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-01-26 17:04-0300\n"
+"POT-Creation-Date: 2005-02-04 17:04-0300\n"
 "PO-Revision-Date: 2005-01-26 18:10-0300\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -22,30 +22,30 @@ msgstr ""
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/Channel.cpp:114 src/Console.cpp:87
+#: src/Channel.cpp:119 src/Console.cpp:87
 msgid "Send"
 msgstr "Enviar"
 
-#: src/Channel.cpp:116
+#: src/Channel.cpp:121
 msgid "Channel's topic:"
 msgstr "Tópico del canal:"
 
-#: src/Channel.cpp:280
+#: src/Channel.cpp:282
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr "---> %s ha entrado al canal\n"
 
-#: src/Channel.cpp:287
+#: src/Channel.cpp:289
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr "<--- %s deja el canal\n"
 
-#: src/Channel.cpp:295
+#: src/Channel.cpp:297
 #, c-format
 msgid ">>> The channel's topic is: %s\n"
 msgstr ">>> El tópico del canal es: %s\n"
 
-#: src/Channel.cpp:303
+#: src/Channel.cpp:305
 #, c-format
 msgid ">>> %s sets topic to: %s\n"
 msgstr ">>> %s cambia el tópico a: %s\n"
@@ -54,11 +54,11 @@ msgstr ">>> %s cambia el tópico a: %s\n"
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/Config.cpp:88
+#: src/Config.cpp:94
 msgid "Console font"
 msgstr "Fuente de las consolas"
 
-#: src/Config.cpp:100
+#: src/Config.cpp:106
 msgid "Chat font"
 msgstr "Fuente del canal de chat"
 
@@ -131,8 +131,8 @@ msgstr "&Guardar en archivo..."
 msgid "Save console's messages to a file"
 msgstr "Guarda los mensajes de la consola a un archivo"
 
-#: src/Window.cpp:87 src/Window.cpp:735 src/Window.cpp:1052
-#: src/Window.cpp:1186
+#: src/Window.cpp:87 src/Window.cpp:735 src/Window.cpp:1023
+#: src/Window.cpp:1157
 msgid "&Maintenance mode OFF"
 msgstr "&Modo de mantenimiento apagado"
 
@@ -232,7 +232,7 @@ msgstr "&Ver"
 msgid "&Help"
 msgstr "A&yuda"
 
-#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1066
+#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1037
 msgid "Logs"
 msgstr "Registros"
 
@@ -320,7 +320,7 @@ msgstr "Usuario: "
 msgid " Server: ["
 msgstr " Servidor: ["
 
-#: src/Window.cpp:654 src/Window.cpp:1021
+#: src/Window.cpp:654 src/Window.cpp:992
 #, c-format
 msgid "Process %d: "
 msgstr "Proceso %d: "
@@ -349,7 +349,7 @@ msgstr "Proceso %d sale: \"%s\""
 msgid "Process %d start: \"%s\""
 msgstr "Proceso %d se inicia: \"%s\""
 
-#: src/Window.cpp:715 src/Window.cpp:1047 src/Window.cpp:1181
+#: src/Window.cpp:715 src/Window.cpp:1018 src/Window.cpp:1152
 msgid "&Maintenance mode ON"
 msgstr "&Modo de mantenimiento encendido"
 
@@ -477,11 +477,11 @@ msgstr ""
 "Falló la lectura de datos desde el servidor.\n"
 "Desconectado."
 
-#: src/Window.cpp:929 src/Window.cpp:1209 src/Window.cpp:1221
+#: src/Window.cpp:929 src/Window.cpp:1180 src/Window.cpp:1192
 msgid "Save to file"
 msgstr "Guardar en archivo"
 
-#: src/Window.cpp:1085
+#: src/Window.cpp:1056
 msgid "Preferences"
 msgstr "Preferencias"
 
