@@ -3,6 +3,8 @@
 sagscl_pixmapsdir = @PACKAGE_PIXMAPS_DIR@
 
 sagscl_pixmaps_DATA = \
+		      chat-admin.png  \
+		      chat-normal.png \
 		      icon-quake1.png \
 		      icon-quake2.png \
 		      icon-quake3.png \

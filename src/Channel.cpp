@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/08/18 03:33:20 $
+// $Revision: 1.9 $
+// $Date: 2004/08/29 22:16:07 $
 //
 
 #include "Channel.hpp"
@@ -99,6 +99,9 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 				   wxLC_SINGLE_SEL | wxLC_HRULES);
 
 	UserList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, 80);
+
+	StatusIcons = new StatusIconList;
+	UserList->SetImageList (StatusIcons->GetImageList (), wxIMAGE_LIST_SMALL);
 
 	Topic = new wxTextCtrl (this,
 				-1,
@@ -656,6 +659,7 @@ void Channel::SetUserList (wxString newlist)
 {
 	wxString nick;
 	int i, last_pos = 0, item = -1;
+	wxListItem newitem;
 
 	UserList->DeleteAllItems ();
 
@@ -666,7 +670,17 @@ void Channel::SetUserList (wxString newlist)
 		if (newlist.GetChar (i) == '\n')
 		{
 			nick = newlist.Mid (last_pos, i - last_pos);
-			UserList->InsertItem (++item, nick);
+
+			// FIXME: por ahora no hay info del tipo de usuario por
+			//        lo que usaremos "normal".
+			newitem.m_itemId = ++item;
+			newitem.m_text = nick;
+			newitem.m_image = StatusIcons->GetIconIndex ("normal");
+			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_IMAGE;
+
+			UserList->InsertItem (newitem);
+			//UserList->InsertItem (++item, nick);
+
 			last_pos = i + 1;
 		}
 
@@ -679,7 +693,17 @@ void Channel::SetUserList (wxString newlist)
 void Channel::AddUser (wxString usr)
 {
 	long item = UserList->GetItemCount ();
-	UserList->InsertItem (item, usr);
+	wxListItem newitem;
+
+	// FIXME: por ahora no hay info del tipo de usuario por
+	//        lo que usaremos "normal".
+	newitem.m_itemId = item;
+	newitem.m_text = usr;
+	newitem.m_image = StatusIcons->GetIconIndex ("normal");
+	newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_IMAGE;
+
+	UserList->InsertItem (newitem);
+	//UserList->InsertItem (item, usr);
 }
 
 void Channel::RemoveUser (wxString usr)

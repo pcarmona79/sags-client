@@ -1,3 +1,25 @@
+2004-08-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Window.cpp:
+		- Fixes win32 bug which doesn't add chat tab to main notebook.
+
+	* pixmaps/chat-admin.png:
+	* pixmaps/chat-normal.png:
+		- New files for user identification on chat window's users
+		list.
+
+	* src/Icons.hpp:
+	* src/Icons.cpp:
+		- New class StatusIconsList for loading status icons to be used
+		on the chat window.
+		- Loads all icons images named chat-*.png.
+
+	* src/Channel.hpp:
+	* src/Channel.cpp:
+		- Added new object StatusIcons to manage user status icons.
+		- For now all users are added using normal chat icon.
+
+
 2004-08-20  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.4.0 version.

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.35 $
-// $Date: 2004/08/20 03:47:27 $
+// $Revision: 1.36 $
+// $Date: 2004/08/29 22:16:08 $
 //
 
 #include <wx/wx.h>
@@ -204,7 +204,10 @@ MainWindow::MainWindow (const wxString& title,
 	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
 #endif
 
-	MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
+	int nb_pos = MainNotebook->GetPageCount () - 1;
+	nb_pos = (nb_pos <= 0) ? 0 : nb_pos;
+
+	MainNotebook->InsertPage (nb_pos,
 				  (wxNotebookPage *) GeneralChannel, _("Chat"), TRUE);
 
 	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);

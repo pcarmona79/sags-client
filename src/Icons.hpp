@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Icons.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/07/07 00:06:19 $
+// $Revision: 1.2 $
+// $Date: 2004/08/29 22:16:08 $
 //
 
 #ifndef __ICONS_HPP__
@@ -60,5 +60,37 @@ public:
 	wxImageList *GetImageList (void);
 	int GetIconIndex (wxString type);
 };
+
+struct status_type
+{
+	wxString st_name;
+	int st_index;
+
+	status_type ()
+	{
+		st_name = wxEmptyString;
+		st_index = 0;
+	}
+
+	bool operator== (const struct status_type &op)
+	{
+		return (st_name == op.st_name);
+	}
+};
+
+class StatusIconList
+{
+private:
+	wxImageList *ImageList;
+	List<struct status_type> Inventory;
+
+public:
+	StatusIconList ();
+	~StatusIconList ();
+
+	wxImageList *GetImageList (void);
+	int GetIconIndex (wxString type);
+};
+
 
 #endif // __ICONS_HPP__

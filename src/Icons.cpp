@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Icons.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/07/07 00:06:19 $
+// $Revision: 1.2 $
+// $Date: 2004/08/29 22:16:08 $
 //
 
 #include "Icons.hpp"
@@ -97,4 +97,69 @@ int IconList::GetIconIndex (wxString type)
 		return -1;
 
 	return found->pt_index;
+}
+
+StatusIconList::StatusIconList ()
+{
+	wxBitmap *s_icon = NULL;
+	struct status_type *newitem = NULL;
+	wxString filename, absolute_filename;
+	bool cont;
+	int dash, point;
+
+	// las imágenes son de 13x13 px.
+	ImageList = new wxImageList (13, 13);
+
+	// cargamos los manejadores de los formatos de imágenes
+	// FIXME: a lo mejor ya se cargó antes
+	//wxInitAllImageHandlers ();
+
+	// cargar las imágenes desde PACKAGE_PIXMAPS_DIR/chat-*.png
+	// y agregarlas a ImageList y a Inventory.
+	wxDir pixmaps_dir (PACKAGE_PIXMAPS_DIR);
+
+	if (pixmaps_dir.IsOpened ())
+	{
+		cont = pixmaps_dir.GetFirst (&filename, "chat-*.png", wxDIR_FILES);
+		while (cont)
+		{
+			absolute_filename = PACKAGE_PIXMAPS_DIR "/" + filename;
+			
+			newitem = new struct status_type;
+			s_icon = new wxBitmap (absolute_filename, wxBITMAP_TYPE_PNG);
+
+			newitem->st_index = ImageList->Add (*s_icon);
+			dash = filename.Find ('-');
+			point = filename.Find ('.');
+			newitem->st_name = filename.Mid (dash + 1, point - dash - 1);
+			Inventory << newitem;
+
+			delete s_icon;
+			cont = pixmaps_dir.GetNext (&filename);
+		}
+	}
+}
+
+StatusIconList::~StatusIconList ()
+{
+	// borrar la lista de imágenes
+	delete ImageList;
+}
+
+wxImageList *StatusIconList::GetImageList (void)
+{
+	return ImageList;
+}
+
+int StatusIconList::GetIconIndex (wxString type)
+{
+	struct status_type item, *found;
+
+	item.st_name = type;
+	found = Inventory.Find (item);
+
+	if (found == NULL)
+		return -1;
+
+	return found->st_index;
 }

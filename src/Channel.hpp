@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/08/18 03:33:20 $
+// $Revision: 1.8 $
+// $Date: 2004/08/29 22:16:07 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -30,6 +30,7 @@
 #include <wx/config.h>
 #include <wx/listctrl.h>
 #include "Network.hpp"
+#include "Icons.hpp"
 
 class Channel : public wxPanel
 {
@@ -50,6 +51,8 @@ private:
 	wxTextAttr *MyNickStyle;
 	wxTextAttr *LimiterStyle;
 	wxTextAttr *MyLimiterStyle;
+
+	StatusIconList *StatusIcons;
 
 	Network *Net;
 	wxConfig *AppConfig;
