@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/05/29 19:59:23 $
+// $Revision: 1.10 $
+// $Date: 2004/05/29 21:47:23 $
 //
 
 #include <wx/wx.h>
@@ -318,7 +318,7 @@ void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
-	ServerConsole->Output->Clear ();
+	ServerConsole->ClearOutput ();
 }
 
 void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
@@ -515,7 +515,7 @@ void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
 {
 	wxString data = ServerConsole->Input->GetValue ();
 
-	ServerConsole->Input->Clear ();
+	ServerConsole->ClearInput ();
 
 	if (data.Length () > 0 && Net != NULL)
 	{

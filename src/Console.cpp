@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.10 $
-// $Date: 2004/05/29 19:59:23 $
+// $Revision: 1.11 $
+// $Date: 2004/05/29 21:47:23 $
 //
 
 #include "Console.hpp"
@@ -203,4 +203,16 @@ void Console::SetConsoleFont (wxFont newfont)
 bool Console::SaveConsoleToFile (const wxString& filename)
 {
 	return Output->SaveFile (filename);
+}
+
+void Console::ClearOutput (void)
+{
+	Output->Clear ();
+	last_input.Empty ();
+	last_had_newline = FALSE;
+}
+
+void Console::ClearInput (void)
+{
+	Input->Clear ();
 }

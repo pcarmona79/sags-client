@@ -4,6 +4,10 @@
 	* src/Window.cpp: Added server's IP and port to window title.
 	* src/Window.cpp: Changed the authenticating message to include a
 	connect text.
+	* src/Window.cpp: Now uses Console::ClearOutput and
+	Console::ClearInput methods.
+	* src/Console.hpp: Added ClearOutput and ClearInput declarations.
+	* src/Console.cpp: Added ClearOutput and ClearInput definitions.
 	* src/Console.cpp: Removed innecesary check of console's text length
 	when adding text to widget.
 
