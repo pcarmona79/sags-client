@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.19 $
-// $Date: 2004/06/23 00:29:42 $
+// $Revision: 1.20 $
+// $Date: 2004/06/23 03:54:02 $
 //
 
 #include <wx/wx.h>
@@ -74,7 +74,7 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
 	// menú Process
-	MenuProcess->Append (Ids::ConsoleFont, _("Change &Font..."),
+	MenuProcess->Append (Ids::ConsoleFont, _("Change &font..."),
 			     _("Change the console's font"));
 	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
 			     _("Save console's messages to a file"));
