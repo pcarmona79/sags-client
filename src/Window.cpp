@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.40 $
-// $Date: 2005/02/15 22:16:05 $
+// $Revision: 1.41 $
+// $Date: 2005/02/18 22:15:39 $
 //
 
 #include <wx/wx.h>
@@ -430,17 +430,49 @@ void MainWindow::OnHelp (wxCommandEvent& WXUNUSED(event))
 	wxString html_cmd;
 	bool html_ok;
 	wxFileType *html = wxTheMimeTypesManager->GetFileTypeFromExtension ("html");
-	wxString help_filename = "index.html";
+	wxString url, path, help_filename = "index.html";
 
-	// TODO: falta probar si existe el archivo a abrir
+	// seleccionamos un archivo para el idioma actual
 	if (HelpLanguage.Length () > 0 && HelpLanguage != "en")
 		help_filename = "index." + HelpLanguage + ".html";
 
 #ifdef __WXMSW__
-	wxString url = wxGetCwd () + "\\doc\\html\\" + help_filename;
-	url.Replace (wxString (wxFILE_SEP_PATH), wxString ("/"));
+	path = wxGetCwd () + "\\doc\\html\\";
+	path.Replace (wxString (wxFILE_SEP_PATH), wxString ("/"));
 #else
-	wxString url = "file://" PACKAGE_DOC_DIR "/html/" + help_filename;
+	path = PACKAGE_DOC_DIR "/html/";
+#endif
+
+	// probamos si existe el archivo
+	if (!wxFileExists (path + help_filename))
+	{
+		if (help_filename == "index.html")
+		{
+			wxMessageBox (wxString::Format (_("Help file %s%s don't exists"),
+							path.c_str (),
+							help_filename.c_str ()),
+				      _("Error"),
+				      wxOK | wxICON_ERROR, this);
+			return;
+		}
+		else
+		{
+			url = path + "index.html";
+			if (!wxFileExists (url))
+			{
+				wxMessageBox (wxString::Format (_("Help file %s don't exists"),
+								url.c_str ()),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+			}
+		}
+	}
+	else
+		url = path + help_filename;
+
+#ifndef __WXMSW__
+	url = "file://" + url;
 #endif
 
 	if (html == NULL)

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/07/07 00:06:19 $
+// $Revision: 1.6 $
+// $Date: 2005/02/18 22:15:39 $
 //
 
 #include "Panels.hpp"
@@ -32,7 +32,7 @@ ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
 
-	TopSizer->Add (new wxStaticText (this, -1, _("Process list")),
+	TopSizer->Add (new wxStaticText (this, -1, _("Processes list")),
 		       0,
 		       wxEXPAND |
 		       wxLEFT | wxRIGHT | wxTOP,

@@ -26,11 +26,11 @@ Documentation<br>
 <h2><a class="mozTocH2" name="mozTocId551282"></a>Introduction</h2>
 <p><span style="font-weight: bold;">SAGS</span> or <span
  style="font-weight: bold;">Secure Administrator of Game
-Servers</span> is an Open Source project who has the ¿finality? to
+Servers</span> is an Open Source project who has the finalty to
 produce a solution to manage game servers under
 GNU/Linux.<br>
 </p>
-<p>The project ¿consist? in a client-server application which uses a
+<p>The project consists in a client-server application which uses a
 SSL
 connection to transfer game information and necessary commands to
 manage it.</p>
@@ -43,101 +43,95 @@ manage it.</p>
 </p>
 <h2><a class="mozTocH2" name="mozTocId525310"></a>Features</h2>
 <ul>
-  <li>Provee una interfaz directa a las consolas de los procesos
-manejados en el servidor.</li>
-  <li>Contiene paneles para mostrar la lista de procesos, información y
-las consolas.<br>
+  <li>The client provides a direct interface to the console of
+authorized game servers.</li>
+  <li>It have panels to show list of processes, process's information
+and consoles.<br>
   </li>
-  <li>Se puede cambiar la fuente de las consolas.</li>
-  <li>El diálogo de login almacena hasta cinco servidores.</li>
-  <li>Los mensajes de la consola pueden ser guardados a un archivo.</li>
-  <li>La versión para Linux soporta IPv6.</li>
-  <li>Posee soporte de chat como IRC.</li>
-  <li>La ventana de chat maneja mensajes normales, acciones (<span
- style="font-family: monospace;">/me</span>), noticias (<span
- style="font-family: monospace;">/notice</span>) y mensajes privados de
-otros usuarios. También se puede cambiar el tópico del canal (<span
- style="font-family: monospace;">/topic</span>).<br>
+  <li>You can change the console's font and the program remembers the
+value.</li>
+  <li>The login dialog stores five entries of servers.</li>
+  <li>You can save the console's messages to a file.</li>
+  <li>Linux version supports IPv6.</li>
+  <li>IRC-based chat support.</li>
+  <li>Chat window manages normal messages, actions (<tt>/me</tt>),
+notices (<tt>/notice</tt>) and private messages from other users. <tt>/topic</tt>
+commands. Also shows when users joins and leaves the channel and using
+the <tt>/topic</tt> command you can change the channel's topic.<br>
   </li>
-  <li>Es portable a la plataforma Windows (se necesita <a
- href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> para
-compilarlo y las bibliotecas <a href="http://www.openssl.org/">OpenSSL</a>
-para ejecutarlo) porque tiene una GUI escrita con <a
+  <li>It is portable to Windows platform (you need <a
+ href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> to compile it
+and will need <a href="http://www.openssl.org/">OpenSSL</a>
+libraries to run it) because it has a GUI writed with <a
  href="http://www.wxwidgets.org/">wxWidgets</a>.<br>
   </li>
 </ul>
 <h2><a class="mozTocH2" name="mozTocId609325"></a>How to get SAGS Client</h2>
-<p>Vaya a la sitio web del proyecto (indicado más arriba) y entre en
-la
-sección "<span style="font-style: italic;">Downloads</span>". En el
-final de la página encontrará el título "<span
- style="font-style: italic;">Precompilated binaries</span>" junto con
-un enlace al instalador (para win32) o a paquetes RPM. La descarga se
-realiza usando
-el sistema
-normal de descargas de <a href="http://sourceforge.net/">Sourceforge.net</a>
-por lo que probablemente tendrá que escoger un mirror antes de
-comenzar a descargarlo.<br>
+<p>Go to the project's website and get into "<span
+ style="font-style: italic;">Downloads</span>" section. At end of page
+you will find the "<span style="font-style: italic;">Precompilated
+binaries</span>" title next to a link to a installer (for win32) or RPM
+packages. The downloading will use the&nbsp; <a
+ href="http://sourceforge.net/">Sourceforge.net</a>'s downloading
+system, so probably you will need to select a mirror before download
+the file.<br>
 </p>
-<p>El código fuente tanto del cliente como del servidor se pueden
-obtener directamente de la sección "<span style="font-style: italic;">Downloads</span>"
-o desde la lista de archivos del proyecto en Sourceforge.net: <a
+<p>The source code of both client and server can be downloaded directly
+from "<span style="font-style: italic;">Downloads</span>" section
+or from the File Archive at Sourceforge.net: <a
  href="http://sourceforge.net/project/showfiles.php?group_id=106892">http://sourceforge.net/project/showfiles.php?group_id=106892</a>.</p>
 <h2><a class="mozTocH2" name="mozTocId741975"></a>How to use</h2>
-<p>En la imagen siguiente se muestra la ventana principal. Contiene
-tres elementos principales que son la <span style="font-style: italic;">Lista
-de procesos</span>, el panel de <span style="font-style: italic;">Información
-del proceso</span> y varias pestañas que muestran las consolas de los
-procesos, el canal de chat e información del programa.<br>
+<p>The following image shows the main window. It contains three
+principal elements which are <span style="font-style: italic;">Processes
+List</span>, <span style="font-style: italic;">Process's information</span>
+panel and many tabs that shows processes's consoles, chat channel and
+program's logs.<br>
 </p>
 <div style="text-align: center;"><img title="Main window's elements"
- style="width: 760px; height: 527px;" alt="Main window's elements"
+ style="width: 747px; height: 527px;" alt="Main window's elements"
  src="logs.png"><br>
 <div style="text-align: left;">
 <h3><a class="mozTocH3" name="mozTocId963935"></a>Connection<br>
 </h3>
-<p>Lo primero que debe hacer es conectarse al servidor remoto usando el
-nombre de usuario y la contraseña asignadas a Ud. por el
-administrador.
-Para ingresar los datos vaya al menú <span style="font-weight: bold;"><span
- style="text-decoration: underline;">S</span>esión
-/ <span style="text-decoration: underline;">C</span>onectar...</span>.
-A continuación aparecerá una ventana como la
-siguiente.</p>
+<p>The first thing that you must do is to connect to remote server
+using the username and password asigned to you by the administrator.
+To enter the data go to <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">S</span>ession
+/ <span style="text-decoration: underline;">C</span>onnect...</span>
+menu.
+Then a window like the following will be showed.</p>
 <div style="text-align: center;"><img
- style="width: 298px; height: 170px;" alt="Login window"
+ style="width: 300px; height: 170px;" alt="Login window"
  title="Login window" src="login.png"><br>
 </div>
-<p>Ingrese los datos del servidor de la forma <span
- style="font-style: italic;">&lt;dirección IP&gt;</span><span
- style="font-weight: bold;">:</span><span style="font-style: italic;">&lt;puerto&gt;</span>
-y luego su nombre de usuario y la contraseña. En la versión para
-Linux
-se pueden usar direcciones IPv6 encerradas entre corchetes de la forma <span
- style="font-weight: bold;">[</span><span style="font-style: italic;">&lt;dirección
-IPv6&gt;</span><span style="font-weight: bold;">]:</span><span
- style="font-style: italic;">&lt;puerto&gt;</span>, sólo si el sistema
-operativo soporta el nuevo protocolo.<br>
+<p>Enter server's IP like <span style="font-style: italic;">&lt;IP
+address&gt;</span><span style="font-weight: bold;">:</span><span
+ style="font-style: italic;">&lt;port&gt;</span>
+and then your username and password. In Linux version, you can use IPv6
+addresses like <span style="font-weight: bold;">[</span><span
+ style="font-style: italic;">&lt;IPv6 address&gt;</span><span
+ style="font-weight: bold;">]:</span><span style="font-style: italic;">&lt;port&gt;</span>,
+only if the operative system supports this new protocol.<br>
 </p>
-<p>Si se está conectando a un servidor en el puerto <span
- style="font-weight: bold;">47777</span>, no es necesario agregar este
-valor y sólo basta con ingresar la dirección IP.<br>
+<p>If you are connecting to a server at <span
+ style="font-weight: bold;">47777</span> port, it's not necessary to
+enter this value, only the IP address.<br>
 </p>
 <h3><a class="mozTocH3" name="mozTocId805103"></a>Session<br>
 </h3>
-<p>Durante la sesión la ventana principal puede parecerse a la
-siguiente que muestra varios servidores de Quake II con D-Day: Normandy
-en la <span style="font-style: italic;">Lista de procesos</span>.<br>
+<p>During the session, the main window must be like the following image
+which shows some Quake II servers at the <span
+ style="font-style: italic;">Processes list</span>.<br>
 </p>
-<p style="text-align: center;"><img style="width: 760px; height: 527px;"
+<p style="text-align: center;"><img style="width: 747px; height: 527px;"
  alt="Tipical main window" title="Tipical main window"
  src="mainwindow.png"><br>
 </p>
-<p>Seleccionando un nombre de la <span style="font-style: italic;">Lista
-de procesos</span> se mostrará la consola de ese proceso y la
-información de él aparecerá en el panel de <span
- style="font-style: italic;">Información del proceso</span>. Sólo los
-procesos autorizados para el usuario serán mostrados por el cliente.<br>
+<p>Selecting a name at <span style="font-style: italic;">Processes list</span>,
+the console of that process will be shown and the information will be
+displayed at panel <span style="font-style: italic;">Process's
+information</span>. Only authorized processes for the user will be
+showed by the program.<br>
 </p>
 <p>Para enviar un comando al servidor del juego seleccionado, sólo
 escríbalo en la

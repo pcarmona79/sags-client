@@ -1,3 +1,7 @@
+2005-02-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Window.cpp (OnHelp): Added checking of help file.
+
 2005-02-15  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* configure.in: Added --enable-redhat-docdir option to assign
