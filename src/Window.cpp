@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.37 $
-// $Date: 2005/01/21 23:06:28 $
+// $Revision: 1.38 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #include <wx/wx.h>
@@ -50,13 +50,16 @@ MainWindow::MainWindow (const wxString& title,
 	wxMenuBar *MenuBar = new wxMenuBar;
 	wxMenu *MenuSession = new wxMenu;
 	wxMenu *MenuProcess = new wxMenu;
+	wxMenu *MenuTab = new wxMenu;
 	wxMenu *MenuView = new wxMenu;
 	wxMenu *MenuHelp = new wxMenu;
 
 	AppConfig = new wxConfig (PACKAGE);
 
-	// al comienzo no tenemos red
+	// al comienzo no tenemos red y
+	// no se muestra ningún proceso
 	Net = NULL;
+	ProcessShown = NULL;
 
 #ifdef __WXMSW__
 	SetIcon (wxICON(A));
@@ -75,14 +78,16 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
 	// menú Process
-	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
-			     _("Save console's messages to a file"));
+	MenuItemProcessSave = new wxMenuItem (MenuProcess, Ids::ConsoleSave,
+					      _("&Save to file..."),
+					      _("Save console's messages to a file"));
+	MenuProcess->Append (MenuItemProcessSave);
 	MenuProcess->AppendSeparator ();
-	MenuItemProcessMaintaince = new wxMenuItem (MenuProcess, Ids::Maintaince,
-						    _("&Maintaince mode OFF"),
-						    _("Change the maintaince mode of the actual process"),
-						    wxITEM_CHECK);
-	MenuProcess->Append (MenuItemProcessMaintaince);
+	MenuItemProcessMaintenance = new wxMenuItem (MenuProcess, Ids::Maintenance,
+						     _("&Maintenance mode OFF"),
+						     _("Change the maintenance mode of the actual process"),
+						     wxITEM_CHECK);
+	MenuProcess->Append (MenuItemProcessMaintenance);
 	MenuProcess->AppendSeparator ();
 	MenuItemProcessKill = new wxMenuItem (MenuProcess, Ids::ProcessKill,
 					      _("&Kill"),
@@ -100,6 +105,12 @@ MainWindow::MainWindow (const wxString& title,
 						 wxITEM_NORMAL);
 	MenuProcess->Append (MenuItemProcessRestart);
 
+	// menú Tab
+	MenuTab->Append (Ids::SaveChat, _("Save &chat to file..."),
+			 _("Save chat's messages to a file"));
+	MenuTab->Append (Ids::SaveLogs, _("Save &logs to file..."),
+			 _("Save logs to a file"));
+
 	// menú View
 	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &logs"),
 					   _("Show the logging window"), wxITEM_CHECK);
@@ -116,13 +127,15 @@ MainWindow::MainWindow (const wxString& title,
 	// agregamos a la barra de menús
 	MenuBar->Append (MenuSession, _("&Session"));
 	MenuBar->Append (MenuProcess, _("&Process"));
+	MenuBar->Append (MenuTab, _("&Tab"));
 	MenuBar->Append (MenuView, _("&View"));
 	MenuBar->Append (MenuHelp, _("&Help"));
 	SetMenuBar (MenuBar);
 
 	// deshabilitamos algunos menús
 	MenuItemDisconnect->Enable (FALSE);
-	MenuItemProcessMaintaince->Enable (FALSE);
+	MenuItemProcessSave->Enable (FALSE);
+	MenuItemProcessMaintenance->Enable (FALSE);
 	MenuItemProcessKill->Enable (FALSE);
 	MenuItemProcessLaunch->Enable (FALSE);
 	MenuItemProcessRestart->Enable (FALSE);
@@ -150,14 +163,19 @@ MainWindow::MainWindow (const wxString& title,
 
 	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
-	Connect (Ids::Maintaince, wxEVT_COMMAND_MENU_SELECTED,
-		 (wxObjectEventFunction) &MainWindow::OnProcessMaintaince);
+	Connect (Ids::Maintenance, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnProcessMaintenance);
 	Connect (Ids::ProcessKill, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnProcessKill);
 	Connect (Ids::ProcessLaunch, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnProcessLaunch);
 	Connect (Ids::ProcessRestart, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnProcessRestart);
+
+	Connect (Ids::SaveChat, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnSaveChat);
+	Connect (Ids::SaveLogs, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnSaveLogs);
 
 	Connect (Ids::ShowLogs, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnShowLogs);
@@ -276,7 +294,8 @@ void MainWindow::Disconnect (void)
 
 	MenuItemConnect->Enable (TRUE);
 	MenuItemDisconnect->Enable (FALSE);
-	MenuItemProcessMaintaince->Enable (FALSE);
+	MenuItemProcessSave->Enable (FALSE);
+	MenuItemProcessMaintenance->Enable (FALSE);
 	MenuItemProcessKill->Enable (FALSE);
 	MenuItemProcessLaunch->Enable (FALSE);
 	MenuItemProcessRestart->Enable (FALSE);
@@ -440,7 +459,8 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 	LoggingTab->Append (text);
 
 	MenuItemDisconnect->Enable (TRUE);
-	MenuItemProcessMaintaince->Enable (TRUE);
+	MenuItemProcessSave->Enable (TRUE);
+	MenuItemProcessMaintenance->Enable (TRUE);
 	MenuItemProcessKill->Enable (TRUE);
 	MenuItemProcessLaunch->Enable (TRUE);
 	MenuItemProcessRestart->Enable (TRUE);
@@ -681,27 +701,43 @@ void MainWindow::ProtoSession (Packet *Pkt)
 						      Pkt->GetIndex (), Pkt->GetData ()));
 		break;
 
-	case Session::MaintainceOn:
+	case Session::MaintenanceOn:
 
-		// revisamos
-		if (!MenuItemProcessMaintaince->IsChecked ())
+		Proc = ProcList.Index (Pkt->GetIndex ());
+		if (Proc != NULL)
 		{
-			MenuItemProcessMaintaince->Check (TRUE);
-			MenuItemProcessMaintaince->SetText (_("&Maintaince mode ON"));
+			Proc->MaintenanceMode = TRUE;
+			if (Proc->ProcConsole->IsShown ())
+			{
+				if (!MenuItemProcessMaintenance->IsChecked ())
+				{
+					MenuItemProcessMaintenance->Check (TRUE);
+					MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+				}
+			}
 		}
-		LoggingTab->Append (wxString::Format (_("Process %d has maintaince mode ON"),
+
+		LoggingTab->Append (wxString::Format (_("Process %d has maintenance mode ON"),
 						      Pkt->GetIndex ()));
 		break;
 
-	case Session::MaintainceOff:
+	case Session::MaintenanceOff:
 
-		// revisamos
-		if (MenuItemProcessMaintaince->IsChecked ())
+		Proc = ProcList.Index (Pkt->GetIndex ());
+		if (Proc != NULL)
 		{
-			MenuItemProcessMaintaince->Check (FALSE);
-			MenuItemProcessMaintaince->SetText (_("&Maintaince mode OFF"));
+			Proc->MaintenanceMode = FALSE;
+			if (Proc->ProcConsole->IsShown ())
+			{
+				if (MenuItemProcessMaintenance->IsChecked ())
+				{
+					MenuItemProcessMaintenance->Check (FALSE);
+					MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+				}
+			}
 		}
-		LoggingTab->Append (wxString::Format (_("Process %d has maintaince mode OFF"),
+		
+		LoggingTab->Append (wxString::Format (_("Process %d has maintenance mode OFF"),
 						      Pkt->GetIndex ()));
 		break;
 
@@ -836,9 +872,9 @@ void MainWindow::ProtoError (Packet *Pkt)
 			      wxOK | wxICON_ERROR, this);
 		break;
 
-	case Error::MaintainceDenied:
-		LoggingTab->Append ("Error::MaintainceDenied");
-		wxMessageBox (wxString::Format (_("Maintaince mode not allowed")),
+	case Error::MaintenanceDenied:
+		LoggingTab->Append ("Error::MaintenanceDenied");
+		wxMessageBox (wxString::Format (_("Maintenance mode not allowed")),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		break;
@@ -886,29 +922,19 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
-	int nb_selected;
-	wxNotebookPage *CurrentNB;
-	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
-						     "", "", "*.*",
-						     wxSAVE | wxOVERWRITE_PROMPT);
-
-	if (SaveDialog->ShowModal () == wxID_OK)
+	wxFileDialog *SaveDialog;
+	
+	if (ProcessShown != NULL)
 	{
-		nb_selected = MainNotebook->GetSelection ();
-		if (nb_selected >= 0)
-		{
-			CurrentNB = MainNotebook->GetPage (nb_selected);
+		SaveDialog = new wxFileDialog (this, _("Save to file"),
+					       "", "", "*.*",
+					       wxSAVE | wxOVERWRITE_PROMPT);
 
-			if (CurrentNB->GetId () == Ids::WindowLogs)
-				LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
-			else if (CurrentNB->GetId () == Ids::WindowChat)
-				GeneralChannel->SaveChannelToFile (SaveDialog->GetPath ());
-			else
-				((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
-		}
+		if (SaveDialog->ShowModal () == wxID_OK)
+			ProcessShown->ProcConsole->SaveConsoleToFile (SaveDialog->GetPath ());
+
+		SaveDialog->Destroy ();
 	}
-
-	SaveDialog->Destroy ();
 }
 
 void MainWindow::OnProcessSelected (wxListEvent& event)
@@ -985,7 +1011,21 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 #ifdef __WXGTK__
 		ProcessToShow->ProcConsole->ScrollToBottom ();
 #endif
+
+		// cambiamos el menú de mantenimiento
+		if (ProcessToShow->MaintenanceMode)
+		{
+			MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+			MenuItemProcessMaintenance->Check (TRUE);
+		}
+		else
+		{
+			MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+			MenuItemProcessMaintenance->Check (FALSE);
+		}
 	}
+
+	ProcessShown = ProcessToShow;
 }
 
 void MainWindow::OnShowLogs (wxCommandEvent& WXUNUSED(event))
@@ -1092,7 +1132,7 @@ void MainWindow::OnProcessRestart (wxCommandEvent& WXUNUSED(event))
 	}
 }
 
-void MainWindow::OnProcessMaintaince (wxCommandEvent& WXUNUSED(event))
+void MainWindow::OnProcessMaintenance (wxCommandEvent& WXUNUSED(event))
 {
 	wxNotebookPage *CurrentNB;
 	int nb_selected = MainNotebook->GetSelection ();
@@ -1107,15 +1147,15 @@ void MainWindow::OnProcessMaintaince (wxCommandEvent& WXUNUSED(event))
 		{
 			idx = ((Console *)(CurrentNB))->GetIndex ();
 
-			if (MenuItemProcessMaintaince->IsChecked ())
+			if (MenuItemProcessMaintenance->IsChecked ())
 			{
-				MenuItemProcessMaintaince->SetText (_("&Maintaince mode ON"));
-				Net->AddOut (idx, Session::MaintainceOn);
+				MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+				Net->AddOut (idx, Session::MaintenanceOn);
 			}
 			else
 			{
-				MenuItemProcessMaintaince->SetText (_("&Maintaince mode OFF"));
-				Net->AddOut (idx, Session::MaintainceOff);
+				MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+				Net->AddOut (idx, Session::MaintenanceOff);
 			}
 
 			Net->Send ();
@@ -1126,11 +1166,35 @@ void MainWindow::OnProcessMaintaince (wxCommandEvent& WXUNUSED(event))
 			// igual se marca. Esta opcion deberia estar
 			// deshabilitada cuando no sea una pestaña de
 			// un proceso
-			if (!MenuItemProcessMaintaince->IsChecked ())
-				MenuItemProcessMaintaince->Check (TRUE);
+			if (!MenuItemProcessMaintenance->IsChecked ())
+				MenuItemProcessMaintenance->Check (TRUE);
 			else
-				MenuItemProcessMaintaince->Check (FALSE);
+				MenuItemProcessMaintenance->Check (FALSE);
 		}
 
 	}
+}
+
+void MainWindow::OnSaveChat (wxCommandEvent& WXUNUSED(event))
+{
+	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
+						     "", "", "*.*",
+						     wxSAVE | wxOVERWRITE_PROMPT);
+
+	if (SaveDialog->ShowModal () == wxID_OK)
+		GeneralChannel->SaveChannelToFile (SaveDialog->GetPath ());
+
+	SaveDialog->Destroy ();
+}
+
+void MainWindow::OnSaveLogs (wxCommandEvent& WXUNUSED(event))
+{
+	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
+						     "", "", "*.*",
+						     wxSAVE | wxOVERWRITE_PROMPT);
+
+	if (SaveDialog->ShowModal () == wxID_OK)
+		LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
+
+	SaveDialog->Destroy ();
 }

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.20 $
-// $Date: 2005/01/21 23:06:28 $
+// $Revision: 1.21 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #include <cstdio>
@@ -398,8 +398,8 @@ void *Network::Entry (void)
 					break;
 
 				case Session::ProcessStart:
-				case Session::MaintainceOn:
-				case Session::MaintainceOff:
+				case Session::MaintenanceOn:
+				case Session::MaintenanceOff:
 
 					Outgoing << new Packet (Pkt->GetIndex (),
 								Session::ProcessGetInfo);

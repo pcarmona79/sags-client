@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.15 $
-// $Date: 2005/01/21 23:06:28 $
+// $Revision: 1.16 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -52,6 +52,7 @@ private:
 	InfoPanel *ProcInfoPanel;
 
 	ProcessTree ProcList;
+	Process *ProcessShown;
 
 	wxMenuItem *MenuItemConnect;
 	wxMenuItem *MenuItemDisconnect;
@@ -59,7 +60,8 @@ private:
 	wxMenuItem *MenuItemProcessKill;
 	wxMenuItem *MenuItemProcessLaunch;
 	wxMenuItem *MenuItemProcessRestart;
-	wxMenuItem *MenuItemProcessMaintaince;
+	wxMenuItem *MenuItemProcessMaintenance;
+	wxMenuItem *MenuItemProcessSave;
 
 	Channel *GeneralChannel;
 
@@ -89,7 +91,9 @@ public:
 	void OnProcessKill (wxCommandEvent& event);
 	void OnProcessLaunch (wxCommandEvent& event);
 	void OnProcessRestart (wxCommandEvent& event);
-	void OnProcessMaintaince (wxCommandEvent& event);
+	void OnProcessMaintenance (wxCommandEvent& event);
+	void OnSaveChat (wxCommandEvent& event);
+	void OnSaveLogs (wxCommandEvent& event);
 
 	// señales de sockets
 	void OnSocketConnected (wxCommandEvent& event);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.hpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.4 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #ifndef __PROCESS_HPP__
@@ -39,6 +39,7 @@ public:
 	Console *ProcConsole;
 	unsigned int index;
 	wxString InfoString;
+	bool MaintenanceMode;
 
 	wxString GetName (void);
 	wxString GetType (void);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Config.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/08/18 03:33:20 $
+// $Revision: 1.3 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #include "Config.hpp"
@@ -60,16 +60,22 @@ ConfigDialog::ConfigDialog (wxConfig *AppCfg, ProcessTree *ProcLst, Channel *Gen
 		AppConfig->Write ("/Console/FontName", "Courier New");
 	if (!AppConfig->Read ("/Channel/FontName", &ChannelFontName, "Courier New"))
 		AppConfig->Write ("/Channel/FontName", "Courier New");
+
+	if (!AppConfig->Read ("/Console/FontSize", &ConsoleFontSize, 9))
+		AppConfig->Write ("/Console/FontSize", 9);
+	if (!AppConfig->Read ("/Channel/FontSize", &ChannelFontSize, 9))
+		AppConfig->Write ("/Channel/FontSize", 9);
 #else
 	if (!AppConfig->Read ("/Console/FontName", &ConsoleFontName, "fixed"))
 		AppConfig->Write ("/Console/FontName", "fixed");
 	if (!AppConfig->Read ("/Channel/FontName", &ChannelFontName, "fixed"))
 		AppConfig->Write ("/Channel/FontName", "fixed");
+
+	if (!AppConfig->Read ("/Console/FontSize", &ConsoleFontSize, 13))
+		AppConfig->Write ("/Console/FontSize", 13);
+	if (!AppConfig->Read ("/Channel/FontSize", &ChannelFontSize, 13))
+		AppConfig->Write ("/Channel/FontSize", 13);
 #endif
-	if (!AppConfig->Read ("/Console/FontSize", &ConsoleFontSize, 12))
-		AppConfig->Write ("/Console/FontSize", 12);
-	if (!AppConfig->Read ("/Channel/FontSize", &ChannelFontSize, 12))
-		AppConfig->Write ("/Channel/FontSize", 12);
 
 	// creamos un wxFont con los valores leídos
 	wxFont ConsoleFont (ConsoleFontSize, wxDEFAULT, wxNORMAL,

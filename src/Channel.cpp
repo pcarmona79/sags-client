@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.10 $
-// $Date: 2004/08/30 00:38:09 $
+// $Revision: 1.11 $
+// $Date: 2005/02/03 22:03:24 $
 //
 
 #include "Channel.hpp"
@@ -28,6 +28,7 @@
 #include <wx/fontdlg.h>
 #include <wx/notebook.h>
 #include <wx/colour.h>
+#include <wx/splitter.h>
 
 #ifdef __WXMSW__
 #  include "Console.hpp"
@@ -41,13 +42,17 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	wxBoxSizer *TopicSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *OutputSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *InputSizer = new wxBoxSizer (wxHORIZONTAL);
-
+	wxSplitterWindow *SeparatorWindow = new wxSplitterWindow (this, -1,
+								  wxDefaultPosition,
+								  wxDefaultSize,
+								  wxSP_NOBORDER |
+								  wxSP_LIVE_UPDATE);
 	Net = NULL;
 	AppConfig = AppCfg;
 	index = idx;
 	ParentNB = (wxNotebook *) parent;
 
-	Output = new wxTextCtrl (this,
+	Output = new wxTextCtrl (SeparatorWindow,
 				 -1,
 				 "",
 				 wxDefaultPosition,
@@ -62,14 +67,15 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 #ifdef __WXMSW__
 	if (!AppConfig->Read ("/Channel/FontName", &FontName, "Courier New"))
 		AppConfig->Write ("/Channel/FontName", "Courier New");
+	if (!AppConfig->Read ("/Channel/FontSize", &FontSize, 9))
+		AppConfig->Write ("/Channel/FontSize", 9);
 #else
 	if (!AppConfig->Read ("/Channel/FontName", &FontName, "fixed"))
 		AppConfig->Write ("/Channel/FontName", "fixed");
+	if (!AppConfig->Read ("/Channel/FontSize", &FontSize, 13))
+		AppConfig->Write ("/Channel/FontSize", 13);
 #endif
 
-	if (!AppConfig->Read ("/Channel/FontSize", &FontSize, 12))
-		AppConfig->Write ("/Channel/FontSize", 12);
-	
 	// creamos un wxFont con los valores leídos
 	wxFont ChannelFont (FontSize, wxDEFAULT, wxNORMAL,
 			    wxNORMAL, FALSE, FontName);
@@ -91,10 +97,10 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 				wxDefaultSize,
 				wxTE_RICH | wxTE_PROCESS_ENTER);
 
-	UserList = new wxListCtrl (this,
+	UserList = new wxListCtrl (SeparatorWindow,
 				   -1,
 				   wxDefaultPosition,
-				   wxSize (100, 1),
+				   wxDefaultSize,
 				   wxLC_REPORT | wxLC_NO_HEADER |
 				   wxLC_SINGLE_SEL | wxLC_HRULES);
 
@@ -127,16 +133,13 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		       wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL,
 		       0);
 
-	OutputSizer->Add (Output,
+	SeparatorWindow->SetMinimumPaneSize (20);
+	SeparatorWindow->SplitVertically (Output, UserList, 470);
+
+	OutputSizer->Add (SeparatorWindow,
 			  1,
 			  wxALIGN_CENTER_VERTICAL | wxEXPAND |
 			  wxLEFT | wxRIGHT | wxTOP | wxBOTTOM,
-			  5);
-
-	OutputSizer->Add (UserList,
-			  0,
-			  wxALIGN_CENTER_VERTICAL | wxEXPAND |
-			  wxRIGHT | wxTOP | wxBOTTOM,
 			  5);
 
 	TopSizer->Add (OutputSizer,

@@ -1,3 +1,11 @@
+2004-01-26  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Channel.cpp:
+	* src/Console.cpp:
+	* src/Config.cpp:
+	- Changed default fonts and sizes.asdasd sdasd
+
+
 2004-08-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.4.1 version.

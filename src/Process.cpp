@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.4 $
+// $Date: 2005/02/03 22:03:40 $
 //
 
 #include "Process.hpp"
@@ -29,12 +29,14 @@ Process::Process (unsigned int idx)
 {
 	index = idx;
 	ProcConsole = NULL;
+	MaintenanceMode = FALSE;
 }
 
 Process::Process (Process &P)
 {
 	index = P.index;
 	ProcConsole = NULL;
+	MaintenanceMode = P.MaintenanceMode;
 }
 
 Process::~Process ()
