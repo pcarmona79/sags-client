@@ -19,9 +19,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/04/18 18:45:03 $
+// $Revision: 1.4 $
+// $Date: 2004/04/21 04:45:46 $
 //
+
+#include <wx/combobox.h>
 
 #include "Login.hpp"
 
@@ -213,4 +215,19 @@ wxString LoginDialog::GetUsername (void)
 wxString LoginDialog::GetPassword (void)
 {
 	return Password->GetValue ();
+}
+
+void LoginDialog::AddServer (wxString& newserver)
+{
+	Server->Append (newserver);
+}
+
+void LoginDialog::SetServerValue (const wxString& text)
+{
+	Server->SetValue (text);
+}
+
+wxString LoginDialog::GetServerValue (void)
+{
+	return Server->GetValue ();
 }

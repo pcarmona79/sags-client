@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/04/17 22:04:06 $
+// $Revision: 1.5 $
+// $Date: 2004/04/21 04:45:46 $
 //
 
 #include <wx/wx.h>
@@ -33,6 +33,9 @@
 #include "Login.hpp"
 #include "Packet.hpp"
 
+#define PACKAGE "sagscl"
+#define VERSION "0.1"
+
 MainWindow::MainWindow (const wxString& title,
 			const wxPoint& position,
 			const wxSize& size)
@@ -42,6 +45,8 @@ MainWindow::MainWindow (const wxString& title,
 	wxMenu *MenuSession = new wxMenu;
 	wxMenu *MenuEdit = new wxMenu;
 	wxMenu *MenuHelp = new wxMenu;
+
+	AppConfig = new wxConfig ("sagscl");
 
 	// al comienzo no tenemos red
 	Net = NULL;
@@ -105,8 +110,28 @@ MainWindow::MainWindow (const wxString& title,
 	// creamos una barra de estado
 	CreateStatusBar (2);
 
+	// extraemos de la configuración el nombre de la
+	// fuente a usar en la consola
+	wxString FontName;
+	long FontSize;
+
+#ifdef _WIN32
+	if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
+		AppConfig->Write ("/Console/FontName", "Courier New");
+#else
+	if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
+		AppConfig->Write ("/Console/FontName", "fixed");
+#endif
+
+	if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
+		AppConfig->Write ("/Console/FontSize", 12);
+	
+	// creamos un wxFont con los valores leídos
+	wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
+			    wxNORMAL, FALSE, FontName);
+
 	wxNotebook *MainNotebook = new wxNotebook (this, -1);
-	ServerConsole = new Console (MainNotebook, -1);
+	ServerConsole = new Console (MainNotebook, -1, ConsoleFont);
 	LoggingTab = new Logs (MainNotebook, -1);
 
 	MainNotebook->AddPage ((wxNotebookPage *) ServerConsole,
@@ -124,6 +149,8 @@ MainWindow::MainWindow (const wxString& title,
 
 MainWindow::~MainWindow ()
 {
+	delete AppConfig;
+
 	if (Net != NULL)
 	{
 		Net->Wait ();
@@ -134,17 +161,33 @@ MainWindow::~MainWindow ()
 
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 {
+	int i;
+	wxString text, server, port, Key, Value, AntKey, AntValue, InputServer;
+	char keystr[] = "/Login/Server";
+	int repeated = 5;
+
 	if (Net != NULL)
 		if (Net->IsConnected ())
 			return;
 
-	wxString text, server, port;
 	LoginDialog *Login = new LoginDialog (this, -1, "Connect to...",
 					      wxDefaultPosition, wxSize (200, 100));
 
+	// leemos los servidores de la configuración
+	// TODO: el límite de 5 servidores podría ser configurable
+	for (i = 1; i <= 5; ++i)
+	{
+		Key.Printf ("%s%d", keystr, i);
+		if (!AppConfig->Read (Key, &Value, ""))
+			AppConfig->Write (Key, "");
+		if (!Value.IsEmpty ())
+			Login->AddServer (Value);
+	}
+
+	//Login->SetServerValue ("");
+
 	if (Login->ShowModal () == wxID_OK)
 	{
-
 		text = "Connecting to server [" + Login->GetServer ();
 		text += "]:" + Login->GetPort () + "...";
 		SetStatusText (text, 1);
@@ -157,6 +200,38 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 				   Login->GetPassword ());
 		Net->Create ();
 		Net->Run ();
+
+		// buscamos el valor repetido y si existe lo borramos
+		InputServer = Login->GetServerValue ();
+		for (i = 1; i <= 5; ++i)
+		{
+			Key.Printf ("%s%d", keystr, i);
+			AppConfig->Read (Key, &Value, "");
+			if (Value == InputServer)
+			{
+				repeated = i;
+				AppConfig->Write (Key, "");
+			}
+		}
+
+		// guardamos los nuevos valores, dejando al recién ingresado
+		// como el primero de la lista
+		for (i = repeated; i >= 1; --i)
+		{
+			Key.Printf ("%s%d", keystr, i);
+			AppConfig->Read (Key, &Value);
+			if (i > 1)
+			{
+				AntKey.Printf ("%s%d", keystr, i - 1);
+				AppConfig->Read (AntKey, &AntValue);
+			}
+			else
+			{
+				AntValue = InputServer;
+			}
+			if (!AntValue.IsEmpty ())
+				AppConfig->Write (Key, AntValue);
+		}
 	}
 }
 
@@ -202,9 +277,15 @@ void MainWindow::OnHelp (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 {
-	wxMessageBox (_("Client for SAGS Server\n"
-			"(C) 2004 Pablo Carmona Amigo"),
-		      _("About Secure Administrator of Game Servers"),
+	wxString about;
+
+	about.Printf (_("SAGS Client version %s\n\n"
+			"Secure Administrator of Game Servers\n"
+			"http://sags.sourceforge.net/\n\n"
+			"(C) 2004 Pablo Carmona Amigo\n"
+			"Licensed under the GNU GPL"), VERSION);
+
+	wxMessageBox (about, _("About SAGS Client"),
 		      wxOK | wxICON_INFORMATION, this);
 }
 
@@ -388,6 +469,12 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 		// cambiar la fuente a ConsoleOutput
 		NewFontData = ConsoleFontDialog->GetFontData ();
 		ServerConsole->SetConsoleFont (NewFontData.GetChosenFont ());
+
+		// los nuevos valores deben ser guardados en la configuración
+		AppConfig->Write ("/Console/FontName",
+				  (NewFontData.GetChosenFont ()).GetFaceName ());
+		AppConfig->Write ("/Console/FontSize",
+				  (NewFontData.GetChosenFont ()).GetPointSize ());
 	}
 }
 

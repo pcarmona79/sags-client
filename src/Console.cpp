@@ -19,15 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/04/19 17:08:28 $
+// $Revision: 1.7 $
+// $Date: 2004/04/21 04:45:46 $
 //
 
 #include "Console.hpp"
 #include "Ids.hpp"
 #include "Network.hpp"
 
-Console::Console (wxWindow *parent, wxWindowID id)
+Console::Console (wxWindow *parent, wxWindowID id, wxFont ConsoleFont)
 	: wxPanel (parent, id)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
@@ -40,17 +40,10 @@ Console::Console (wxWindow *parent, wxWindowID id)
 				 wxDefaultSize,
 				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_LINEWRAP);
 
-#ifdef _WIN32
-	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour,
-				      wxFont (9, wxMODERN, wxNORMAL, wxNORMAL));
-	InputStyle = new wxTextAttr (wxNullColour, wxNullColour,
-				     wxFont (9, wxMODERN, wxNORMAL, wxBOLD));
-#else
-	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour,
-				      wxFont (12, wxMODERN, wxNORMAL, wxNORMAL));
-	InputStyle = new wxTextAttr (wxNullColour, wxNullColour,
-				     wxFont (12, wxMODERN, wxNORMAL, wxBOLD));
-#endif
+	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour, ConsoleFont);
+	ConsoleFont.SetWeight (wxBOLD);
+	InputStyle = new wxTextAttr (wxNullColour, wxNullColour, ConsoleFont);
+
 	Output->SetDefaultStyle (*OutputStyle);
 	Output->Refresh ();
 
@@ -154,7 +147,7 @@ void Console::Add (wxString text, bool memorize)
 
 	if (!text.IsEmpty ())
 	{
-		if (last_had_newline)
+		if (Output->GetLastPosition () > 0 && last_had_newline)
 			Output->AppendText ("\n");
 		Output->AppendText (text);
 	}

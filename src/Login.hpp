@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.hpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/18 18:45:03 $
+// $Revision: 1.3 $
+// $Date: 2004/04/21 04:45:46 $
 //
 
 #ifndef __LOGIN_HPP__
@@ -48,6 +48,9 @@ public:
 	wxString GetPort (void);
 	wxString GetUsername (void);
 	wxString GetPassword (void);
+	void AddServer (wxString& newserver);
+	void SetServerValue (const wxString& text);
+	wxString GetServerValue (void);
 };
 
 #endif // __LOGIN_HPP__
