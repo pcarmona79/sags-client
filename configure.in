@@ -112,6 +112,7 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOURCE_DIR, "${packagesrcdir}", [Source dir])
 
 AC_OUTPUT([
 Makefile
+sagscl.spec
 debian/Makefile
 intl/Makefile
 m4/Makefile

@@ -25960,7 +25960,7 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
-                                                                                                    ac_config_files="$ac_config_files Makefile debian/Makefile intl/Makefile m4/Makefile pixmaps/Makefile po/Makefile.in src/Makefile win32/config.h win32/Makefile win32/sagscl.iss"
+                                                                                                              ac_config_files="$ac_config_files Makefile sagscl.spec debian/Makefile intl/Makefile m4/Makefile pixmaps/Makefile po/Makefile.in src/Makefile win32/config.h win32/Makefile win32/sagscl.iss"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -26525,6 +26525,7 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+  "sagscl.spec" ) CONFIG_FILES="$CONFIG_FILES sagscl.spec" ;;
   "debian/Makefile" ) CONFIG_FILES="$CONFIG_FILES debian/Makefile" ;;
   "intl/Makefile" ) CONFIG_FILES="$CONFIG_FILES intl/Makefile" ;;
   "m4/Makefile" ) CONFIG_FILES="$CONFIG_FILES m4/Makefile" ;;

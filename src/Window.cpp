@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.11 $
-// $Date: 2004/06/01 00:08:28 $
+// $Revision: 1.12 $
+// $Date: 2004/06/03 02:50:48 $
 //
 
 #include <wx/wx.h>
@@ -358,7 +358,8 @@ void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
 				SetStatusText (text, 1);
 				LoggingTab->Append (text);
 				windowtitle.Printf (_("SAGS Client %s"), VERSION);
-				windowtitle += " - [" + Net->GetAddress () + "]:" + Net->GetPort ();
+				windowtitle += " - " + Net->GetUsername () + "@[";
+				windowtitle += Net->GetAddress () + "]:" + Net->GetPort ();
 				SetTitle (windowtitle);
 				break;
 

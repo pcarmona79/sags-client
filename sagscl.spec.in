@@ -1,0 +1,62 @@
+%define	name		@PACKAGE@
+%define	version		@VERSION@
+%define	release		1
+
+Summary:	Client for Secure Administrator of Game Servers
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+License:	GPL
+Group:		Aplications/Internet
+URL:		http://sags.sourceforge.net/
+Vendor:		Pablo Carmona Amigo <pcarm@users.sourceforge.net>
+Source:		%{name}-%{version}.tar.gz
+BuildRoot:	/var/tmp/%{name}-%{version}
+Docdir:		%{_docdir}
+
+Requires: 	openssl >= 0.9.7a
+Requires:	wx-base >= 2.4.2
+Requires: 	wx-gtk2 >= 2.4.2
+
+BuildRequires: 	openssl-devel >= 0.9.7a
+BuildRequires: 	wx-base-devel >= 2.4.2
+BuildRequires: 	wx-gtk2-devel >= 2.4.2
+
+Distribution:	Any
+Packager:	Pablo Carmona Amigo <pcarm@users.sourceforge.net>
+
+%description
+SAGS (Secure Administrator of Game Servers) is a client-server
+application to administer game servers on GNU/Linux using a SSL
+connection.
+This is the client needed to connect to the SAGS server.
+
+%prep
+%setup -q
+rm -rf %{buildroot}
+
+%build
+%configure
+make %{?_smp_mflags}
+
+%install
+make install DESTDIR=%{buildroot}
+#mkdir -p %{buildroot}%{_mandir}/man1
+#cp %{name}.1 %{buildroot}%{_mandir}/man1/%{name}.1
+
+%clean
+rm -rf %{buildroot}
+
+%files
+%defattr(-,root,root)
+%doc AUTHORS COPYING ChangeLog INSTALL NEWS README
+
+%defattr(-,root,root)
+%{_bindir}/%{name}
+%{_datadir}/pixmaps/%{name}
+%{_datadir}/locale
+#%{_mandir}/man1
+
+%changelog
+* Thu Jun 1 2004 Pablo Carmona Amigo <pcarm@users.sourceforge.net>
+- Added .spec for RPM.
