@@ -6,5 +6,6 @@ EXTRA_DIST = \
 	     Makefile.in       \
 	     sagscl.dev        \
 	     sagscl.ico        \
+	     sagscl.iss        \
 	     sagscl_private.rc
 

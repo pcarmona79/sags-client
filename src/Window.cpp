@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/04/24 20:04:43 $
+// $Revision: 1.7 $
+// $Date: 2004/05/06 00:39:58 $
 //
 
 #include <wx/wx.h>
@@ -32,6 +32,11 @@
 #include "Window.hpp"
 #include "Login.hpp"
 #include "Packet.hpp"
+#include "About.hpp"
+
+#if defined(__WXGTK__) || defined(__WXX11__) || defined(__WXMOTIF__) || defined(__WXMAC__)
+#  include "../pixmaps/sagscl.xpm"
+#endif
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -52,8 +57,10 @@ MainWindow::MainWindow (const wxString& title,
 	// al comienzo no tenemos red
 	Net = NULL;
 
-#ifdef _WIN32
+#ifdef __WXMSW__
 	SetIcon (wxICON(A));
+#else
+	SetIcon (wxIcon (sagscl_xpm));
 #endif
 
 	// menú Session
@@ -116,7 +123,7 @@ MainWindow::MainWindow (const wxString& title,
 	wxString FontName;
 	long FontSize;
 
-#ifdef _WIN32
+#ifdef __WXMSW__
 	if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
 		AppConfig->Write ("/Console/FontName", "Courier New");
 #else
@@ -171,7 +178,7 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 		if (Net->IsConnected ())
 			return;
 
-	LoginDialog *Login = new LoginDialog (this, -1, "Connect to...",
+	LoginDialog *Login = new LoginDialog (this, -1, _("Connect to..."),
 					      wxDefaultPosition, wxSize (200, 100));
 
 	// leemos los servidores de la configuración
@@ -189,7 +196,7 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 
 	if (Login->ShowModal () == wxID_OK)
 	{
-		text = "Connecting to server [" + Login->GetServer ();
+		text = _("Connecting to server [") + Login->GetServer ();
 		text += "]:" + Login->GetPort () + "...";
 		SetStatusText (text, 1);
 		LoggingTab->Append (text);
@@ -278,16 +285,16 @@ void MainWindow::OnHelp (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 {
-	wxString about;
+	wxString progname, about = _("Secure Administrator of Game Servers\n"
+				     "http://sags.sourceforge.net/\n\n"
+				     "(C) 2004 Pablo Carmona Amigo\n"
+				     "Licensed under the GNU GPL");
 
-	about.Printf (_("SAGS Client version %s\n\n"
-			"Secure Administrator of Game Servers\n"
-			"http://sags.sourceforge.net/\n\n"
-			"(C) 2004 Pablo Carmona Amigo\n"
-			"Licensed under the GNU GPL"), VERSION);
+	progname.Printf (_("SAGS Client %s"), VERSION);
 
-	wxMessageBox (about, _("About SAGS Client"),
-		      wxOK | wxICON_INFORMATION, this);
+	AboutDialog *About = new AboutDialog (this, _("About"), progname, about);
+	About->ShowModal ();
+	About->Destroy ();
 }
 
 void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
@@ -332,7 +339,7 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 				text.Printf ("AuthSuccessful (%d bytes): %s",
 					     Pkt->GetLength (), Pkt->GetData ());
 				LoggingTab->Append (text);
-				LoggingTab->Append ("Logged successfully.");
+				LoggingTab->Append (_("Logged in successfully."));
 				text = _("Getting process's log...");
 				SetStatusText (text, 1);
 				LoggingTab->Append (text);

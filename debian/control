@@ -1,0 +1,12 @@
+Source: sagscl
+Section: net
+Priority: optional
+Maintainer: Pablo Carmona Amigo <pcarm@users.sourceforge.net>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: sagscl
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>

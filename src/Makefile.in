@@ -37,6 +37,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = @host@
 ACLOCAL = @ACLOCAL@
+ALLOCA = @ALLOCA@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
@@ -45,6 +46,8 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
+CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -55,6 +58,7 @@ CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DATADIRNAME = @DATADIRNAME@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 ECHO = @ECHO@
@@ -65,20 +69,37 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 F77 = @F77@
 FFLAGS = @FFLAGS@
-GTK_CFLAGS = @GTK_CFLAGS@
-GTK_CONFIG = @GTK_CONFIG@
-GTK_LIBS = @GTK_LIBS@
+GENCAT = @GENCAT@
+GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GLIBC21 = @GLIBC21@
+GMSGFMT = @GMSGFMT@
+HAVE_ASPRINTF = @HAVE_ASPRINTF@
+HAVE_POSIX_PRINTF = @HAVE_POSIX_PRINTF@
+HAVE_SNPRINTF = @HAVE_SNPRINTF@
+HAVE_WPRINTF = @HAVE_WPRINTF@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTOBJEXT = @INSTOBJEXT@
+INTLBISON = @INTLBISON@
+INTLLIBS = @INTLLIBS@
+INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 LDFLAGS = @LDFLAGS@
+LIBICONV = @LIBICONV@
+LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
+LTLIBICONV = @LTLIBICONV@
+LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+MKINSTALLDIRS = @MKINSTALLDIRS@
+MSGFMT = @MSGFMT@
+MSGMERGE = @MSGMERGE@
 NO_PREFIX_PACKAGE_DATA_DIR = @NO_PREFIX_PACKAGE_DATA_DIR@
 NO_PREFIX_PACKAGE_DOC_DIR = @NO_PREFIX_PACKAGE_DOC_DIR@
 NO_PREFIX_PACKAGE_HELP_DIR = @NO_PREFIX_PACKAGE_HELP_DIR@
@@ -97,10 +118,13 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+POSUB = @POSUB@
 RANLIB = @RANLIB@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WX_CFLAGS = @WX_CFLAGS@
 WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
@@ -111,6 +135,7 @@ WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
 WX_LIBS = @WX_LIBS@
 WX_LIBS_STATIC = @WX_LIBS_STATIC@
 WX_VERSION = @WX_VERSION@
+XGETTEXT = @XGETTEXT@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
@@ -161,6 +186,7 @@ sagscl_CXXFLAGS = \
 bin_PROGRAMS = sagscl
 
 sagscl_SOURCES = \
+		 About.cpp    \
 		 Console.cpp  \
 		 Login.cpp    \
 		 Logs.cpp     \
@@ -169,6 +195,7 @@ sagscl_SOURCES = \
 		 Packet.cpp   \
 		 Protocol.cpp \
 		 Window.cpp   \
+		 About.hpp    \
 		 Console.hpp  \
 		 Ids.hpp      \
 		 Login.hpp    \
@@ -187,10 +214,11 @@ CONFIG_CLEAN_FILES =
 bin_PROGRAMS = sagscl$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-am_sagscl_OBJECTS = sagscl-Console.$(OBJEXT) sagscl-Login.$(OBJEXT) \
-	sagscl-Logs.$(OBJEXT) sagscl-Main.$(OBJEXT) \
-	sagscl-Network.$(OBJEXT) sagscl-Packet.$(OBJEXT) \
-	sagscl-Protocol.$(OBJEXT) sagscl-Window.$(OBJEXT)
+am_sagscl_OBJECTS = sagscl-About.$(OBJEXT) sagscl-Console.$(OBJEXT) \
+	sagscl-Login.$(OBJEXT) sagscl-Logs.$(OBJEXT) \
+	sagscl-Main.$(OBJEXT) sagscl-Network.$(OBJEXT) \
+	sagscl-Packet.$(OBJEXT) sagscl-Protocol.$(OBJEXT) \
+	sagscl-Window.$(OBJEXT)
 sagscl_OBJECTS = $(am_sagscl_OBJECTS)
 sagscl_LDADD = $(LDADD)
 sagscl_DEPENDENCIES =
@@ -199,7 +227,8 @@ sagscl_LDFLAGS =
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sagscl-Console.Po \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sagscl-About.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sagscl-Console.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Login.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Logs.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Main.Po \
@@ -274,6 +303,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-About.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Console.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Login.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Logs.Po@am__quote@
@@ -315,6 +345,39 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
+
+sagscl-About.o: About.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-About.o -MD -MP -MF "$(DEPDIR)/sagscl-About.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-About.o `test -f 'About.cpp' || echo '$(srcdir)/'`About.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-About.Tpo" "$(DEPDIR)/sagscl-About.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-About.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='About.cpp' object='sagscl-About.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-About.Po' tmpdepfile='$(DEPDIR)/sagscl-About.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-About.o `test -f 'About.cpp' || echo '$(srcdir)/'`About.cpp
+
+sagscl-About.obj: About.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-About.obj -MD -MP -MF "$(DEPDIR)/sagscl-About.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-About.obj `if test -f 'About.cpp'; then $(CYGPATH_W) 'About.cpp'; else $(CYGPATH_W) '$(srcdir)/About.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-About.Tpo" "$(DEPDIR)/sagscl-About.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-About.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='About.cpp' object='sagscl-About.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-About.Po' tmpdepfile='$(DEPDIR)/sagscl-About.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-About.obj `if test -f 'About.cpp'; then $(CYGPATH_W) 'About.cpp'; else $(CYGPATH_W) '$(srcdir)/About.cpp'; fi`
+
+sagscl-About.lo: About.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-About.lo -MD -MP -MF "$(DEPDIR)/sagscl-About.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-About.lo `test -f 'About.cpp' || echo '$(srcdir)/'`About.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-About.Tpo" "$(DEPDIR)/sagscl-About.Plo"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-About.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='About.cpp' object='sagscl-About.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-About.Plo' tmpdepfile='$(DEPDIR)/sagscl-About.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-About.lo `test -f 'About.cpp' || echo '$(srcdir)/'`About.cpp
 
 sagscl-Console.o: Console.cpp
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Console.o -MD -MP -MF "$(DEPDIR)/sagscl-Console.Tpo" \

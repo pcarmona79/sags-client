@@ -1,3 +1,20 @@
+2004-05-04  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.am (SUBDIRS): Add intl,
+	(ACLOCAL_AMFLAGS): New variable.
+	(EXTRA_DIST): New variable.
+	* configure.in (AC_OUTPUT): Add intl/Makefile,
+
+2004-05-04  Pablo Carmona Amigo  <kernel@dday.cl>
+
+	* Version 0.1.1.
+	* Added a provisional icon for the application.
+	* New about dialog.
+	* Added a script for Inno Setup Compiler to create a installer
+	for Windows.
+	* Added debian/ directory to create a debian package.
+
+
 2004-04-25  Pablo Carmona Amigo  <kernel@dday.cl>
 
 	* Converted to autotools.

@@ -1,0 +1,13 @@
+# List of source files containing translatable strings.
+
+# Source files
+src/About.cpp
+src/Console.cpp
+src/Login.cpp
+src/Logs.cpp
+src/Main.cpp
+src/Network.cpp
+src/Packet.cpp
+src/Protocol.cpp
+src/Window.cpp
+

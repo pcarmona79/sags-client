@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/04/24 20:04:43 $
+// $Revision: 1.4 $
+// $Date: 2004/05/06 00:39:58 $
 //
 
 #include "Main.hpp"
@@ -34,8 +34,14 @@ IMPLEMENT_APP (Application)
 
 bool Application::OnInit (void)
 {
+	AppLocale.Init (wxLANGUAGE_DEFAULT);
+#ifdef __WXMSW__
+	AppLocale.AddCatalogLookupPathPrefix ("locale");
+#endif
+	AppLocale.AddCatalog (GETTEXT_PACKAGE);
+
 	wxString windowtitle;
-	windowtitle.Printf ("SAGS Client %s", VERSION);
+	windowtitle.Printf (_("SAGS Client %s"), VERSION);
 
 	MainWindow *AppWindow = new MainWindow (windowtitle, wxDefaultPosition,
 						wxSize (650, 500));

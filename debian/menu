@@ -1,0 +1,3 @@
+?package(sagscl):needs="X11" section="Apps/Net"\
+  title="SAGS Client" command="/usr/bin/sagscl"\
+  icon="/usr/share/pixmaps/sagscl/sagscl.xpm"

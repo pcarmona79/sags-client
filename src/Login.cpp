@@ -19,13 +19,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/04/21 04:45:46 $
+// $Revision: 1.5 $
+// $Date: 2004/05/06 00:39:58 $
 //
 
 #include <wx/combobox.h>
 
 #include "Login.hpp"
+
+#if defined(__WXGTK__) || defined(__WXX11__) || defined(__WXMOTIF__) || defined(__WXMAC__)
+#  include "../pixmaps/sagscl.xpm"
+#endif
 
 LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title,
 			  const wxPoint& pos, const wxSize& size, long style)
@@ -37,6 +41,12 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 	wxBoxSizer *PasswordSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *ButtonSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxButton *OkButton = new wxButton (this, wxID_OK, _("OK"));
+
+#ifdef __WXMSW__
+	SetIcon (wxICON(A));
+#else
+	SetIcon (wxIcon (sagscl_xpm));
+#endif
 
 	Server = new wxComboBox (this,
 				 -1,

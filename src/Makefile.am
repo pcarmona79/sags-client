@@ -8,6 +8,7 @@ sagscl_CXXFLAGS = \
 bin_PROGRAMS = sagscl
 
 sagscl_SOURCES = \
+		 About.cpp    \
 		 Console.cpp  \
 		 Login.cpp    \
 		 Logs.cpp     \
@@ -16,6 +17,7 @@ sagscl_SOURCES = \
 		 Packet.cpp   \
 		 Protocol.cpp \
 		 Window.cpp   \
+		 About.hpp    \
 		 Console.hpp  \
 		 Ids.hpp      \
 		 Login.hpp    \

@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Pablo Carmona Amigo
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
+"POT-Creation-Date: 2004-05-05 16:01-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/About.cpp:46 src/Login.cpp:43
+msgid "OK"
+msgstr ""
+
+#: src/Console.cpp:57
+msgid "Send"
+msgstr ""
+
+#: src/Login.cpp:70
+msgid "Server:"
+msgstr ""
+
+#: src/Login.cpp:90
+msgid "Username:"
+msgstr ""
+
+#: src/Login.cpp:110
+msgid "Password:"
+msgstr ""
+
+#: src/Login.cpp:137
+msgid "Cancel"
+msgstr ""
+
+#: src/Main.cpp:44 src/Window.cpp:293
+#, c-format
+msgid "SAGS Client %s"
+msgstr ""
+
+#: src/Window.cpp:67
+msgid "&Connect..."
+msgstr ""
+
+#: src/Window.cpp:67
+msgid "Connect to server"
+msgstr ""
+
+#: src/Window.cpp:68
+msgid "&Disconnect"
+msgstr ""
+
+#: src/Window.cpp:68
+msgid "Disconnect from server"
+msgstr ""
+
+#: src/Window.cpp:70
+msgid "&Save to file..."
+msgstr ""
+
+#: src/Window.cpp:70
+msgid "Save console's messages to a file"
+msgstr ""
+
+#: src/Window.cpp:72
+msgid "E&xit"
+msgstr ""
+
+#: src/Window.cpp:72
+msgid "Exit the application"
+msgstr ""
+
+#: src/Window.cpp:75
+msgid "&Font..."
+msgstr ""
+
+#: src/Window.cpp:75
+msgid "Change console's font"
+msgstr ""
+
+#: src/Window.cpp:78
+msgid "&Contents"
+msgstr ""
+
+#: src/Window.cpp:78
+msgid "Show help contents"
+msgstr ""
+
+#: src/Window.cpp:80
+msgid "&About..."
+msgstr ""
+
+#: src/Window.cpp:80
+msgid "About this application"
+msgstr ""
+
+#: src/Window.cpp:83
+msgid "&Session"
+msgstr ""
+
+#: src/Window.cpp:84
+msgid "&Edit"
+msgstr ""
+
+#: src/Window.cpp:85
+msgid "&Help"
+msgstr ""
+
+#: src/Window.cpp:146
+msgid "Console"
+msgstr ""
+
+#: src/Window.cpp:148
+msgid "Logs"
+msgstr ""
+
+#: src/Window.cpp:181
+msgid "Connect to..."
+msgstr ""
+
+#: src/Window.cpp:199
+msgid "Connecting to server ["
+msgstr ""
+
+#: src/Window.cpp:253 src/Window.cpp:254
+msgid "Disconnecting..."
+msgstr ""
+
+#: src/Window.cpp:257 src/Window.cpp:261
+msgid "Not connected"
+msgstr ""
+
+#: src/Window.cpp:281
+msgid "No help available yet."
+msgstr ""
+
+#: src/Window.cpp:282
+msgid "Information"
+msgstr ""
+
+#: src/Window.cpp:288
+msgid ""
+"Secure Administrator of Game Servers\n"
+"http://sags.sourceforge.net/\n"
+"\n"
+"(C) 2004 Pablo Carmona Amigo\n"
+"Licensed under the GNU GPL"
+msgstr ""
+
+#: src/Window.cpp:295
+msgid "About"
+msgstr ""
+
+#: src/Window.cpp:302
+msgid "Authenticating..."
+msgstr ""
+
+#: src/Window.cpp:342
+msgid "Logged in successfully."
+msgstr ""
+
+#: src/Window.cpp:343
+msgid "Getting process's log..."
+msgstr ""
+
+#: src/Window.cpp:368
+#, c-format
+msgid "Receiving logs: %.1f KB"
+msgstr ""
+
+#: src/Window.cpp:375
+#, c-format
+msgid "Received %.1f KB of logs"
+msgstr ""
+
+#: src/Window.cpp:378
+msgid "User: "
+msgstr ""
+
+#: src/Window.cpp:379
+msgid " Server: ["
+msgstr ""
+
+#: src/Window.cpp:393 src/Window.cpp:428 src/Window.cpp:437
+msgid "Disconnected"
+msgstr ""
+
+#: src/Window.cpp:394 src/Window.cpp:439
+msgid "Disconnected."
+msgstr ""
+
+#: src/Window.cpp:397
+msgid "Disconnected from server."
+msgstr ""
+
+#: src/Window.cpp:398 src/Window.cpp:408 src/Window.cpp:431 src/Window.cpp:442
+msgid "Error"
+msgstr ""
+
+#: src/Window.cpp:429 src/Window.cpp:430
+msgid "Failed to connect to server."
+msgstr ""
+
+#: src/Window.cpp:438
+msgid "Failed to read data from server."
+msgstr ""
+
+#: src/Window.cpp:440
+msgid ""
+"Failed to read data from server.\n"
+"Disconnected."
+msgstr ""
+
+#: src/Window.cpp:491
+msgid "Save to file"
+msgstr ""

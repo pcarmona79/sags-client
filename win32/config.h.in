@@ -1,0 +1,4 @@
+#define PACKAGE "@PACKAGE@"
+#define GETTEXT_PACKAGE "@GETTEXT_PACKAGE@"
+#define VERSION "@VERSION@"
+#define PACKAGE_PIXMAPS_DIR "pixmaps"
