@@ -1,14 +1,23 @@
+2004-08-08  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Channel.hpp:
+	* src/Channel.cpp:
+		- New files.
+
+
 2004-08-07  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* configure.in:
 		- Preparing 0.4.0 version.
-		- This will includes chat support.
+		- The program will includes chat support.
 
 	* src/Network.cpp:
 		- Now we will use the network protocol version 3.
 
 
 2004-07-06  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* This is the 0.3.4 version.
 
 	* pixmaps/icon-*.png:
 		- New icons for process identification.
@@ -30,12 +39,7 @@
 		- Removed instruction to load image handlers. This is done on
 		IconList class's constructor.
 
-
-2004-06-30  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
-
-	* Released 0.3.3 version.
-
-
+		
 2004-07-05  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* pixmaps/icon-quake1.png:
@@ -43,6 +47,11 @@
 	* pixmaps/icon-quake3.png:
 	* pixmaps/icon-rtcw.png:
 		- New icons to show in the process list.
+
+
+2004-06-30  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.3.3 version.
 
 
 2004-06-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

@@ -10,6 +10,8 @@ bin_PROGRAMS = sagscl
 sagscl_SOURCES = \
 		 About.cpp    \
 		 About.hpp    \
+		 Channel.cpp  \
+		 Channel.hpp  \
 		 Console.cpp  \
 		 Console.hpp  \
 		 Icons.cpp    \
