@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.29 $
-// $Date: 2004/08/10 03:17:15 $
+// $Revision: 1.30 $
+// $Date: 2004/08/11 04:37:54 $
 //
 
 #include <wx/wx.h>
@@ -187,8 +187,8 @@ MainWindow::MainWindow (const wxString& title,
 	PanelsWindow->SplitHorizontally (ProcListPanel, ProcInfoPanel, 150);
 
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
-	LoggingTab = new Logs (MainNotebook, -1);
-	GeneralChannel = new Channel (MainNotebook, -1, Net, AppConfig);
+	LoggingTab = new Logs (MainNotebook, Ids::WindowLogs);
+	GeneralChannel = new Channel (MainNotebook, Ids::WindowChat, Net, AppConfig);
 
 #ifdef __WXMSW__
 	if (ShowLogs)
@@ -211,14 +211,34 @@ MainWindow::MainWindow (const wxString& title,
 	Connect (Ids::ProcessSelected, wxEVT_COMMAND_LIST_ITEM_SELECTED,
 	         (wxObjectEventFunction) &MainWindow::OnProcessSelected);
 
-	// TODO: las dimensiones y la posición se podrían
-	//       obtener de las opciones con AppConfig
-	SetSize (750, 500);
+	// obtenemos el tamaño de la ventana
+	long Width, Height;
+
+	if (!AppConfig->Read ("/Options/WindowWidth", &Width, 750))
+		AppConfig->Write ("/Options/WindowWidth", 750);
+	if (!AppConfig->Read ("/Options/WindowHeight", &Height, 500))
+		AppConfig->Write ("/Options/WindowHeight", 500);
+
+	SetSize (Width, Height);
 	Centre ();
 }
 
 MainWindow::~MainWindow ()
 {
+	// antes de cerrar la configuración hay que
+	// leer el tamaño de la ventana y guardarlo en
+	// el archivo de configuración
+	int w, h;
+	GetSize (&w, &h);
+	AppConfig->Write ("/Options/WindowWidth", w);
+	AppConfig->Write ("/Options/WindowHeight", h);
+
+/*	printf ("GetSize        w=%d h=%d\n", w, h);
+	GetVirtualSize (&w, &h);
+	printf ("GetVirtualSize w=%d h=%d\n", w, h);
+	GetClientSize (&w, &h);
+	printf ("GetClientSize  w=%d h=%d\n", w, h); */
+
 	delete AppConfig;
 
 	if (Net != NULL)
@@ -382,20 +402,15 @@ void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 {
 	// borrar las consolas del notebook
-#ifdef __WXMSW__
 	if (MainNotebook->GetPageCount () > 0)
 	{
-		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+		while ((MainNotebook->GetPage (0))->GetId () != Ids::WindowChat &&
+		       (MainNotebook->GetPage (0))->GetId () != Ids::WindowLogs)
 			MainNotebook->DeletePage (0);
 	}
-#else
-	// en 0.4 tenemos una pestaña más
-	while (MainNotebook->GetPageCount () > 2)
-		MainNotebook->DeletePage (0);
-#endif
-	ProcList.TheList.Clear ();
 
-	// borrar la lista de procesos y la informacion
+	// borrar la lista de procesos y la información
+	ProcList.TheList.Clear ();
 	ProcListPanel->ProcessList->DeleteAllItems ();
 	ProcInfoPanel->InfoList->DeleteAllItems ();
 
@@ -898,18 +913,14 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 		nb_selected = MainNotebook->GetSelection ();
 		if (nb_selected >= 0)
 		{
-#ifdef __WXMSW__
-			if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
-#else
-			// TODO: falta detectar la pestaña de chat
-			if (MenuItemShowLogs->IsChecked () && nb_selected == MainNotebook->GetPageCount () - 1)
-#endif
+			CurrentNB = MainNotebook->GetPage (nb_selected);
+
+			if (CurrentNB->GetId () == Ids::WindowLogs)
 				LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
+			else if (CurrentNB->GetId () == Ids::WindowChat)
+				GeneralChannel->SaveChannelToFile (SaveDialog->GetPath ());
 			else
-			{
-				CurrentNB = MainNotebook->GetPage (nb_selected);
 				((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
-			}
 		}
 	}
 }
@@ -952,11 +963,14 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 	{
 #ifdef __WXMSW__
 		// si se están mostrando los logs, no debe ser removido
+		// tampoco se debe remover la pestaña de chat
 		if (MainNotebook->GetPageCount () > 0)
 		{
-			if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+			CurrentNB = MainNotebook->GetPage (0);
+
+			if (CurrentNB->GetId () != Ids::WindowChat &&
+			    CurrentNB->GetId () != Ids::WindowLogs)
 			{
-				CurrentNB = MainNotebook->GetPage (0);
 				CurrentNB->Hide ();
 				MainNotebook->RemovePage (0);
 			}
@@ -983,6 +997,7 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
 #ifdef __WXGTK__
+		// TODO: ver si esta función funciona bien en win32
 		ProcessToShow->ProcConsole->ScrollToBottom ();
 #endif
 	}
@@ -1030,13 +1045,12 @@ void MainWindow::OnProcessKill (wxCommandEvent& WXUNUSED(event))
 */
 	if (nb_selected >= 0)
 	{
-#ifdef __WXMSW__
-		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
-#else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
-#endif
+		CurrentNB = MainNotebook->GetPage (nb_selected);
+
+		if (CurrentNB->GetId () != Ids::WindowChat &&
+		    CurrentNB->GetId () != Ids::WindowLogs)
 		{
-			CurrentNB = MainNotebook->GetPage (nb_selected);
+			
 			idx = ((Console *)(CurrentNB))->GetIndex ();
 			Net->AddOut (idx, Session::ProcessKill);
 			Net->Send ();
@@ -1052,13 +1066,11 @@ void MainWindow::OnProcessLaunch (wxCommandEvent& WXUNUSED(event))
 
 	if (nb_selected >= 0)
 	{
-#ifdef __WXMSW__
-		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
-#else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
-#endif
+		CurrentNB = MainNotebook->GetPage (nb_selected);
+
+		if (CurrentNB->GetId () != Ids::WindowChat &&
+		    CurrentNB->GetId () != Ids::WindowLogs)
 		{
-			CurrentNB = MainNotebook->GetPage (nb_selected);
 			idx = ((Console *)(CurrentNB))->GetIndex ();
 			Net->AddOut (idx, Session::ProcessLaunch);
 			Net->Send ();
@@ -1075,13 +1087,11 @@ void MainWindow::OnProcessRestart (wxCommandEvent& WXUNUSED(event))
 
 	if (nb_selected >= 0)
 	{
-#ifdef __WXMSW__
-		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
-#else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
-#endif
+		CurrentNB = MainNotebook->GetPage (nb_selected);
+
+		if (CurrentNB->GetId () != Ids::WindowChat &&
+		    CurrentNB->GetId () != Ids::WindowLogs)
 		{
-			CurrentNB = MainNotebook->GetPage (nb_selected);
 			idx = ((Console *)(CurrentNB))->GetIndex ();
 			Net->AddOut (idx, Session::ProcessRestart);
 			Net->Send ();
