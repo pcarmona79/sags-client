@@ -7,7 +7,6 @@ DEBIAN_FILES= \
 	      copyright          \
 	      dirs               \
 	      docs               \
-	      manpage.1.ex       \
 	      menu               \
 	      README.Debian      \
 	      rules              \

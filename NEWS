@@ -4,10 +4,11 @@ New Version 0.3.0
 This release work with the series 0.3.x of SAGS Server and includes the
 following changes:
 
-1) Manages multiples process.
-2) Added panels to contain a list of process, the information about a
+1) Uses SAGS Protocol 2.
+2) Manages multiples process.
+3) Added panels to contain a list of process, the information about a
    selected process and a console for every authorized process.
-3) The user can hide and show the logs tab.
+4) The user can hide and show the logs tab.
 
 
 Version 0.2.3

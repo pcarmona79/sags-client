@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-06-22 23:56-0400\n"
+"POT-Creation-Date: 2004-06-23 13:19-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,6 +43,22 @@ msgstr ""
 #: src/Main.cpp:43 src/Window.cpp:202 src/Window.cpp:334 src/Window.cpp:429
 #, c-format
 msgid "SAGS Client %s"
+msgstr ""
+
+#: src/Panels.cpp:35
+msgid "Process list"
+msgstr ""
+
+#: src/Panels.cpp:74
+msgid "Process's information"
+msgstr ""
+
+#: src/Panels.cpp:83
+msgid "Name"
+msgstr ""
+
+#: src/Panels.cpp:84
+msgid "Value"
 msgstr ""
 
 #: src/Window.cpp:67
@@ -86,7 +102,7 @@ msgid "Save console's messages to a file"
 msgstr ""
 
 #: src/Window.cpp:83
-msgid "Show &Logs"
+msgid "Show &logs"
 msgstr ""
 
 #: src/Window.cpp:84

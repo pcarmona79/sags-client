@@ -8,6 +8,8 @@ src/Logs.cpp
 src/Main.cpp
 src/Network.cpp
 src/Packet.cpp
+src/Panels.cpp
+src/Process.cpp
 src/Protocol.cpp
 src/Window.cpp
 

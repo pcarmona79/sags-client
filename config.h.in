@@ -261,6 +261,9 @@
 /* Locale dir */
 #undef PACKAGE_LOCALE_DIR
 
+/* Mans dir */
+#undef PACKAGE_MAN_DIR
+
 /* Menu dir */
 #undef PACKAGE_MENU_DIR
 

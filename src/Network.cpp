@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.12 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.13 $
+// $Date: 2004/06/24 00:12:57 $
 //
 
 #include <cstdio>
@@ -267,7 +267,9 @@ wxString Network::GetMD5 (wxString password)
 	     (unsigned char *) md5_password);
 
 	for ( i = 0; i < MD5_DIGEST_LENGTH; ++i ) {
-		snprintf (hexadecimal, 3, "%.2x", *(md5_password + i));
+		memset (hexadecimal, 0, 3);
+		snprintf (hexadecimal, 3, "%02x", *(md5_password + i));
+		hexadecimal[2] = '\0';
 		strncat (md5_password_hex, hexadecimal, sizeof (hexadecimal));
 	}
 
@@ -285,7 +287,7 @@ void *Network::Entry (void)
 	unsigned int idx2;
 	bool send_now = FALSE, not_ask_for_logs = FALSE;
 	wxString hello_msg, pwdhash;
-	Packet *Pkt = NULL, *DeleteMe = NULL;
+	Packet *Pkt = NULL;
 
 	if (!Connected)
 		Connect ();

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.16 $
-// $Date: 2004/06/22 04:58:53 $
+// $Revision: 1.17 $
+// $Date: 2004/06/24 00:12:57 $
 //
 
 #include <wx/fontdlg.h>
@@ -277,9 +277,9 @@ void Console::ChangeConsoleFont (void)
 	}
 }
 
-bool Console::OutputScrollPages (int pages)
+void Console::ScrollToBottom (void)
 {
-	return Output->ScrollPages (pages);
+	Output->ShowPosition (Output->GetLastPosition ());
 }
 
 void Console::OnSend (wxCommandEvent& WXUNUSED(event))

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.20 $
-// $Date: 2004/06/23 03:54:02 $
+// $Revision: 1.21 $
+// $Date: 2004/06/24 00:12:57 $
 //
 
 #include <wx/wx.h>
@@ -80,7 +80,7 @@ MainWindow::MainWindow (const wxString& title,
 			     _("Save console's messages to a file"));
 
 	// menú View
-	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &Logs"),
+	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &logs"),
 					   _("Show the logging window"), wxITEM_CHECK);
 	MenuView->Append (MenuItemShowLogs);
 
@@ -796,7 +796,9 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 		ProcessToShow->ProcConsole->Show ();
 		MainNotebook->SetSelection (info.m_itemId);
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
-		ProcessToShow->ProcConsole->OutputScrollPages (1);
+#ifdef __WXGTK__
+		ProcessToShow->ProcConsole->ScrollToBottom ();
+#endif
 	}
 }
 

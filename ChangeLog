@@ -1,3 +1,21 @@
+2004-06-23  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Network.cpp:
+		- Fixed GetMD5() for better generation of MD5 hash.
+
+	* src/Window.cpp:
+		- ScrollToBottom() will used only when using wxGTK.
+
+
+2004-06-22  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Console.hpp:
+	* src/Console.cpp:
+	* src/Window.cpp:
+		- Changed OutputScrollLines() by ScrollToBottom(). This new
+		method scroll correctly.
+
+
 2004-06-22  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Window.hpp:
