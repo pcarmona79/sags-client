@@ -1,3 +1,7 @@
+2005-02-21  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* doc/html/index.html: Updated english documentation.
+
 2005-02-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Window.cpp (OnHelp): Added checking of help file.
