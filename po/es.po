@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.2.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-06-19 14:46-0400\n"
+"POT-Creation-Date: 2004-06-21 23:12-0400\n"
 "PO-Revision-Date: 2004-05-31 18:02-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -42,7 +42,7 @@ msgstr "Contraseña:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/Main.cpp:42 src/Window.cpp:167 src/Window.cpp:293 src/Window.cpp:385
+#: src/Main.cpp:43 src/Window.cpp:171 src/Window.cpp:298 src/Window.cpp:390
 #, c-format
 msgid "SAGS Client %s"
 msgstr "Cliente SAGS %s"
@@ -119,39 +119,39 @@ msgstr "A&yuda"
 msgid "Logs"
 msgstr "Registros"
 
-#: src/Window.cpp:164 src/Window.cpp:580 src/Window.cpp:589
+#: src/Window.cpp:168 src/Window.cpp:623 src/Window.cpp:632
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: src/Window.cpp:165 src/Window.cpp:591
+#: src/Window.cpp:169 src/Window.cpp:634
 msgid "Disconnected."
 msgstr "Desconectado."
 
-#: src/Window.cpp:180
+#: src/Window.cpp:185
 msgid "Connect to..."
 msgstr "Conectar a..."
 
-#: src/Window.cpp:198
+#: src/Window.cpp:203
 msgid "Connecting to server ["
 msgstr "Conectando al servidor ["
 
-#: src/Window.cpp:252 src/Window.cpp:253
+#: src/Window.cpp:257 src/Window.cpp:258
 msgid "Disconnecting..."
 msgstr "Desconectando..."
 
-#: src/Window.cpp:257 src/Window.cpp:261
+#: src/Window.cpp:262 src/Window.cpp:266
 msgid "Not connected"
 msgstr "No conectado"
 
-#: src/Window.cpp:281
+#: src/Window.cpp:286
 msgid "No help available yet."
 msgstr "Aún no hay ayuda disponible."
 
-#: src/Window.cpp:282
+#: src/Window.cpp:287
 msgid "Information"
 msgstr "Información"
 
-#: src/Window.cpp:288
+#: src/Window.cpp:293
 msgid ""
 "Secure Administrator of Game Servers\n"
 "http://sags.sourceforge.net/\n"
@@ -165,56 +165,80 @@ msgstr ""
 "(C) 2004 Pablo Carmona Amigo\n"
 "Licenciado bajo la GNU GPL"
 
-#: src/Window.cpp:295
+#: src/Window.cpp:300
 msgid "About"
 msgstr "Acerca de"
 
-#: src/Window.cpp:302
+#: src/Window.cpp:307
 msgid "Connected to server. Authenticating..."
 msgstr "Conectado al servidor. Autenticando..."
 
-#: src/Window.cpp:381
+#: src/Window.cpp:386
 msgid "Logged in successfully."
 msgstr "Autenticado exitosamente."
 
-#: src/Window.cpp:382
+#: src/Window.cpp:387
 msgid "Getting process's log..."
 msgstr "Obteniendo registros del proceso..."
 
-#: src/Window.cpp:434
+#: src/Window.cpp:440
 #, fuzzy, c-format
 msgid "Receiving logs for process %d: %.1f KB"
 msgstr "Recibiendo registros: %.1f KB"
 
-#: src/Window.cpp:441
+#: src/Window.cpp:447
 #, fuzzy, c-format
 msgid "Received %.1f KB of logs of process %d"
 msgstr "Recibidos %.1f KB de registros"
 
-#: src/Window.cpp:444
+#: src/Window.cpp:450
 msgid "User: "
 msgstr "Usuario: "
 
-#: src/Window.cpp:445
+#: src/Window.cpp:451
 msgid " Server: ["
 msgstr " Servidor: ["
 
-#: src/Window.cpp:473
-#, fuzzy, c-format
-msgid "Console %d"
-msgstr "Consola"
+#: src/Window.cpp:479
+#, c-format
+msgid "Process %d: "
+msgstr ""
 
-#: src/Window.cpp:484
+#: src/Window.cpp:485
+#, c-format
+msgid "Added page \"Process %d\""
+msgstr ""
+
+#: src/Window.cpp:495
+msgid "You are an administrator of this server"
+msgstr ""
+
+#: src/Window.cpp:506
+#, c-format
+msgid "Creating new process with index %d"
+msgstr ""
+
+#: src/Window.cpp:512
+#, c-format
+msgid "Process %d exits: \"%s\""
+msgstr ""
+
+#: src/Window.cpp:518
+#, c-format
+msgid "Process %d start: \"%s\""
+msgstr ""
+
+#: src/Window.cpp:527
 msgid "Disconnected from server."
 msgstr "Desconectado desde el servidor."
 
-#: src/Window.cpp:485 src/Window.cpp:505 src/Window.cpp:514 src/Window.cpp:523
-#: src/Window.cpp:532 src/Window.cpp:541 src/Window.cpp:551 src/Window.cpp:559
-#: src/Window.cpp:569 src/Window.cpp:583 src/Window.cpp:594
+#: src/Window.cpp:528 src/Window.cpp:548 src/Window.cpp:557 src/Window.cpp:566
+#: src/Window.cpp:575 src/Window.cpp:584 src/Window.cpp:594 src/Window.cpp:602
+#: src/Window.cpp:612 src/Window.cpp:626 src/Window.cpp:637
 msgid "Error"
 msgstr "Error"
 
-#: src/Window.cpp:504
+#: src/Window.cpp:547
 msgid ""
 "Server is full.\n"
 "Disconnected."
@@ -222,7 +246,7 @@ msgstr ""
 "Servidor lleno.\n"
 "Desconectado."
 
-#: src/Window.cpp:513
+#: src/Window.cpp:556
 msgid ""
 "Protocol's version not valid.\n"
 "Disconnected."
@@ -230,7 +254,7 @@ msgstr ""
 "Versión de protocolo no válida.\n"
 "Desconectado."
 
-#: src/Window.cpp:522
+#: src/Window.cpp:565
 msgid ""
 "Username or password not valid.\n"
 "Disconnected."
@@ -238,7 +262,7 @@ msgstr ""
 "Nombre de usuario o contraseña no válida.\n"
 "Desconectado."
 
-#: src/Window.cpp:531
+#: src/Window.cpp:574
 msgid ""
 "Time for authentication has expired.\n"
 "Disconnected."
@@ -246,7 +270,7 @@ msgstr ""
 "Expiró el tiempo para la autenticación.\n"
 "Desconectado."
 
-#: src/Window.cpp:540
+#: src/Window.cpp:583
 msgid ""
 "Server is shutting down.\n"
 "Disconnected."
@@ -254,7 +278,7 @@ msgstr ""
 "El servidor se está cerrando.\n"
 "Desconectado."
 
-#: src/Window.cpp:549
+#: src/Window.cpp:592
 msgid ""
 "Bad process on server:\n"
 "\n"
@@ -262,11 +286,11 @@ msgstr ""
 "Proceso no válido en el servidor:\n"
 "\n"
 
-#: src/Window.cpp:558
+#: src/Window.cpp:601
 msgid "Server can't write to the process."
 msgstr "Servidor no puede escribir en el proceso."
 
-#: src/Window.cpp:567
+#: src/Window.cpp:610
 msgid ""
 "Generic Error:\n"
 "\n"
@@ -274,15 +298,15 @@ msgstr ""
 "Error genérico:\n"
 "\n"
 
-#: src/Window.cpp:581 src/Window.cpp:582
+#: src/Window.cpp:624 src/Window.cpp:625
 msgid "Failed to connect to server."
 msgstr "Falló la conexión al servidor."
 
-#: src/Window.cpp:590
+#: src/Window.cpp:633
 msgid "Failed to read data from server."
 msgstr "Falló la lectura de datos desde el servidor."
 
-#: src/Window.cpp:592
+#: src/Window.cpp:635
 msgid ""
 "Failed to read data from server.\n"
 "Disconnected."
@@ -290,6 +314,10 @@ msgstr ""
 "Falló la lectura de datos desde el servidor.\n"
 "Desconectado."
 
-#: src/Window.cpp:607
+#: src/Window.cpp:649
 msgid "Save to file"
 msgstr "Guardar en archivo"
+
+#, fuzzy
+#~ msgid "Console %d"
+#~ msgstr "Consola"

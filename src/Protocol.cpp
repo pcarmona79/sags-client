@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Protocol.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.4 $
+// $Date: 2004/06/22 04:58:53 $
 //
 
 #include <cstdio>
@@ -163,11 +163,11 @@ int Protocol::SendPacket (Packet *Pkt)
 {
 	struct pkt sent;
 	int bytes;
-	char minidata[14];
+	char minidata[22];
 
-	memset (minidata, 0, 14);
-	strncpy (minidata, Pkt->GetData (), 10);
-	if (strlen (Pkt->GetData ()) > 10)
+	memset (minidata, 0, 22);
+	strncpy (minidata, Pkt->GetData (), 18);
+	if (strlen (Pkt->GetData ()) > 18)
 		strncat (minidata, "...", 3);
 	
 	printf ("Packet to send: IDX: %02X COM: %02X SEQ: %d LEN: %d DATA: \"%s\"\n",
@@ -189,7 +189,7 @@ Packet *Protocol::RecvPacket (void)
 	int bytes, total = 0;
 	struct pkt header;
 	Packet *Pkt = NULL;
-	char minidata[14];
+	char minidata[21];
 
 	memset (&header, 0, sizeof (header));
 
@@ -209,9 +209,9 @@ Packet *Protocol::RecvPacket (void)
 
 	Pkt = new Packet (header);
 	
-	memset (minidata, 0, 14);
-	strncpy (minidata, Pkt->GetData (), 10);
-	if (strlen (Pkt->GetData ()) > 10)
+	memset (minidata, 0, 21);
+	strncpy (minidata, Pkt->GetData (), 17);
+	if (strlen (Pkt->GetData ()) > 17)
 		strncat (minidata, "...", 3);
 
 	printf ("Packet received: IDX: %02X COM: %02X SEQ: %d LEN: %d DATA: \"%s\"\n",

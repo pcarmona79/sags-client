@@ -1,5 +1,13 @@
 2004-06-21  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
+	* src/Window.hpp:
+	* src/Window.cpp:
+		- Changed menu bar. Added two menus more.
+		- Now we can enable and disable some menu items.
+
+
+2004-06-21  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
 	* src/List.hpp:
 		- Added Remove() and Clear() from server's List.hpp.
 

@@ -19,10 +19,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.3 $
+// $Date: 2004/06/22 04:58:53 $
 //
 
+#include <wx/cursor.h>
 #include "Panels.hpp"
 #include "Ids.hpp"
 
@@ -45,6 +46,8 @@ ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 
 	//ProcessList->SetItemState (0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 	//ProcessList->SetFocus ();
+
+	ProcessList->SetCursor (wxCursor (wxCURSOR_HAND));
 
 	TopSizer->Add (ProcessList,
 		       1,

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.15 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.16 $
+// $Date: 2004/06/22 04:58:53 $
 //
 
 #include <wx/fontdlg.h>
@@ -86,7 +86,7 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 		       wxALIGN_CENTER_VERTICAL |
 		       wxEXPAND |
 		       wxALL,
-		       10);
+		       5);
 
 	InputSizer->Add (Input,
 			 1,
@@ -95,7 +95,7 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 			 wxLEFT |
 			 wxRIGHT |
 			 wxBOTTOM,
-			 10);
+			 5);
 
 	InputSizer->Add (SendButton,
 			 0,
@@ -103,7 +103,7 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 			 wxALIGN_CENTER_HORIZONTAL |
 			 wxRIGHT |
 			 wxBOTTOM,
-			 10);
+			 5);
 
 	TopSizer->Add (InputSizer,
 		       0,
@@ -277,9 +277,9 @@ void Console::ChangeConsoleFont (void)
 	}
 }
 
-bool Console::ScrollPages (int pages)
+bool Console::OutputScrollPages (int pages)
 {
-	Output->ScrollPages (pages);
+	return Output->ScrollPages (pages);
 }
 
 void Console::OnSend (wxCommandEvent& WXUNUSED(event))

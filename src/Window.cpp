@@ -19,15 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.17 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.18 $
+// $Date: 2004/06/22 04:58:53 $
 //
 
 #include <wx/wx.h>
 #include <wx/notebook.h>
 #include <wx/socket.h>
 #include <wx/filedlg.h>
-
+#include <wx/menuitem.h>
 #include "Window.hpp"
 #include "Login.hpp"
 #include "About.hpp"
@@ -47,7 +47,8 @@ MainWindow::MainWindow (const wxString& title,
 {
 	wxMenuBar *MenuBar = new wxMenuBar;
 	wxMenu *MenuSession = new wxMenu;
-	wxMenu *MenuEdit = new wxMenu;
+	wxMenu *MenuProcess = new wxMenu;
+	wxMenu *MenuView = new wxMenu;
 	wxMenu *MenuHelp = new wxMenu;
 
 	AppConfig = new wxConfig (PACKAGE);
@@ -62,15 +63,24 @@ MainWindow::MainWindow (const wxString& title,
 #endif
 
 	// menú Session
-	MenuSession->Append (Ids::Connect, _("&Connect..."), _("Connect to server"));
-	MenuSession->Append (Ids::Disconnect, _("&Disconnect"), _("Disconnect from server"));
-	MenuSession->AppendSeparator ();
-	MenuSession->Append (Ids::ConsoleSave, _("&Save to file..."), _("Save console's messages to a file"));
+	MenuItemConnect = new wxMenuItem (MenuSession, Ids::Connect, _("&Connect..."),
+					  _("Connect to server"), wxITEM_NORMAL);
+	MenuItemDisconnect = new wxMenuItem (MenuSession, Ids::Disconnect, _("&Disconnect"),
+					     _("Disconnect from server"), wxITEM_NORMAL);
+	MenuSession->Append (MenuItemConnect);
+	MenuSession->Append (MenuItemDisconnect);
 	MenuSession->AppendSeparator ();
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
-	// menú Edit
-	MenuEdit->Append (Ids::ConsoleFont, _("&Font..."), _("Change console's font"));
+	// menú Process
+	MenuProcess->Append (Ids::ConsoleFont, _("&Font..."), _("Change console's font"));
+	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
+			     _("Save console's messages to a file"));
+
+	// menú View
+	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &Logs"),
+					   _("Show the logging window"), wxITEM_CHECK);
+	MenuView->Append (MenuItemShowLogs);
 
 	// menú Help
 	MenuHelp->Append (Ids::Help, _("&Contents"), _("Show help contents"));
@@ -79,9 +89,13 @@ MainWindow::MainWindow (const wxString& title,
 
 	// agregamos a la barra de menús
 	MenuBar->Append (MenuSession, _("&Session"));
-	MenuBar->Append (MenuEdit, _("&Edit"));
+	MenuBar->Append (MenuProcess, _("&Process"));
+	MenuBar->Append (MenuView, _("&View"));
 	MenuBar->Append (MenuHelp, _("&Help"));
 	SetMenuBar (MenuBar);
+
+	// al inicio la opción desconectar está inhabilitada
+	MenuItemDisconnect->Enable (FALSE);
 
 	// señal close
 	Connect (wxID_ANY, wxEVT_CLOSE_WINDOW,
@@ -169,6 +183,9 @@ void MainWindow::Disconnect (void)
 	LoggingTab->Append (_("Disconnected."));
 
 	SetTitle (wxString::Format (_("SAGS Client %s"), VERSION));
+
+	MenuItemConnect->Enable (TRUE);
+	MenuItemDisconnect->Enable (FALSE);
 }
 
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
@@ -244,6 +261,8 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 			if (!AntValue.IsEmpty ())
 				AppConfig->Write (Key, AntValue);
 		}
+		
+		MenuItemConnect->Enable (FALSE);
 	}
 }
 
@@ -308,6 +327,9 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
+
+	MenuItemDisconnect->Enable (TRUE);
+
 	// borrar las consolas del notebook
 }
 
@@ -625,6 +647,9 @@ void MainWindow::OnSocketFailConnect (wxCommandEvent& WXUNUSED(event))
 	wxMessageBox (_("Failed to connect to server."),
 		      _("Error"),
 		      wxOK | wxICON_ERROR, this);
+
+	MenuItemConnect->Enable (TRUE);
+	MenuItemDisconnect->Enable (FALSE);
 }
 
 void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
@@ -636,6 +661,9 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 			"Disconnected."),
 		      _("Error"),
 		      wxOK | wxICON_ERROR, this);
+
+	MenuItemConnect->Enable (TRUE);
+	MenuItemDisconnect->Enable (FALSE);
 }
 
 void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
@@ -700,5 +728,6 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 		ProcessToShow->ProcConsole->Show ();
 		MainNotebook->SetSelection (info.m_itemId);
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
+		ProcessToShow->ProcConsole->OutputScrollPages (1);
 	}
 }

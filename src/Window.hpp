@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/06/22 02:44:29 $
+// $Revision: 1.10 $
+// $Date: 2004/06/22 04:58:53 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -51,6 +51,10 @@ private:
 	InfoPanel *ProcInfoPanel;
 
 	ProcessTree ProcList;
+
+	wxMenuItem *MenuItemConnect;
+	wxMenuItem *MenuItemDisconnect;
+	wxMenuItem *MenuItemShowLogs;
 
 public:
 	MainWindow (const wxString& title,
