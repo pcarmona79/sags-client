@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-08-17 23:03-0400\n"
+"POT-Creation-Date: 2004-08-19 23:48-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/Channel.cpp:110 src/Console.cpp:85
+#: src/Channel.cpp:110 src/Console.cpp:86
 msgid "Send"
 msgstr ""
 
@@ -201,7 +201,7 @@ msgstr ""
 msgid "&Help"
 msgstr ""
 
-#: src/Window.cpp:197 src/Window.cpp:204 src/Window.cpp:943
+#: src/Window.cpp:197 src/Window.cpp:204 src/Window.cpp:942
 msgid "Logs"
 msgstr ""
 
@@ -409,6 +409,6 @@ msgstr ""
 msgid "Save to file"
 msgstr ""
 
-#: src/Window.cpp:962
+#: src/Window.cpp:961
 msgid "Preferences"
 msgstr ""

@@ -1,5 +1,21 @@
-New version 0.3.4
+New version 0.4.0
 -----------------
+
+This new version includes the following changes:
+
+1) IRC-based chat support.
+2) Uses new version of protocol network to manipulate chat messages.
+3) Changed method to detect and select the logs and chat windows.
+4) Chat window manages normal messages, /me, /notice and /topic
+   commands. Also shows when users joins and leaves the channel.
+5) Because the server accepts only one connection per username, the
+   program manages error packets and desconnections from the server.
+6) Win32 version has XP themes support.
+7) Fixed broken pipe when received a Error::ServerFull packet.
+
+
+Version 0.3.4
+-------------
 
 This releases includes:
 
