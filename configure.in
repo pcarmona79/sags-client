@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([sagscl], 0.2.2)
+AC_INIT([sagscl], 0.3.0cvs)
 AM_INIT_AUTOMAKE
 AM_CONFIG_HEADER(config.h)
 
@@ -11,29 +11,28 @@ AC_PROG_LIBTOOL
 dnl Checks for library functions.
 AC_CHECK_LIB([ssl], [main], ,
 	     AC_MSG_ERROR([
-			   OpenSSL library not found!
-			   Install it before compile this program.]))
+	OpenSSL library not found!
+	Install it before compile this program.]))
 AC_CHECK_HEADERS([openssl/ssl.h openssl/err.h], ,
 		 AC_MSG_ERROR([
-			       Basic OpenSSL headers not found!
-			       Without this headers the program can't be compiled.]))
+	Basic OpenSSL headers not found!
+	Without this headers the program can't be compiled.]))
 
 AC_CHECK_FUNCS([memset getaddrinfo freeaddrinfo gai_strerror], ,
 	       AC_MSG_ERROR([
-			     Without this functions the program can't be compiled.]))
+	Without this functions the program can't be compiled.]))
 
 AM_OPTIONS_WXCONFIG
 AM_PATH_WXCONFIG(2.3.4, wxWin=1)
 if test "$wxWin" != 1; then
 	AC_MSG_ERROR([
-		      wxWindows must be installed on your system.
+	wxWindows must be installed on your system.
 
-		      Please check that wx-config is in path, the directory
-		      where wxWindows libraries are installed (returned by
-		      'wx-config --libs' or 'wx-config --static --libs' command)
-		      is in LD_LIBRARY_PATH or equivalent variable and
-		      wxWindows version is 2.3.4 or above.
-		      ])
+	Please check that wx-config is in path, the directory
+	where wxWindows libraries are installed (returned by
+	'wx-config --libs' or 'wx-config --static --libs' command)
+	is in LD_LIBRARY_PATH or equivalent variable and
+	wxWindows version is 2.3.4 or above.])
 else
 	CPPFLAGS="$CPPFLAGS $WX_CPPFLAGS"
 	CXXFLAGS="$CXXFLAGS $WX_CXXFLAGS_ONLY"
@@ -114,6 +113,8 @@ AC_OUTPUT([
 Makefile
 sagscl.spec
 debian/Makefile
+doc/Makefile
+doc/tutorial-0.2es/Makefile
 intl/Makefile
 m4/Makefile
 pixmaps/Makefile

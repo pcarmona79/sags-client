@@ -1,3 +1,28 @@
+2004-06-17  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Packet.hpp:
+	* src/Packet.cpp:
+		- Patched to version 2 of network protocol.
+
+	* src/Protocol.cpp:
+		- Adapted to version 2 of network protocol.
+
+	* src/Network.cpp:
+	* src/Network.cpp:
+		- Added GetMD5() to support new authetication method.
+		- Starting adaptation to version 2 of network protocol.
+
+	* src/Window.hpp:
+	* src/Window.cpp:
+		- Starting adaptation to version 2 of network protocol.
+		- Added new methods to control the protocol's sections.
+
+
+2004-06-15  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Preparing new version 0.3.0.
+
+
 2004-06-04  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.2.2 version.

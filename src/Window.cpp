@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.12 $
-// $Date: 2004/06/03 02:50:48 $
+// $Revision: 1.13 $
+// $Date: 2004/06/17 08:26:37 $
 //
 
 #include <wx/wx.h>
@@ -323,173 +323,232 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
 {
-	wxString text, windowtitle;
 	Packet *Pkt = Net->Get ();
+
+	if (Pkt == NULL)
+	{
+		LoggingTab->Append ("Nothing in Incoming list");
+		return;
+	}
+
+	switch (Pkt->GetIndex ())
+	{
+	case Sync::Index:
+		ProtoSync (Pkt);
+		break;
+
+	case Auth::Index:
+		ProtoAuth (Pkt);
+		break;
+
+	case Error::Index:
+		ProtoError (Pkt);
+		break;
+
+	default:
+		// paquetes de sesión de un proceso
+		if (Pkt->GetIndex () <= Session::MaxIndex)
+			ProtoSession (Pkt);
+	}
+
+	delete Pkt;	
+}
+
+void MainWindow::ProtoSync (Packet *Pkt)
+{
+	wxString text;
+
+	switch (Pkt->GetCommand ())
+	{
+	case Sync::Hello:
+		text.Printf ("Sync::Hello (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		break;
+
+	case Sync::Version:
+		text.Printf ("Sync::Version (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		break;
+
+	default:
+		;
+	}
+}
+
+void MainWindow::ProtoAuth (Packet *Pkt)
+{
+	wxString text, windowtitle;
+
+	switch (Pkt->GetCommand ())
+	{
+	case Auth::Password:
+		text.Printf ("Auth::Password (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		break;
+
+	case Auth::Successful:
+		text.Printf ("Auth::Successful (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		LoggingTab->Append (_("Logged in successfully."));
+		text = _("Getting process's log...");
+		SetStatusText (text, 1);
+		LoggingTab->Append (text);
+		windowtitle.Printf (_("SAGS Client %s"), VERSION);
+		windowtitle += " - " + Net->GetUsername () + "@[";
+		windowtitle += Net->GetAddress () + "]:" + Net->GetPort ();
+		SetTitle (windowtitle);
+		break;
+
+	default:
+		;
+	}
+}
+
+void MainWindow::ProtoSession (Packet *Pkt)
+{
+	wxString text;
 	static int bytes = 0;
 
-	if (Pkt != NULL)
+	switch (Pkt->GetCommand ())
 	{
-		switch (Pkt->GetType ())
+	case Session::ConsoleOutput:
+		// esto llena mucho el widget
+		//text.Printf ("Session::ConsoleOutput (%d bytes)",
+		//	     Pkt->GetLength ());
+		//LoggingTab->Append (text);
+		ServerConsole->Add (Pkt->GetData ());
+		break;
+
+	case Session::ConsoleSuccess:
+		text.Printf ("Session::ConsoleSuccess");
+		LoggingTab->Append (text);
+		break;
+
+	case Session::ConsoleLogs:
+		text.Printf ("Session::ConsoleLogs (%d bytes)",
+			     Pkt->GetLength ());
+		LoggingTab->Append (text);
+		ServerConsole->Add (Pkt->GetData ());
+
+		bytes += Pkt->GetLength ();
+		text.Printf (_("Receiving logs: %.1f KB"),
+			     (float)(bytes) / 1024.0);
+		SetStatusText (text, 1);
+
+		// si la secuencia es 1 entonces es el último paquete!
+		if (Pkt->GetSequence () == 1)
 		{
-			case Pckt::SyncHello:
-				text.Printf ("SyncHello (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				break;
-
-			case Pckt::SyncVersion:
-				text.Printf ("SyncVersion (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				break;
-
-			case Pckt::AuthPassword:
-				text.Printf ("AuthPassword (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				break;
-
-			case Pckt::AuthSuccessful:
-				text.Printf ("AuthSuccessful (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				LoggingTab->Append (_("Logged in successfully."));
-				text = _("Getting process's log...");
-				SetStatusText (text, 1);
-				LoggingTab->Append (text);
-				windowtitle.Printf (_("SAGS Client %s"), VERSION);
-				windowtitle += " - " + Net->GetUsername () + "@[";
-				windowtitle += Net->GetAddress () + "]:" + Net->GetPort ();
-				SetTitle (windowtitle);
-				break;
-
-			case Pckt::SessionConsoleOutput:
-				// esto llena mucho el widget
-				//text.Printf ("SessionConsoleOutput (%d bytes)",
-				//	     Pkt->GetLength ());
-				//LoggingTab->Append (text);
-				ServerConsole->Add (Pkt->GetData ());
-				break;
-
-			case Pckt::SessionConsoleSuccess:
-				text.Printf ("SessionConsoleSuccess");
-				LoggingTab->Append (text);
-				break;
-
-			case Pckt::SessionConsoleLogs:
-				text.Printf ("SessionConsoleLogs (%d bytes)",
-					     Pkt->GetLength ());
-				LoggingTab->Append (text);
-				ServerConsole->Add (Pkt->GetData ());
-				
-				bytes += Pkt->GetLength ();
-				text.Printf (_("Receiving logs: %.1f KB"),
-					     (float)(bytes) / 1024.0);
-				SetStatusText (text, 1);
-				
-				// si la secuencia es 1 entonces es el último paquete!
-				if (Pkt->GetSequence () == 1)
-				{
-					text.Printf (_("Received %.1f KB of logs"),
-						     (float)(bytes) / 1024.0);
-					LoggingTab->Append (text);
-					text = _("User: ") + Net->GetUsername ();
-					text += _(" Server: [") + Net->GetAddress () + "]:" + Net->GetPort ();
-					SetStatusText (text, 1);
-					bytes = 0;
-				}
-				break;
-
-			case Pckt::SessionDisconnect:
-			case Pckt::SessionDrop:
-				text.Printf ("SessionDisconnect");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Disconnected from server."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorServerFull:
-				text.Printf ("ErrorServerFull");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Server is full.\nDisconnected."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorNotValidVersion:
-				text.Printf ("ErrorNotValidVersion");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Protocol's version not valid.\nDisconnected."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorLoginFailed:
-				text.Printf ("ErrorLoginFailed");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Username or password not valid.\nDisconnected."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorAuthTimeout:
-				text.Printf ("ErrorAuthTimeout");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Time for authentication has expired.\nDisconnected."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorServerQuit:
-				text.Printf ("ErrorServerQuit");
-				LoggingTab->Append (text);
-				Disconnect ();
-				wxMessageBox (_("Server is shutting down.\nDisconnected."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				return;
-
-			case Pckt::ErrorBadProcess:
-				text.Printf ("ErrorBadProcess (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				wxMessageBox ((wxString)(_("Bad process on server:\n\n")) +
-					      (wxString)(Pkt->GetData ()),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				break;
-
-			case Pckt::ErrorCantWriteToProcess:
-				text.Printf ("ErrorCantWriteToProcess");
-				LoggingTab->Append (text);
-				wxMessageBox (_("Server can't write to the process."),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				break;
-
-			case Pckt::ErrorGeneric:
-				text.Printf ("ErrorGeneric (%d bytes): %s",
-					     Pkt->GetLength (), Pkt->GetData ());
-				LoggingTab->Append (text);
-				wxMessageBox ((wxString)(_("Generic Error:\n\n")) +
-					      (wxString)(Pkt->GetData ()),
-					      _("Error"),
-					      wxOK | wxICON_ERROR, this);
-				break;
-
-			default:
-				;
+			text.Printf (_("Received %.1f KB of logs"),
+				     (float)(bytes) / 1024.0);
+			LoggingTab->Append (text);
+			text = _("User: ") + Net->GetUsername ();
+			text += _(" Server: [") + Net->GetAddress () + "]:"
+				+ Net->GetPort ();
+			SetStatusText (text, 1);
+			bytes = 0;
 		}
-		delete Pkt;
+		break;
+
+	case Session::Disconnect:
+		text.Printf ("Session::Disconnect");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Disconnected from server."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	default:
+		;
 	}
-	else
-		LoggingTab->Append ("Nothing in Incoming list");
+}
+
+void MainWindow::ProtoError (Packet *Pkt)
+{
+	wxString text;
+
+	switch (Pkt->GetCommand ())
+	{
+	case Error::ServerFull:
+		text.Printf ("Error::ServerFull");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Server is full.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::NotValidVersion:
+		text.Printf ("Error::NotValidVersion");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Protocol's version not valid.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::LoginFailed:
+		text.Printf ("Error::LoginFailed");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Username or password not valid.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::AuthTimeout:
+		text.Printf ("Error::AuthTimeout");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Time for authentication has expired.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::ServerQuit:
+		text.Printf ("Error::ServerQuit");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("Server is shutting down.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::BadProcess:
+		text.Printf ("Error::BadProcess (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		wxMessageBox ((wxString)(_("Bad process on server:\n\n")) +
+			      (wxString)(Pkt->GetData ()),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	case Error::CantWriteToProcess:
+		text.Printf ("Error::CantWriteToProcess");
+		LoggingTab->Append (text);
+		wxMessageBox (_("Server can't write to the process."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	case Error::Generic:
+		text.Printf ("Error::Generic (%d bytes): %s",
+			     Pkt->GetLength (), Pkt->GetData ());
+		LoggingTab->Append (text);
+		wxMessageBox ((wxString)(_("Generic Error:\n\n")) +
+			      (wxString)(Pkt->GetData ()),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	default:
+		;
+	}
 }
 
 void MainWindow::OnSocketFailConnect (wxCommandEvent& WXUNUSED(event))
@@ -525,7 +584,8 @@ void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
 		ServerConsole->Add (data, TRUE);
 		ServerConsole->SetOutputStyle ();
 
-		Net->AddBufferOut (Pckt::SessionConsoleInput, data.c_str ());
+		// para mientras pedimos el del proceso 1
+		Net->AddBufferOut (1, Session::ConsoleInput, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
 	}
 }

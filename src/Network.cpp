@@ -19,14 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/06/01 00:08:28 $
+// $Revision: 1.7 $
+// $Date: 2004/06/17 08:26:37 $
 //
 
 #include <cstdio>
 #include <cstring>
 #include <cmath>
 #include <wx/socket.h>
+#include <openssl/md5.h>
 
 #include "Network.hpp"
 
@@ -52,7 +53,8 @@ Network::~Network ()
 	
 }
 
-void Network::AddBuffer (List<Packet> &PktList, unsigned int type, const char *data)
+void Network::AddBuffer (List<Packet> &PktList, unsigned int idx,
+			 unsigned int com, const char *data)
 {
 	const char *p = data;
 	int s;
@@ -61,23 +63,23 @@ void Network::AddBuffer (List<Packet> &PktList, unsigned int type, const char *d
 
 	// calculamos cuantos paquetes necesitaremos
 	// que corresponde a la parte entera más uno de
-	// TamañoTotal / 1024
+	// TamañoTotal / PCKT_MAXDATA
 	s = (int) trunc (strlen (data) / PCKT_MAXDATA) + 1;
 
 	while (strlen (p) >= PCKT_MAXDATA)
 	{
-		PktList << new Packet (type, s--, strlen (p), p); // asigna hasta PCKT_MAXDATA bytes
+		PktList << new Packet (idx, com, s--, strlen (p), p);
 		p += PCKT_MAXDATA;
 	}
 
 	if (strlen (p) > 0 && strlen (p) < PCKT_MAXDATA)
-		PktList << new Packet (type, s--, strlen (p), p);
+		PktList << new Packet (idx, com, s--, strlen (p), p);
 }
 
-void Network::AddBufferOut (unsigned int type, const char *data)
+void Network::AddBufferOut (unsigned int idx, unsigned int com, const char *data)
 {
 	OutgoingMutex.Lock ();
-	AddBuffer (Outgoing, type, data);
+	AddBuffer (Outgoing, idx, com, data);
 	OutgoingMutex.Unlock ();
 }
 
@@ -98,7 +100,7 @@ int Network::Disconnect (bool exiting)
 	Exiting = (exiting) ? TRUE : FALSE;
 
 	// enviar un paquete de desconexión
-	if (SendPacket (new Packet (Pckt::SessionDisconnect)) < 0)
+	if (SendPacket (new Packet (Session::MainIndex, Session::Disconnect)) < 0)
 		return -1;
 
 	return 0;
@@ -150,15 +152,26 @@ int Network::Receive (void)
 	Incoming << Pkt;
 	IncomingMutex.Unlock ();
 
-	switch (Pkt->GetType ())
+	if (Pkt->GetIndex () == Error::Index)
 	{
-		case Pckt::SessionDisconnect:
-		case Pckt::ErrorServerFull:
-		case Pckt::ErrorNotValidVersion:
-		case Pckt::ErrorLoginFailed:
-		case Pckt::ErrorAuthTimeout:
-		case Pckt::ErrorServerQuit:
-			return 1;
+		switch (Pkt->GetCommand ())
+		{
+			case Error::ServerFull:
+			case Error::NotValidVersion:
+			case Error::LoginFailed:
+			case Error::AuthTimeout:
+			case Error::ServerQuit:
+				return 1;
+		}
+	}
+	else if (Pkt->GetIndex () >= Session::MainIndex &&
+		 Pkt->GetIndex () <= Session::MaxIndex)
+	{
+		switch (Pkt->GetCommand ())
+		{
+			case Session::Disconnect:
+				return 1;
+		}
 	}
 
 	return 0;
@@ -209,11 +222,39 @@ Packet *Network::Get (void)
 	return Item;
 }
 
+wxString Network::GetMD5 (wxString password)
+{
+	char *md5_password;
+	char *md5_password_hex;
+	char hexadecimal[3];
+	int i;
+
+	md5_password = new char [MD5_DIGEST_LENGTH + 1];
+	memset (md5_password, 0, MD5_DIGEST_LENGTH + 1);
+	md5_password_hex = new char [2 * MD5_DIGEST_LENGTH + 1];
+	memset (md5_password_hex, 0, 2 * MD5_DIGEST_LENGTH + 1);
+
+	MD5 ((unsigned char *) password.c_str (), password.Length (),
+	     (unsigned char *) md5_password);
+
+	for ( i = 0; i < MD5_DIGEST_LENGTH; ++i ) {
+		snprintf (hexadecimal, 3, "%.2x", *(md5_password + i));
+		strncat (md5_password_hex, hexadecimal, sizeof (hexadecimal));
+	}
+
+	wxString retstr = md5_password_hex;
+
+	delete[] md5_password;
+	delete[] md5_password_hex;
+
+	return retstr;
+}
+
 void *Network::Entry (void)
 {
 	int val;
 	bool send_now = FALSE;
-	char hello_msg[26];
+	wxString hello_msg, pwdhash;
 
 	if (!Connected)
 		Connect ();
@@ -230,10 +271,10 @@ void *Network::Entry (void)
 	wxSocketEvent ConnectSuccessful (NetEvt::Connect);
 	EvtParent->AddPendingEvent ((wxEvent&) ConnectSuccessful);
 
-	// La autenticación comieza enviando un SyncHello
-	snprintf (hello_msg, 26, "SAGS Client %s", VERSION);
+	// La autenticación comieza enviando un Sync::Hello
+	hello_msg.Printf ("SAGS Client %s", VERSION);
 	OutgoingMutex.Lock ();
-	AddBuffer (Outgoing, Pckt::SyncHello, hello_msg);
+	AddBuffer (Outgoing, Sync::Index, Sync::Hello, hello_msg.c_str ());
 	OutgoingMutex.Unlock ();
 	Send ();
 
@@ -261,27 +302,40 @@ void *Network::Entry (void)
 		{
 			// manejamos la autenticación
 			OutgoingMutex.Lock ();
-			switch (Incoming[0]->GetType ())
+			if (Incoming[0]->GetIndex () == Sync::Index)
 			{
-				case Pckt::SyncHello:
-					Outgoing << new Packet (Pckt::SyncVersion, 1, 1, "1");
+				switch (Incoming[0]->GetCommand ())
+				{
+				case Sync::Hello:
+					// ahora menejamos la versión 2
+					// del protocolo
+					Outgoing << new Packet (Sync::Index, Sync::Version,
+								1, 1, "2");
 					send_now = TRUE;
 					break;
 
-				case Pckt::SyncVersion:
-					AddBuffer (Outgoing, Pckt::AuthUsername, Username.c_str ());
+				case Sync::Version:
+					AddBuffer (Outgoing, Auth::Index, Auth::Username,
+						   Username.c_str ());
+					send_now = TRUE;
+					break;
+				}
+			}
+			else if (Incoming[0]->GetIndex () == Auth::Index)
+			{
+				switch (Incoming[0]->GetCommand ())
+				{
+				case Auth::RandomHash:
+					pwdhash = Incoming[0]->GetData ();
+					pwdhash += Password;
+					AddBuffer (Outgoing, Auth::Index, Auth::Password,
+						   (GetMD5 (pwdhash)).c_str ());
 					send_now = TRUE;
 					break;
 
-				case Pckt::AuthPassword:
-					AddBuffer (Outgoing, Pckt::AuthPassword, Password.c_str ());
-					send_now = TRUE;
-					break;
-
-				case Pckt::AuthSuccessful:
-					Outgoing << new Packet (Pckt::SessionConsoleNeedLogs);
-					send_now = TRUE;
-					break;
+					// ahora hay que esperar que lleguen
+					// los paquetes Session::Authorized
+				}
 			}
 			OutgoingMutex.Unlock ();
 

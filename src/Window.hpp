@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/06/01 00:08:28 $
+// $Revision: 1.7 $
+// $Date: 2004/06/17 08:26:37 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -49,6 +49,11 @@ public:
 	~MainWindow ();
 	void Disconnect (void);
 
+	void ProtoSync (Packet *Pkt);
+	void ProtoAuth (Packet *Pkt);
+	void ProtoSession (Packet *Pkt);
+	void ProtoError (Packet *Pkt);
+	
 	// manejadores de señales
 	void OnConnect (wxCommandEvent& event);
 	void OnDisconnect (wxCommandEvent& event);
