@@ -1,3 +1,9 @@
+2005-03-02  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.5.0 version.
+
+	* doc/html/*.es.html: Removed UTF-8 chars.
+
 2005-02-23  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* doc/html/index.html, doc/html/index.es.html: Added maintenance
