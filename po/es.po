@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: sagscl 0.3.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
 "POT-Creation-Date: 2004-06-29 16:11-0400\n"
-"PO-Revision-Date: 2004-06-26 18:04-0400\n"
+"PO-Revision-Date: 2004-06-29 23:53-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -105,27 +105,27 @@ msgstr "Guarda los mensajes de la consola a un archivo"
 
 #: src/Window.cpp:83
 msgid "&Kill"
-msgstr ""
+msgstr "&Terminar"
 
 #: src/Window.cpp:84
 msgid "Terminates the actual process"
-msgstr ""
+msgstr "Termina el proceso actual"
 
 #: src/Window.cpp:88
 msgid "&Launch"
-msgstr ""
+msgstr "&Lanzar"
 
 #: src/Window.cpp:89
 msgid "Launch the actual process"
-msgstr ""
+msgstr "Lanza el proceso actual"
 
 #: src/Window.cpp:93
 msgid "Force to &restart"
-msgstr ""
+msgstr "Fuerza a &reiniciar"
 
 #: src/Window.cpp:94
 msgid "Force to restart the actual process"
-msgstr ""
+msgstr "Fuerza a reiniciar el proceso actual"
 
 #: src/Window.cpp:99
 msgid "Show &logs"
@@ -344,19 +344,19 @@ msgid "Server can't write to the process."
 msgstr "Servidor no puede escribir en el proceso."
 
 #: src/Window.cpp:712
-#, fuzzy, c-format
+#, c-format
 msgid "Process %s can't be terminated."
-msgstr "Proceso %d se inicia: \"%s\""
+msgstr "Proceso %s no pudo ser terminado."
 
 #: src/Window.cpp:720
-#, fuzzy, c-format
+#, c-format
 msgid "Process %s can't be launched."
-msgstr "Proceso %d se inicia: \"%s\""
+msgstr "Proceso %s no pudo ser lanzado."
 
 #: src/Window.cpp:728
-#, fuzzy, c-format
+#, c-format
 msgid "Process %s can't be restarted."
-msgstr "Proceso %d se inicia: \"%s\""
+msgstr "Proceso %s no pudo ser reiniciado."
 
 #: src/Window.cpp:738
 msgid ""
