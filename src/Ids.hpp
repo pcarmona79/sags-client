@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Ids.hpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/17 22:00:14 $
 //
 
 namespace Ids
@@ -34,6 +34,7 @@ namespace Ids
 		Disconnect,
 		Input,
 		SendButton,
-		ConsoleFont
+		ConsoleFont,
+		ConsoleSave
 	};
 }

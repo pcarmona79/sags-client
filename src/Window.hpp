@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/17 22:00:14 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -55,6 +55,7 @@ public:
 	void OnAbout (wxCommandEvent& event);
 	void OnSend (wxCommandEvent& event);
 	void OnConsoleFont (wxCommandEvent& event);
+	void OnConsoleSave (wxCommandEvent& event);
 
 	// señales de sockets
 	void OnConnected (wxCommandEvent& event);

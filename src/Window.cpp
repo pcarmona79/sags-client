@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/17 22:00:14 $
 //
 
 #include <wx/wx.h>
@@ -53,6 +53,8 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->Append (Ids::Connect, _("&Connect..."), _("Connect to server"));
 	MenuSession->Append (Ids::Disconnect, _("&Disconnect"), _("Disconnect from server"));
 	MenuSession->AppendSeparator ();
+	MenuSession->Append (Ids::ConsoleSave, _("&Save to file..."), _("Save console's messages to a file"));
+	MenuSession->AppendSeparator ();
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
 	// menú Edit
@@ -78,6 +80,8 @@ MainWindow::MainWindow (const wxString& title,
 		 (wxObjectEventFunction) &MainWindow::OnConnect);
 	Connect (Ids::Disconnect, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnDisconnect);
+	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
 	Connect (Ids::Quit, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnQuit);
 	Connect (Ids::ConsoleFont, wxEVT_COMMAND_MENU_SELECTED,
@@ -384,4 +388,13 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 		NewFontData = ConsoleFontDialog->GetFontData ();
 		ServerConsole->SetConsoleFont (NewFontData.GetChosenFont ());
 	}
+}
+
+void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
+{
+	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"), "", "", "*.*",
+						     wxSAVE | wxOVERWRITE_PROMPT);
+
+	if (SaveDialog->ShowModal () == wxID_OK)
+		ServerConsole->SaveConsoleToFile (SaveDialog->GetPath ());
 }
