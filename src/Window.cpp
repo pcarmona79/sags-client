@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.30 $
-// $Date: 2004/08/11 04:37:54 $
+// $Revision: 1.31 $
+// $Date: 2004/08/12 02:12:39 $
 //
 
 #include <wx/wx.h>
@@ -32,6 +32,7 @@
 #include "Window.hpp"
 #include "Login.hpp"
 #include "About.hpp"
+#include "Config.hpp"
 
 #if defined(__WXGTK__) || defined(__WXX11__) || defined(__WXMOTIF__) || defined(__WXMAC__)
 #  include "../pixmaps/sagscl.xpm"
@@ -74,8 +75,6 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
 	// menú Process
-	MenuProcess->Append (Ids::ConsoleFont, _("Change &font..."),
-			     _("Change the console's font"));
 	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
 			     _("Save console's messages to a file"));
 	MenuProcess->AppendSeparator ();
@@ -99,6 +98,9 @@ MainWindow::MainWindow (const wxString& title,
 	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &logs"),
 					   _("Show the logging window"), wxITEM_CHECK);
 	MenuView->Append (MenuItemShowLogs);
+	MenuView->AppendSeparator ();
+	MenuView->Append (Ids::Preferences, _("&Preferences..."),
+			  _("Change program's preferences"));
 
 	// menú Help
 	MenuHelp->Append (Ids::Help, _("&Contents"), _("Show help contents"));
@@ -141,8 +143,6 @@ MainWindow::MainWindow (const wxString& title,
 
 	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
-	Connect (Ids::ConsoleFont, wxEVT_COMMAND_MENU_SELECTED,
-		 (wxObjectEventFunction) &MainWindow::OnConsoleFont);
 	Connect (Ids::ProcessKill, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnProcessKill);
 	Connect (Ids::ProcessLaunch, wxEVT_COMMAND_MENU_SELECTED,
@@ -152,6 +152,8 @@ MainWindow::MainWindow (const wxString& title,
 
 	Connect (Ids::ShowLogs, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnShowLogs);
+	Connect (Ids::Preferences, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnPreferences);
 
 	Connect (Ids::Help, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnHelp);
@@ -342,6 +344,8 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 		
 		MenuItemConnect->Enable (FALSE);
 	}
+
+	Login->Destroy ();
 }
 
 void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
@@ -786,120 +790,6 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 	MenuItemDisconnect->Enable (FALSE);
 }
 
-void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
-{
-	wxFontData ActualFontData, NewFontData;
-	wxNotebookPage *FirstNB = NULL;
-	wxString FontName;
-	long FontSize;
-	unsigned int i;
-	bool changing_console_font = TRUE;
-
-	// FIXME: todo esto debiera hacerse en una ventana de configuración
-
-	// obtenemos la fuente actual usada
-	if (MainNotebook->GetPageCount () > 0)
-	{
-		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 2 &&
-		    MainNotebook->GetSelection () == MainNotebook->GetPageCount () - 1)
-		{
-			// la pestaña de logs esta seleccionada
-			// seleccionamos la fuente de las consolas
-#ifdef __WXMSW__
-			if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
-				AppConfig->Write ("/Console/FontName", "Courier New");
-#else
-			if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
-				AppConfig->Write ("/Console/FontName", "fixed");
-#endif
-			if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
-				AppConfig->Write ("/Console/FontSize", 12);
-
-			// creamos un wxFont con los valores leídos
-			wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
-					    wxNORMAL, FALSE, FontName);
-			ActualFontData.SetInitialFont (ConsoleFont);
-		}
-		else if (MenuItemShowLogs->IsChecked () &&
-			 MainNotebook->GetSelection () == MainNotebook->GetPageCount () - 2)
-		{
-			// la pestaña de chat
-			// seleccionamos la fuente del canal de chat
-#ifdef __WXMSW__
-			if (!AppConfig->Read ("/Channel/FontName", &FontName, "Courier New"))
-				AppConfig->Write ("/Chat/FontName", "Courier New");
-#else
-			if (!AppConfig->Read ("/Channel/FontName", &FontName, "fixed"))
-				AppConfig->Write ("/Chat/FontName", "fixed");
-#endif
-			if (!AppConfig->Read ("/Channel/FontSize", &FontSize, 12))
-				AppConfig->Write ("/Chat/FontSize", 12);
-
-			// creamos un wxFont con los valores leídos
-			wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
-					    wxNORMAL, FALSE, FontName);
-			ActualFontData.SetInitialFont (ConsoleFont);
-			changing_console_font = FALSE;
-		}
-		else
-		{
-			// una pestaña de proceso
-			// seleccionamos la fuente de las consolas
-			FirstNB = MainNotebook->GetPage (0);
-			ActualFontData.SetInitialFont (((Console*)FirstNB)->GetConsoleFont ());
-		}
-	}
-	else
-	{
-		// no hay ningún tab
-		// seleccionamos la fuente de las consolas
-#ifdef __WXMSW__
-		if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
-			AppConfig->Write ("/Console/FontName", "Courier New");
-#else
-		if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
-			AppConfig->Write ("/Console/FontName", "fixed");
-#endif
-		if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
-			AppConfig->Write ("/Console/FontSize", 12);
-
-		// creamos un wxFont con los valores leídos
-		wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
-				    wxNORMAL, FALSE, FontName);
-		ActualFontData.SetInitialFont (ConsoleFont);
-	}
-
-	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
-
-	if (ConsoleFontDialog->ShowModal () == wxID_OK)
-	{
-		// obtener el wxFontData y usarlo para
-		// cambiar la fuente
-		NewFontData = ConsoleFontDialog->GetFontData ();
-
-		// los nuevos valores deben ser guardados en la configuración
-		if (changing_console_font)
-		{
-			AppConfig->Write ("/Console/FontName",
-					  (NewFontData.GetChosenFont ()).GetFaceName ());
-			AppConfig->Write ("/Console/FontSize",
-					  (NewFontData.GetChosenFont ()).GetPointSize ());
-
-			for (i = 0; i <= ProcList.TheList.GetCount () - 1; ++i)
-				ProcList[i]->ProcConsole->SetConsoleFont (NewFontData.GetChosenFont ());
-		}
-		else
-		{
-			AppConfig->Write ("/Channel/FontName",
-					  (NewFontData.GetChosenFont ()).GetFaceName ());
-			AppConfig->Write ("/Channel/FontSize",
-					  (NewFontData.GetChosenFont ()).GetPointSize ());
-
-			GeneralChannel->SetChannelFont (NewFontData.GetChosenFont ());
-		}
-	}
-}
-
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
 	int nb_selected;
@@ -923,6 +813,8 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 				((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
 		}
 	}
+
+	SaveDialog->Destroy ();
 }
 
 void MainWindow::OnProcessSelected (wxListEvent& event)
@@ -1023,6 +915,15 @@ void MainWindow::OnShowLogs (wxCommandEvent& WXUNUSED(event))
 #endif
 		AppConfig->Write ("/Options/ShowLogs", 0l);
 	}
+}
+
+void MainWindow::OnPreferences (wxCommandEvent& WXUNUSED(event))
+{
+	ConfigDialog *Prefs = new ConfigDialog (AppConfig, &ProcList, GeneralChannel,
+						this, -1, _("Preferences"),
+						wxDefaultPosition, wxSize (400, 400));
+	Prefs->ShowModal ();
+	Prefs->Destroy ();
 }
 
 void MainWindow::OnProcessKill (wxCommandEvent& WXUNUSED(event))

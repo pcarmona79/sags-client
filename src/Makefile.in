@@ -192,6 +192,8 @@ sagscl_SOURCES = \
 		 About.hpp    \
 		 Channel.cpp  \
 		 Channel.hpp  \
+		 Config.cpp   \
+		 Config.hpp   \
 		 Console.cpp  \
 		 Console.hpp  \
 		 Icons.cpp    \
@@ -226,12 +228,12 @@ bin_PROGRAMS = sagscl$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_sagscl_OBJECTS = sagscl-About.$(OBJEXT) sagscl-Channel.$(OBJEXT) \
-	sagscl-Console.$(OBJEXT) sagscl-Icons.$(OBJEXT) \
-	sagscl-Login.$(OBJEXT) sagscl-Logs.$(OBJEXT) \
-	sagscl-Main.$(OBJEXT) sagscl-Network.$(OBJEXT) \
-	sagscl-Packet.$(OBJEXT) sagscl-Panels.$(OBJEXT) \
-	sagscl-Process.$(OBJEXT) sagscl-Protocol.$(OBJEXT) \
-	sagscl-Window.$(OBJEXT)
+	sagscl-Config.$(OBJEXT) sagscl-Console.$(OBJEXT) \
+	sagscl-Icons.$(OBJEXT) sagscl-Login.$(OBJEXT) \
+	sagscl-Logs.$(OBJEXT) sagscl-Main.$(OBJEXT) \
+	sagscl-Network.$(OBJEXT) sagscl-Packet.$(OBJEXT) \
+	sagscl-Panels.$(OBJEXT) sagscl-Process.$(OBJEXT) \
+	sagscl-Protocol.$(OBJEXT) sagscl-Window.$(OBJEXT)
 sagscl_OBJECTS = $(am_sagscl_OBJECTS)
 sagscl_LDADD = $(LDADD)
 sagscl_DEPENDENCIES =
@@ -242,6 +244,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sagscl-About.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Channel.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sagscl-Config.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Console.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Icons.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Login.Po \
@@ -322,6 +325,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-About.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Channel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Console.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Icons.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Login.Po@am__quote@
@@ -432,6 +436,39 @@ sagscl-Channel.lo: Channel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Channel.Plo' tmpdepfile='$(DEPDIR)/sagscl-Channel.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Channel.lo `test -f 'Channel.cpp' || echo '$(srcdir)/'`Channel.cpp
+
+sagscl-Config.o: Config.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Config.o -MD -MP -MF "$(DEPDIR)/sagscl-Config.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Config.o `test -f 'Config.cpp' || echo '$(srcdir)/'`Config.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Config.Tpo" "$(DEPDIR)/sagscl-Config.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Config.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Config.cpp' object='sagscl-Config.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Config.Po' tmpdepfile='$(DEPDIR)/sagscl-Config.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Config.o `test -f 'Config.cpp' || echo '$(srcdir)/'`Config.cpp
+
+sagscl-Config.obj: Config.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Config.obj -MD -MP -MF "$(DEPDIR)/sagscl-Config.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Config.obj `if test -f 'Config.cpp'; then $(CYGPATH_W) 'Config.cpp'; else $(CYGPATH_W) '$(srcdir)/Config.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Config.Tpo" "$(DEPDIR)/sagscl-Config.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Config.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Config.cpp' object='sagscl-Config.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Config.Po' tmpdepfile='$(DEPDIR)/sagscl-Config.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Config.obj `if test -f 'Config.cpp'; then $(CYGPATH_W) 'Config.cpp'; else $(CYGPATH_W) '$(srcdir)/Config.cpp'; fi`
+
+sagscl-Config.lo: Config.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Config.lo -MD -MP -MF "$(DEPDIR)/sagscl-Config.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Config.lo `test -f 'Config.cpp' || echo '$(srcdir)/'`Config.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Config.Tpo" "$(DEPDIR)/sagscl-Config.Plo"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Config.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Config.cpp' object='sagscl-Config.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Config.Plo' tmpdepfile='$(DEPDIR)/sagscl-Config.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Config.lo `test -f 'Config.cpp' || echo '$(srcdir)/'`Config.cpp
 
 sagscl-Console.o: Console.cpp
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Console.o -MD -MP -MF "$(DEPDIR)/sagscl-Console.Tpo" \

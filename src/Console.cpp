@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.21 $
-// $Date: 2004/08/10 03:17:15 $
+// $Revision: 1.22 $
+// $Date: 2004/08/12 02:12:39 $
 //
 
 #include "Console.hpp"
@@ -268,29 +268,6 @@ void Console::ClearOutput (void)
 void Console::ClearInput (void)
 {
 	Input->Clear ();
-}
-
-void Console::ChangeConsoleFont (void)
-{
-	wxFontData ActualFontData, NewFontData;
-
-	// obtenemos la fuente actual usada en ConsoleOutput
-	ActualFontData.SetInitialFont (GetConsoleFont ());
-	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
-
-	if (ConsoleFontDialog->ShowModal () == wxID_OK)
-	{
-		// obtener el wxFontData y usarlo para
-		// cambiar la fuente a ConsoleOutput
-		NewFontData = ConsoleFontDialog->GetFontData ();
-		SetConsoleFont (NewFontData.GetChosenFont ());
-
-		// los nuevos valores deben ser guardados en la configuración
-		AppConfig->Write ("/Console/FontName",
-				  (NewFontData.GetChosenFont ()).GetFaceName ());
-		AppConfig->Write ("/Console/FontSize",
-				  (NewFontData.GetChosenFont ()).GetPointSize ());
-	}
 }
 
 void Console::ScrollToBottom (void)

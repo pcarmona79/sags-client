@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.13 $
-// $Date: 2004/08/10 03:17:15 $
+// $Revision: 1.14 $
+// $Date: 2004/08/12 02:12:39 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -81,10 +81,10 @@ public:
 	void OnQuit (wxCommandEvent& event);
 	void OnHelp (wxCommandEvent& event);
 	void OnAbout (wxCommandEvent& event);
-	void OnConsoleFont (wxCommandEvent& event);
 	void OnConsoleSave (wxCommandEvent& event);
 	void OnProcessSelected (wxListEvent& event);
 	void OnShowLogs (wxCommandEvent& event);
+	void OnPreferences (wxCommandEvent& event);
 	void OnProcessKill (wxCommandEvent& event);
 	void OnProcessLaunch (wxCommandEvent& event);
 	void OnProcessRestart (wxCommandEvent& event);

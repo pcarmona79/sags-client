@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.11 $
-// $Date: 2004/06/30 03:47:07 $
+// $Revision: 1.12 $
+// $Date: 2004/08/12 02:12:39 $
 //
 
 #ifndef __CONSOLE_HPP__
@@ -59,7 +59,6 @@ public:
 	bool SaveConsoleToFile (const wxString& filename);
 	void ClearOutput (void);
 	void ClearInput (void);
-	void ChangeConsoleFont (void);
 	void ScrollToBottom (void);
 	void InputSetFocus (void);
 	void OutputSetFocus (void);

@@ -12,6 +12,8 @@ sagscl_SOURCES = \
 		 About.hpp    \
 		 Channel.cpp  \
 		 Channel.hpp  \
+		 Config.cpp   \
+		 Config.hpp   \
 		 Console.cpp  \
 		 Console.hpp  \
 		 Icons.cpp    \

@@ -2,7 +2,10 @@
 
 # Source files
 src/About.cpp
+src/Channel.cpp
+src/Config.cpp
 src/Console.cpp
+src/Icons.cpp
 src/Login.cpp
 src/Logs.cpp
 src/Main.cpp

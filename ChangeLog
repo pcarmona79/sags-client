@@ -2,9 +2,28 @@
 
 	* src/Ids.hpp:
 		- Added two ids to identify the logs and chat windows.
+		- Added ids for preferences menu item and buttons on
+		preferences window.
 
+	* src/Config.hpp:
+	* src/Config.cpp:
+		- New files.
+		- Added event handlers for buttons to update immediately
+		console and chat widgets.
+
+	* src/Window.hpp:
 	* src/Window.cpp:
 		- Changed method to detect the logs and chat windows.
+		- Removed OnConsoleFont() event handler and its menu item.
+		Replaced by preferences	window.
+		- Fixed dialog manipulation. All dialog windows are destroyed
+		before exits the event handler which calls it.
+
+	* po/POTFILES.in:
+		- Update files containing translatable strings.
+
+	* po/es.po:
+		- Updated spanish translation.
 
 
 2004-08-09  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
