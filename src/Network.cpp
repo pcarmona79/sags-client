@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.10 $
+// $Date: 2004/06/19 09:11:18 $
 //
 
 #include <cstdio>
@@ -35,6 +35,13 @@
 #  include <config.h>
 #endif
 
+// definiciones de objetos estáticos
+static wxMutex OutgoingMutex;
+static wxMutex IncomingMutex;
+
+List<Packet> Network::Outgoing;
+List<Packet> Network::Incoming;
+
 Network::Network () : wxThread (wxTHREAD_JOINABLE)
 {
 	EvtParent = (wxEvtHandler*) NULL;
@@ -45,6 +52,34 @@ Network::Network () : wxThread (wxTHREAD_JOINABLE)
 Network::~Network ()
 {
 	
+}
+
+void Network::Lock (wxMutex &mtx)
+{
+	while (mtx.Lock () != wxMUTEX_NO_ERROR)
+	{
+		printf ("mtx.Lock () != wxMUTEX_NO_ERROR\n");
+		//Sleep (10); // dormir 10 milisegundos
+		Yield ();
+	}
+	//printf ("mtx.Lock () == wxMUTEX_NO_ERROR\n");
+}
+
+void Network::Unlock (wxMutex &mtx)
+{
+	wxMutexError val = mtx.Unlock ();
+
+	while (val != wxMUTEX_NO_ERROR && val != wxMUTEX_UNLOCKED)
+	{
+		printf ("mtx.Unlock () != wxMUTEX_NO_ERROR\n");
+		//Sleep (10); // dormir 10 milisegundos
+		Yield ();
+		val = mtx.Unlock ();
+	}
+	if (val == wxMUTEX_UNLOCKED)
+		printf ("mtx.Unlock () == wxMUTEX_UNLOCKED\n");
+	//else
+	//	printf ("mtx.Unlock () == wxMUTEX_NO_ERROR\n");
 }
 
 void Network::SetData (wxEvtHandler *parent, wxString address, wxString port,
@@ -82,9 +117,9 @@ void Network::AddBuffer (List<Packet> &PktList, unsigned int idx,
 
 void Network::AddBufferOut (unsigned int idx, unsigned int com, const char *data)
 {
-	OutgoingMutex.Lock ();
+	Lock (OutgoingMutex);
 	AddBuffer (Outgoing, idx, com, data);
-	OutgoingMutex.Unlock ();
+	Unlock (OutgoingMutex);
 }
 
 int Network::Connect (void)
@@ -122,25 +157,26 @@ int Network::Send (void)
 	Packet *Sending = NULL;
 	int bytes = 0, total = 0;
 
-	while (Outgoing.GetCount ())
-	{
-		OutgoingMutex.Lock ();
-		Sending = Outgoing.ExtractFirst ();
-		OutgoingMutex.Unlock ();
+	Lock (OutgoingMutex);
 
+	while (Outgoing.GetCount () > 0)
+	{
+		Sending = Outgoing.ExtractFirst ();
 		bytes = SendPacket (Sending);
+		delete Sending;
 
 		if (bytes < 0)
 		{
 			// paquete no se envió
 			perror ("SendPacket");
+			Unlock (OutgoingMutex);
 			return -1; 
 		}
 
-		// borramos el paquete usado
 		total += bytes;
-		delete Sending;
 	}
+
+	Unlock (OutgoingMutex);
 
 	return bytes;
 }
@@ -152,9 +188,8 @@ int Network::Receive (void)
 	if (Pkt == NULL)
 		return -1;
 
-	IncomingMutex.Lock ();
+	Lock (IncomingMutex);
 	Incoming << Pkt;
-	IncomingMutex.Unlock ();
 
 	if (Pkt->GetIndex () == Error::Index)
 	{
@@ -165,6 +200,7 @@ int Network::Receive (void)
 			case Error::LoginFailed:
 			case Error::AuthTimeout:
 			case Error::ServerQuit:
+				Unlock (IncomingMutex);
 				return 1;
 		}
 	}
@@ -174,10 +210,12 @@ int Network::Receive (void)
 		switch (Pkt->GetCommand ())
 		{
 			case Session::Disconnect:
+				Unlock (IncomingMutex);
 				return 1;
 		}
 	}
 
+	Unlock (IncomingMutex);
 	return 0;
 }
 
@@ -213,9 +251,9 @@ wxString Network::GetPassword (void)
 
 Packet *Network::Get (void)
 {
-	IncomingMutex.Lock ();
+	Lock (IncomingMutex);
 	Packet *Item = Incoming.ExtractFirst ();
-	IncomingMutex.Unlock ();
+	Unlock (IncomingMutex);
 
 	if (Item == NULL)
 	{
@@ -259,6 +297,7 @@ void *Network::Entry (void)
 	int val;
 	bool send_now = FALSE;
 	wxString hello_msg, pwdhash;
+	Packet *Pkt = NULL;
 
 	if (!Connected)
 		Connect ();
@@ -277,9 +316,9 @@ void *Network::Entry (void)
 
 	// La autenticación comieza enviando un Sync::Hello
 	hello_msg.Printf ("SAGS Client %s", VERSION);
-	OutgoingMutex.Lock ();
+	Lock (OutgoingMutex);
 	AddBuffer (Outgoing, Sync::Index, Sync::Hello, hello_msg.c_str ());
-	OutgoingMutex.Unlock ();
+	Unlock (OutgoingMutex);
 	Send ();
 
 	// Si se leen datos se envía el evento NetEvt::Read
@@ -305,10 +344,12 @@ void *Network::Entry (void)
 		else
 		{
 			// manejamos la autenticación
-			OutgoingMutex.Lock ();
-			if (Incoming[0]->GetIndex () == Sync::Index)
+			Lock (OutgoingMutex);
+			Lock (IncomingMutex);
+			Pkt = Incoming[Incoming.GetCount () - 1];
+			if (Pkt->GetIndex () == Sync::Index)
 			{
-				switch (Incoming[0]->GetCommand ())
+				switch (Pkt->GetCommand ())
 				{
 				case Sync::Hello:
 					// ahora manejamos la versión 2
@@ -325,12 +366,12 @@ void *Network::Entry (void)
 					break;
 				}
 			}
-			else if (Incoming[0]->GetIndex () == Auth::Index)
+			else if (Pkt->GetIndex () == Auth::Index)
 			{
-				switch (Incoming[0]->GetCommand ())
+				switch (Pkt->GetCommand ())
 				{
 				case Auth::RandomHash:
-					pwdhash = Incoming[0]->GetData ();
+					pwdhash = Pkt->GetData ();
 					pwdhash += Password;
 					AddBuffer (Outgoing, Auth::Index, Auth::Password,
 						   (GetMD5 (pwdhash)).c_str ());
@@ -341,29 +382,28 @@ void *Network::Entry (void)
 					// los paquetes Session::Authorized
 				}
 			}
-			else if (Incoming[0]->GetIndex () >= Session::MainIndex &&
-				 Incoming[0]->GetIndex () <= Session::MaxIndex)
+			else if (Pkt->GetIndex () >= Session::MainIndex &&
+				 Pkt->GetIndex () <= Session::MaxIndex)
 			{
-				switch (Incoming[0]->GetCommand ())
+				switch (Pkt->GetCommand ())
 				{
 				case Session::Authorized:
-					Outgoing << new Packet (Incoming[0]->GetIndex (),
+					Outgoing << new Packet (Pkt->GetIndex (),
 								Session::ProcessGetInfo);
 					send_now = TRUE;
 					break;
 
 				case Session::ProcessInfo:
-					if (Incoming[0]->GetSequence () == 1)
+					if (Pkt->GetSequence () == 1)
 					{
-						Outgoing << new Packet (
-								Incoming[0]->GetIndex(),
+						Outgoing << new Packet (Pkt->GetIndex(),
 								Session::ConsoleNeedLogs);
 						send_now = TRUE;
 					}
-					break;
 				}
 			}
-			OutgoingMutex.Unlock ();
+			Unlock (OutgoingMutex);
+			Unlock (IncomingMutex);
 
 			if (send_now)
 			{

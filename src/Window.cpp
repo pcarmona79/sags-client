@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.14 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.15 $
+// $Date: 2004/06/19 09:11:18 $
 //
 
 #include <wx/wx.h>
@@ -409,8 +409,8 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 	case Session::ConsoleLogs:
 
-		text.Printf ("Session::ConsoleLogs (%d bytes)",
-			     Pkt->GetLength ());
+		text.Printf ("Session::ConsoleLogs on %d (%d bytes)",
+			     Pkt->GetIndex (), Pkt->GetLength ());
 		LoggingTab->Append (text);
 
 		Proc = ProcList.Index (Pkt->GetIndex ());
@@ -418,15 +418,15 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			Proc->ProcConsole->Add (Pkt->GetData ());
 
 		bytes += Pkt->GetLength ();
-		text.Printf (_("Receiving logs: %.1f KB"),
-			     (float)(bytes) / 1024.0);
+		text.Printf (_("Receiving logs for process %d: %.1f KB"),
+			     Pkt->GetIndex (), (float)(bytes) / 1024.0);
 		SetStatusText (text, 1);
 
 		// si la secuencia es 1 entonces es el último paquete!
 		if (Pkt->GetSequence () == 1)
 		{
-			text.Printf (_("Received %.1f KB of logs"),
-				     (float)(bytes) / 1024.0);
+			text.Printf (_("Received %.1f KB of logs of process %d"),
+				     (float)(bytes) / 1024.0, Pkt->GetIndex ());
 			LoggingTab->Append (text);
 			text = _("User: ") + Net->GetUsername ();
 			text += _(" Server: [") + Net->GetAddress () + "]:"
@@ -457,7 +457,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 						    Pkt->GetIndex ());
 		MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
 					  (wxNotebookPage *) NewProc->ProcConsole,
-					  wxString::Format ("Console %d", Pkt->GetIndex ()),
+					  wxString::Format (_("Console %d"), Pkt->GetIndex ()),
 					  MainNotebook->GetPageCount () == 1 ? TRUE : FALSE);
 		ProcList.TheList << NewProc;
 		NewProc = NULL;

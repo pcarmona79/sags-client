@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.5 $
+// $Date: 2004/06/19 09:11:18 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -51,12 +51,8 @@ class Network : private Protocol, public wxThread
 {
 private:
 	// lista de paquetes
-	List<Packet> Outgoing;
-	List<Packet> Incoming;
-
-	// mutexes para las listas
-	wxMutex OutgoingMutex;
-	wxMutex IncomingMutex;
+	static List<Packet> Outgoing;
+	static List<Packet> Incoming;
 
 	// datos
 	wxString Address;
@@ -68,6 +64,10 @@ private:
 	// estado
 	bool Connected;
 	bool Exiting;
+
+	// para bloquear y desbloquear mutexes
+	void Lock (wxMutex &mtx);
+	void Unlock (wxMutex &mtx);
 
 public:
 	Network ();
