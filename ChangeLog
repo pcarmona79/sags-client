@@ -1,3 +1,13 @@
+2004-08-07  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* configure.in:
+		- Preparing 0.4.0 version.
+		- This will includes chat support.
+
+	* src/Network.cpp:
+		- Now we will use the network protocol version 3.
+
+
 2004-07-06  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* pixmaps/icon-*.png:
