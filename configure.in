@@ -114,7 +114,7 @@ Makefile
 sagscl.spec
 debian/Makefile
 doc/Makefile
-doc/tutorial-0.2es/Makefile
+doc/tutorial-0.3es/Makefile
 intl/Makefile
 m4/Makefile
 pixmaps/Makefile

@@ -59,6 +59,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root)
 %doc AUTHORS COPYING ChangeLog INSTALL NEWS README
+%doc doc/tutorial-0.3es
 
 %defattr(-,root,root)
 %{_bindir}/%{name}

@@ -4,9 +4,14 @@
 	* src/Window.cpp:
 		- Changed menu bar. Added two menus more.
 		- Now we can enable and disable some menu items.
+		- The user can hide and show the logs tab.
+		- Now we can change the console's font for all process tabs.
 
 	* po/es.po:
 		- Updated spanish translation.
+
+	* doc/tutorial-0.3es:
+		- Updated spanish tutorial.
 
 
 2004-06-21  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

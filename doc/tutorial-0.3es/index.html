@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+  <title>Tutorial del Cliente SAGS</title>
+</head>
+<body>
+<h1><a class="mozTocH1" name="mozTocId35885"></a>Tutorial del Cliente
+SAGS 0.3.x<br>
+</h1>
+© 2004 Pablo Carmona Amigo<br>
+<ol id="mozToc">
+<!--mozToc h2 1 h3 2 h4 3--><li><a href="#mozTocId551282">Introducción</a></li>
+  <li><a href="#mozTocId525310">Características</a></li>
+  <li><a href="#mozTocId609325">Cómo obtener el
+Cliente SAGS
+    </a></li>
+  <li><a href="#mozTocId741975">Modo de uso</a>
+    <ol>
+      <li><a href="#mozTocId963935">Conexión
+        </a></li>
+      <li><a href="#mozTocId805103">Sesión
+        </a></li>
+      <li><a href="#mozTocId739549">Terminando</a></li>
+    </ol>
+  </li>
+</ol>
+<h2><a class="mozTocH2" name="mozTocId551282"></a>Introducción</h2>
+<p><span style="font-weight: bold;">SAGS</span> o <span
+ style="font-weight: bold;">Secure Administrator of Game
+Servers</span> es un proyecto Open Source que tiene como finalidad
+producir una solución para administrar servidores de juegos bajo
+GNU/Linux.<br>
+</p>
+<p>El proyecto consiste en una aplicación cliente-servidor que usa una
+conexión SSL para la transferencia de información tanto del juego
+como
+la necesaria para administrarlo.<br>
+</p>
+<p>Está disponible bajo los términos de la <a
+ href="http://www.gnu.org/licenses/gpl.html">Licencia Pública General
+de GNU</a>.<br>
+</p>
+<p>La página del proyecto se encuentra alojada en Sourceforge.net y la
+dirección es <a href="http://sags.sourceforge.net/">http://sags.sourceforge.net/</a>.<br>
+</p>
+<h2><a class="mozTocH2" name="mozTocId525310"></a>Características</h2>
+<ul>
+  <li>Provee una interfaz directa a las consolas de los juegos
+manejoados en el servidor.</li>
+  <li>Se puede cambiar la fuente de las consolas y el programa recuerda
+el valor.</li>
+  <li>El diálogo de login almacena hasta cinco servidores.</li>
+  <li>Los mensajes de la consola pueden ser guardados a un archivo.</li>
+  <li>Es portable a la plataforma Windows (se necesita <a
+ href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> para
+compilarlo y las bibliotecas <a href="http://www.openssl.org/">OpenSSL</a>
+para ejecutarlo) porque tiene una GUI escrita con <a
+ href="http://www.wxwidgets.org/">wxWidgets</a>.<br>
+  </li>
+</ul>
+<h2><a class="mozTocH2" name="mozTocId609325"></a>Cómo obtener el
+Cliente SAGS<br>
+</h2>
+<p>Vaya a la sitio web del proyecto (indicado más arriba) y entre en
+la
+sección "<span style="font-style: italic;">Downloads</span>". En el
+final de la página encontrará el título "<span
+ style="font-style: italic;">Precompilated binaries</span>" junto con
+un enlace al instalador o a paquetes RPM. La descarga se realiza usando
+el sistema
+normal de descargas de <a href="http://sourceforge.net/">Sourceforge.net</a>
+por lo que probablemente tendrá que escoger un mirror antes de
+comenzar a descargarlo.<br>
+</p>
+<p>El código fuente tanto del cliente como del servidor se pueden
+obtener directamente de la sección "<span style="font-style: italic;">Downloads</span>"
+o desde la lista de archivos del proyecto en Sourceforge.net: <a
+ href="http://sourceforge.net/project/showfiles.php?group_id=106892">http://sourceforge.net/project/showfiles.php?group_id=106892</a>.</p>
+<h2><a class="mozTocH2" name="mozTocId741975"></a>Modo de uso</h2>
+<p>En la imagen siguiente se muestra la ventana principal. Contiene
+tres elementos principales que son la <span style="font-style: italic;">Lista
+de procesos</span>, el panel de <span style="font-style: italic;">Información
+del proceso</span> y varias pestañas que muestran las consolas de los
+procesos e información del programa.<br>
+</p>
+<div style="text-align: center;"><img title="Main window's elements"
+ style="width: 760px; height: 527px;" alt="Main window's elements"
+ src="logs.png"><br>
+<div style="text-align: left;">
+<h3><a class="mozTocH3" name="mozTocId963935"></a>Conexión<br>
+</h3>
+<p>Lo primero que debe hacer es conectarse al servidor remoto usando el
+nombre de usuario y la contraseña asignadas a Ud. por el
+administrador.
+Para ingresar los datos vaya al menú <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">S</span>esión
+/ <span style="text-decoration: underline;">C</span>onectar...</span>.
+A continuación aparecerá una ventana como la
+siguiente.</p>
+<div style="text-align: center;"><img
+ style="width: 298px; height: 170px;" alt="Login window"
+ title="Login window" src="login.png"><br>
+</div>
+<p>Ingrese los datos del servidor de la forma <span
+ style="font-style: italic;">&lt;dirección IP&gt;</span><span
+ style="font-weight: bold;">:</span><span style="font-style: italic;">&lt;puerto&gt;</span>
+y luego su nombre de usuario y la contraseña. En la versión para
+Linux
+se pueden usar direcciones IPv6 encerradas entre corchetes de la forma <span
+ style="font-weight: bold;">[</span><span style="font-style: italic;">&lt;dirección
+IPv6&gt;</span><span style="font-weight: bold;">]:</span><span
+ style="font-style: italic;">&lt;puerto&gt;</span>, sólo si el sistema
+operativo soporta el nuevo protocolo.<br>
+</p>
+<p>Si se está conectando a un servidor en el puerto <span
+ style="font-weight: bold;">47777</span>, no es necesario agregar este
+valor y sólo basta con ingresar la dirección IP.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId805103"></a>Sesión<br>
+</h3>
+<p>Durante la sesión la ventana principal puede parecerse a la
+siguiente que muestra varios servidores de Quake II con D-Day: Normandy
+en la <span style="font-style: italic;">Lista de procesos</span>.<br>
+</p>
+<p style="text-align: center;"><img style="width: 760px; height: 527px;"
+ alt="Tipical main window" title="Tipical main window"
+ src="mainwindow.png"><br>
+</p>
+<p>Seleccionando un nombre de la <span style="font-style: italic;">Lista
+de procesos</span> se mostrará la consola de ese proceso y la
+información de él aparecerá en el panel de <span
+ style="font-style: italic;">Información del proceso</span>. Sólo los
+procesos autorizados para el usuario serán mostrados por el cliente.<br>
+</p>
+<p>Para enviar un comando al servidor del juego seleccionado, sólo
+escríbalo en la
+entrada de abajo y luego pulse el botón <span
+ style="font-weight: bold;">Enviar</span> o simplemente presione la
+tecla Enter. Los comandos ingresados son enviados al servidor y pasados
+directamente al proceso del juego. En la consola queda destacado el
+comando enviado al servidor y la salida es mostrada en
+la consola unos instantes después.<br>
+</p>
+<p>Se puede cambiar la fuente de la consola escogiendo <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">P</span>roceso
+/ Cambiar <span style="text-decoration: underline;">F</span>uente...</span>
+en el menú.<br>
+</p>
+<p>Para guardar los mensajes de la consola actual a un archivo hay que
+seleccionar <span style="font-weight: bold;"><span
+ style="text-decoration: underline;">P</span>roceso / <span
+ style="text-decoration: underline;">G</span>uardar en
+archivo...</span> en el menú.<br>
+</p>
+<p>En la pestaña <span style="font-weight: bold;">Registros</span> se
+pueden ver las distintas acciones que realiza el cliente y se muestran
+los nombres de algunos de los paquetes enviados por el servidor. Se
+puede ocultar esta pestaña seleccionando <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">V</span>er
+/ Mostrar <span style="text-decoration: underline;">r</span>egistros</span>
+en el menú. Este estado será recordado por el programa.<br>
+</p>
+<h3><a class="mozTocH3" name="mozTocId739549"></a>Terminando<br>
+</h3>
+<p>Para desconectarse sólo basta con seleccionar <span
+ style="font-weight: bold;"><span style="text-decoration: underline;">S</span>esión
+/ <span style="text-decoration: underline;">D</span>esconectar</span>
+en el menú o
+simplemente cerrar la aplicación desde su ícono en la barra de
+título.<br>
+</p>
+</div>
+</div>
+</body>
+</html>

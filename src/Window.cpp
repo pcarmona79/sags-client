@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.18 $
-// $Date: 2004/06/22 04:58:53 $
+// $Revision: 1.19 $
+// $Date: 2004/06/23 00:29:42 $
 //
 
 #include <wx/wx.h>
@@ -28,6 +28,7 @@
 #include <wx/socket.h>
 #include <wx/filedlg.h>
 #include <wx/menuitem.h>
+#include <wx/fontdlg.h>
 #include "Window.hpp"
 #include "Login.hpp"
 #include "About.hpp"
@@ -73,7 +74,8 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
 	// menú Process
-	MenuProcess->Append (Ids::ConsoleFont, _("&Font..."), _("Change console's font"));
+	MenuProcess->Append (Ids::ConsoleFont, _("Change &Font..."),
+			     _("Change the console's font"));
 	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
 			     _("Save console's messages to a file"));
 
@@ -97,6 +99,15 @@ MainWindow::MainWindow (const wxString& title,
 	// al inicio la opción desconectar está inhabilitada
 	MenuItemDisconnect->Enable (FALSE);
 
+	// mostramos los logs?
+	long ShowLogs;
+	if (!AppConfig->Read ("/Options/ShowLogs", &ShowLogs, 0l))
+		AppConfig->Write ("/Options/ShowLogs", 0l);
+	if (ShowLogs)
+		MenuItemShowLogs->Check (TRUE);
+	else
+		MenuItemShowLogs->Check (FALSE);
+
 	// señal close
 	Connect (wxID_ANY, wxEVT_CLOSE_WINDOW,
 		 (wxObjectEventFunction) &MainWindow::OnClose);
@@ -106,12 +117,14 @@ MainWindow::MainWindow (const wxString& title,
 		 (wxObjectEventFunction) &MainWindow::OnConnect);
 	Connect (Ids::Disconnect, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnDisconnect);
-	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
-		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
 	Connect (Ids::Quit, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnQuit);
+	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
 	Connect (Ids::ConsoleFont, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnConsoleFont);
+	Connect (Ids::ShowLogs, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnShowLogs);
 	Connect (Ids::Help, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnHelp);
 	Connect (Ids::About, wxEVT_COMMAND_MENU_SELECTED,
@@ -147,6 +160,10 @@ MainWindow::MainWindow (const wxString& title,
 
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, -1);
+
+	if (!ShowLogs)
+		LoggingTab->Hide ();
+
 	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
 
 	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);
@@ -432,9 +449,9 @@ void MainWindow::ProtoSession (Packet *Pkt)
 	case Session::ConsoleOutput:
 
 		// esto llena mucho el widget
-		text.Printf ("Session::ConsoleOutput on %d (%d bytes)",
-			     Pkt->GetIndex (), Pkt->GetLength ());
-		LoggingTab->Append (text);
+		//text.Printf ("Session::ConsoleOutput on %d (%d bytes)",
+		//	     Pkt->GetIndex (), Pkt->GetLength ());
+		//LoggingTab->Append (text);
 
 		Proc = ProcList.Index (Pkt->GetIndex ());
 		if (Proc != NULL)
@@ -450,9 +467,10 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 	case Session::ConsoleLogs:
 
-		text.Printf ("Session::ConsoleLogs on %d (%d bytes)",
-			     Pkt->GetIndex (), Pkt->GetLength ());
-		LoggingTab->Append (text);
+		// esto también llena mucho el widget
+		//text.Printf ("Session::ConsoleLogs on %d (%d bytes)",
+		//	     Pkt->GetIndex (), Pkt->GetLength ());
+		//LoggingTab->Append (text);
 
 		Proc = ProcList.Index (Pkt->GetIndex ());
 		if (Proc != NULL)
@@ -500,7 +518,6 @@ void MainWindow::ProtoSession (Packet *Pkt)
 				(wxNotebookPage *) Proc->ProcConsole,
 				wxString::Format (_("Process %d: "), Pkt->GetIndex ())
 					+ newitem.m_text,
-				//MainNotebook->GetPageCount () == 1 ? TRUE : FALSE);
 				FALSE);
 			Proc->ProcConsole->Hide ();
 
@@ -668,7 +685,58 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 {
-	// cambiar la fuente para todas las consolas
+	wxFontData ActualFontData, NewFontData;
+	wxNotebookPage *FirstNB = NULL, *CurrentNB = NULL;
+	wxString FontName;
+	long FontSize;
+	int i;
+
+	// obtenemos la fuente actual usada
+
+	if (MainNotebook->GetPageCount () == 1)
+	{
+		// no hay tabs de procesos
+#ifdef __WXMSW__
+		if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
+			AppConfig->Write ("/Console/FontName", "Courier New");
+#else
+		if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
+			AppConfig->Write ("/Console/FontName", "fixed");
+#endif
+		if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
+			AppConfig->Write ("/Console/FontSize", 12);
+
+		// creamos un wxFont con los valores leídos
+		wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
+				    wxNORMAL, FALSE, FontName);
+		ActualFontData.SetInitialFont (ConsoleFont);
+	}
+	else
+	{
+		FirstNB = MainNotebook->GetPage (0);
+		ActualFontData.SetInitialFont (((Console*)FirstNB)->GetConsoleFont ());
+	}
+
+	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
+
+	if (ConsoleFontDialog->ShowModal () == wxID_OK)
+	{
+		// obtener el wxFontData y usarlo para
+		// cambiar la fuente
+		NewFontData = ConsoleFontDialog->GetFontData ();
+
+		// los nuevos valores deben ser guardados en la configuración
+		AppConfig->Write ("/Console/FontName",
+				  (NewFontData.GetChosenFont ()).GetFaceName ());
+		AppConfig->Write ("/Console/FontSize",
+				  (NewFontData.GetChosenFont ()).GetPointSize ());
+
+		for (i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
+		{
+			CurrentNB = MainNotebook->GetPage (i);
+			((Console*)CurrentNB)->SetConsoleFont (NewFontData.GetChosenFont ());
+		}
+	}
 }
 
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
@@ -729,5 +797,19 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 		MainNotebook->SetSelection (info.m_itemId);
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
 		ProcessToShow->ProcConsole->OutputScrollPages (1);
+	}
+}
+
+void MainWindow::OnShowLogs (wxCommandEvent& WXUNUSED(event))
+{
+	if (MenuItemShowLogs->IsChecked ())
+	{
+		LoggingTab->Show ();
+		AppConfig->Write ("/Options/ShowLogs", 1l);
+	}
+	else
+	{
+		LoggingTab->Hide ();
+		AppConfig->Write ("/Options/ShowLogs", 0l);
 	}
 }
