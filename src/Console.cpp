@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/04/17 02:14:39 $
+// $Revision: 1.3 $
+// $Date: 2004/04/17 18:52:09 $
 //
 
 #include "Console.hpp"
@@ -147,6 +147,12 @@ void Console::Add (wxString text, bool memorize)
 		Output->AppendText ("\n");
 
 	Output->AppendText (text);
+
+#ifdef _WIN32
+	// en win98 el widget de texto no hace bien el scroll
+	// por lo que lo forzaremos
+	Output->ShowPosition (Output->GetLastPosition ());
+#endif
 
 	if (memorize)
 		last_input = text_copy;
