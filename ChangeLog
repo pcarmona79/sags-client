@@ -1,3 +1,7 @@
+2005-03-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* sagscl.spec.in: Removed package dependencies.
+
 2005-03-02  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.5.0 version.
