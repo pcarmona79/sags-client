@@ -1,6 +1,11 @@
-2005-03-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+2005-03-17  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* sagscl.spec.in: Removed package dependencies.
+
+	* po/es.po: Updated spanish translation.
+
+	* configure.in: 0.5.1 version.
+	(AC_DEFINE_UNQUOTED): fixed mispelled $packagemandir.
 
 2005-03-02  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: sagscl 0.5.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
 "POT-Creation-Date: 2005-02-23 17:34-0300\n"
-"PO-Revision-Date: 2005-02-21 23:45-0300\n"
+"PO-Revision-Date: 2005-03-17 13:19-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr "Fuente de las consolas"
 
 #: src/Config.cpp:106
 msgid "Chat channel's font"
-msgstr "Cambia la fuente de la consola"
+msgstr "Cambia la fuente del canal de chat"
 
 #: src/Login.cpp:68
 msgid "Server:"
