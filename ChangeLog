@@ -1,9 +1,17 @@
-2004-05-29  Pablo Carmona Amigo  <kernel@dday.cl>
+2004-05-31  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Network.cpp: Fixed size value passed to snprintf function.
+	* src/Window.hpp: Renamed event handlers adding "Socket" text.
+	* debian/changelog: Preparing new version 0.2.2.
+	* po/es.po: Updated spanish translation.
+
+
+2004-05-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* configure.in: Append "cvs" to current version on CVS.
 	* src/Window.cpp: Added server's IP and port to window title.
 	* src/Window.cpp: Changed the authenticating message to include a
-	connect text.
+	connection text.
 	* src/Window.cpp: Now uses Console::ClearOutput and
 	Console::ClearInput methods.
 	* src/Console.hpp: Added ClearOutput and ClearInput declarations.

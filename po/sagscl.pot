@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-05-29 12:35-0400\n"
+"POT-Creation-Date: 2004-05-31 13:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: src/Main.cpp:44 src/Window.cpp:276 src/Window.cpp:308 src/Window.cpp:360
+#: src/Main.cpp:44 src/Window.cpp:180 src/Window.cpp:308 src/Window.cpp:360
 #, c-format
 msgid "SAGS Client %s"
 msgstr ""
@@ -129,19 +129,19 @@ msgstr ""
 msgid "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:191
+#: src/Window.cpp:195
 msgid "Connect to..."
 msgstr ""
 
-#: src/Window.cpp:209
+#: src/Window.cpp:213
 msgid "Connecting to server ["
 msgstr ""
 
-#: src/Window.cpp:263 src/Window.cpp:264
+#: src/Window.cpp:267 src/Window.cpp:268
 msgid "Disconnecting..."
 msgstr ""
 
-#: src/Window.cpp:268 src/Window.cpp:272
+#: src/Window.cpp:272 src/Window.cpp:276
 msgid "Not connected"
 msgstr ""
 

@@ -1,3 +1,9 @@
+sagscl (0.2.2-1) unstable; urgency=low
+
+  * New version with bugfixes. See ChangeLog and NEWS.
+
+ -- Pablo Carmona Amigo <pcarm@users.sourceforge.net>  Mon, 31 May 2004 13:03:51 -0400
+
 sagscl (0.2.1-1) unstable; urgency=low
 
   * New version with bugfixes. See ChangeLog and NEWS.
@@ -10,13 +16,11 @@ sagscl (0.2.0-1) unstable; urgency=low
 
  -- Pablo Carmona Amigo <pcarm@users.sourceforge.net>  Fri, 21 May 2004 16:31:42 -0400
 
-
 sagscl (0.1.2-1) unstable; urgency=low
 
   * New version of SAGS Client.
 
  -- Pablo Carmona Amigo <pcarm@users.sourceforge.net>  Sun, 16 May 2004 00:58:25 -0400
-
 
 sagscl (0.1.1-1) unstable; urgency=low
 

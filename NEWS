@@ -1,5 +1,21 @@
-New version 0.2.1
+New version 0.2.2
 -----------------
+
+This release includes the following changes:
+
+1) Added server's IP and port to window title.
+2) Changed the authenticating message to include a connection text.
+3) Removed innecesary check of console's text length when adding text
+   to widget.
+4) Now uses Console::ClearOutput and Console::ClearInput methods to
+   clear the text entries.
+5) Renamed event handlers by adding "Socket" text to their names.
+6) Fixed size value passed to snprintf functions.
+7) Updated spanish translation.
+
+
+Version 0.2.1
+-------------
 
 This new release includes:
 
@@ -16,8 +32,8 @@ This new release includes:
 4) The win32 installer now copy this file to the installation directory.
 
 
-New version 0.2.0
------------------
+Version 0.2.0
+-------------
 
 This version is an improvement of the series 0.1.x that includes the
 following changes:

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/05/21 22:18:28 $
+// $Revision: 1.6 $
+// $Date: 2004/06/01 00:08:28 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -61,10 +61,10 @@ public:
 	void OnConsoleSave (wxCommandEvent& event);
 
 	// señales de sockets
-	void OnConnected (wxCommandEvent& event);
-	void OnRead (wxCommandEvent& event);
-	void OnFailConnect (wxCommandEvent& event);
-	void OnFailRead (wxCommandEvent& event);
+	void OnSocketConnected (wxCommandEvent& event);
+	void OnSocketRead (wxCommandEvent& event);
+	void OnSocketFailConnect (wxCommandEvent& event);
+	void OnSocketFailRead (wxCommandEvent& event);
 };
 
 #endif // __WINDOW_HPP__

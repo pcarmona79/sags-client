@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.10 $
-// $Date: 2004/05/29 21:47:23 $
+// $Revision: 1.11 $
+// $Date: 2004/06/01 00:08:28 $
 //
 
 #include <wx/wx.h>
@@ -105,15 +105,15 @@ MainWindow::MainWindow (const wxString& title,
 	Connect (Ids::About, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnAbout);
 
-	// conectamos las señales de la conexion
+	// conectamos las señales de la conexión
 	Connect (NetEvt::Connect, wxEVT_SOCKET,
-		 (wxObjectEventFunction) &MainWindow::OnConnected);
+		 (wxObjectEventFunction) &MainWindow::OnSocketConnected);
 	Connect (NetEvt::Read, wxEVT_SOCKET,
-		 (wxObjectEventFunction) &MainWindow::OnRead);
+		 (wxObjectEventFunction) &MainWindow::OnSocketRead);
 	Connect (NetEvt::FailConnect, wxEVT_SOCKET,
-		 (wxObjectEventFunction) &MainWindow::OnFailConnect);
+		 (wxObjectEventFunction) &MainWindow::OnSocketFailConnect);
 	Connect (NetEvt::FailRead, wxEVT_SOCKET,
-		 (wxObjectEventFunction) &MainWindow::OnFailRead);
+		 (wxObjectEventFunction) &MainWindow::OnSocketFailRead);
 
 	// creamos una barra de estado
 	CreateStatusBar (2);
@@ -175,6 +175,10 @@ void MainWindow::Disconnect (void)
 	
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Disconnected."));
+
+	wxString windowtitle;
+	windowtitle.Printf (_("SAGS Client %s"), VERSION);
+	SetTitle (windowtitle);
 }
 
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
@@ -271,10 +275,6 @@ void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
 	{
 		SetStatusText (_("Not connected"), 1);
 	}
-
-	wxString windowtitle;
-	windowtitle.Printf (_("SAGS Client %s"), VERSION);
-	SetTitle (windowtitle);
 }
 
 void MainWindow::OnClose (wxCommandEvent& WXUNUSED(event))
@@ -312,7 +312,7 @@ void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 	About->Destroy ();
 }
 
-void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
+void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 {
 	wxString text = _("Connected to server. Authenticating...");
 
@@ -321,7 +321,7 @@ void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
 	ServerConsole->ClearOutput ();
 }
 
-void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
+void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
 {
 	wxString text, windowtitle;
 	Packet *Pkt = Net->Get ();
@@ -491,7 +491,7 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 		LoggingTab->Append ("Nothing in Incoming list");
 }
 
-void MainWindow::OnFailConnect (wxCommandEvent& WXUNUSED(event))
+void MainWindow::OnSocketFailConnect (wxCommandEvent& WXUNUSED(event))
 {
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Failed to connect to server."));
@@ -500,7 +500,7 @@ void MainWindow::OnFailConnect (wxCommandEvent& WXUNUSED(event))
 		      wxOK | wxICON_ERROR, this);
 }
 
-void MainWindow::OnFailRead (wxCommandEvent& WXUNUSED(event))
+void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 {
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Failed to read data from server."));

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.2.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-05-29 12:35-0400\n"
-"PO-Revision-Date: 2004-05-29 12:36-0400\n"
+"POT-Creation-Date: 2004-05-31 13:36-0400\n"
+"PO-Revision-Date: 2004-05-31 18:02-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "Contraseña:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/Main.cpp:44 src/Window.cpp:276 src/Window.cpp:308 src/Window.cpp:360
+#: src/Main.cpp:44 src/Window.cpp:180 src/Window.cpp:308 src/Window.cpp:360
 #, c-format
 msgid "SAGS Client %s"
 msgstr "Cliente SAGS %s"
@@ -65,7 +65,7 @@ msgstr "Desconectar del servidor"
 
 #: src/Window.cpp:70
 msgid "&Save to file..."
-msgstr "&Guardar a archivo..."
+msgstr "&Guardar en archivo..."
 
 #: src/Window.cpp:70
 msgid "Save console's messages to a file"
@@ -131,19 +131,19 @@ msgstr "Desconectado"
 msgid "Disconnected."
 msgstr "Desconectado."
 
-#: src/Window.cpp:191
+#: src/Window.cpp:195
 msgid "Connect to..."
 msgstr "Conectar a..."
 
-#: src/Window.cpp:209
+#: src/Window.cpp:213
 msgid "Connecting to server ["
 msgstr "Conectando al servidor ["
 
-#: src/Window.cpp:263 src/Window.cpp:264
+#: src/Window.cpp:267 src/Window.cpp:268
 msgid "Disconnecting..."
 msgstr "Desconectando..."
 
-#: src/Window.cpp:268 src/Window.cpp:272
+#: src/Window.cpp:272 src/Window.cpp:276
 msgid "Not connected"
 msgstr "No conectado"
 
@@ -226,7 +226,7 @@ msgid ""
 "Protocol's version not valid.\n"
 "Disconnected."
 msgstr ""
-"Versión no válida de protocolo.\n"
+"Versión de protocolo no válida.\n"
 "Desconectado."
 
 #: src/Window.cpp:434
@@ -250,7 +250,7 @@ msgid ""
 "Server is shutting down.\n"
 "Disconnected."
 msgstr ""
-"El servidor está terminando.\n"
+"El servidor se está cerrando.\n"
 "Desconectado."
 
 #: src/Window.cpp:461
@@ -291,4 +291,4 @@ msgstr ""
 
 #: src/Window.cpp:557
 msgid "Save to file"
-msgstr "Guardar a archivo"
+msgstr "Guardar en archivo"
