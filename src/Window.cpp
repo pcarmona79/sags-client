@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.23 $
-// $Date: 2004/06/28 01:32:14 $
+// $Revision: 1.24 $
+// $Date: 2004/06/28 22:44:25 $
 //
 
 #include <wx/wx.h>
@@ -78,6 +78,13 @@ MainWindow::MainWindow (const wxString& title,
 			     _("Change the console's font"));
 	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
 			     _("Save console's messages to a file"));
+	MenuProcess->AppendSeparator ();
+	MenuProcess->Append (Ids::ProcessKill, _("&Kill"),
+			     _("Terminates the actual process"));
+	MenuProcess->Append (Ids::ProcessLaunch, _("&Launch"),
+			     _("Launch the actual process"));
+	MenuProcess->Append (Ids::ProcessRestart, _("Force to &restart"),
+			     _("Force to restart the actual process"));
 
 	// menú View
 	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &logs"),

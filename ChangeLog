@@ -1,3 +1,12 @@
+2004-06-28  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Packet.hpp:
+		- Added new packet types.
+
+	* src/Window.cpp:
+		- Added three new menu items.
+
+
 2004-06-27  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.3.2 version.
