@@ -1,6 +1,8 @@
-2004-04-23  Pablo Carmona Amigo  <kernel@dday.cl>
+2004-04-25  Pablo Carmona Amigo  <kernel@dday.cl>
 
 	* Converted to autotools.
+	* Added config.h for win32
+	* CXXFLAGS and LDFLAGS of Dev-C++ file project had been reduced.
 
 
 2004-04-21  Pablo Carmona Amigo  <kernel@dday.cl>

@@ -1,7 +1,7 @@
 [Project]
 FileName=sagscl.dev
 Name=sagscl
-UnitCount=17
+UnitCount=18
 Type=0
 Ver=1
 ObjFiles=
@@ -11,8 +11,8 @@ PrivateResource=sagscl_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
-CppCompiler=-DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -DHAVE_W32API_H  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -Os -fno-rtti -fno-exceptions_@@_
-Linker=-Wl,--subsystem,windows -mwindows -lwxmsw -lstdc++ -lgcc -lodbc32 -lwsock32 -lwinspool -lwinmm -lshell32 -lcomctl32 -lctl3d32 -ladvapi32 -lopengl32 -lglu32 -lole32 -loleaut32 -luuid -lssl32 -leay32_@@_
+CppCompiler=-DWINVER=0x0400 -D__WIN95__ -D__GNUWIN32__ -D__WIN32__ -DHAVE_W32API_H  -D__WXMSW__ -D__WINDOWS__ -Wall -fno-pcc-struct-return -O2 -Os -fno-rtti -fno-exceptions -I. -DHAVE_CONFIG_H_@@_
+Linker=-Wl,--subsystem,windows -mwindows -lwxmsw -lws2_32 -lcomctl32 -lole32 -loleaut32 -luuid -lssl32 -leay32_@@_
 IsCpp=1
 Icon=sagscl.ico
 ExeOutput=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000
+CompilerSettings=0000000000000000000000
 
 [Unit1]
 FileName=..\src\Window.cpp
@@ -221,6 +221,16 @@ BuildCmd=
 FileName=..\src\Updater.cpp
 CompileCpp=1
 Folder=sagscl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=config.h
+CompileCpp=1
+Folder=
 Compile=1
 Link=1
 Priority=1000
