@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.11 $
-// $Date: 2004/05/29 21:47:23 $
+// $Revision: 1.12 $
+// $Date: 2004/06/01 05:34:23 $
 //
 
 #include "Console.hpp"
@@ -109,7 +109,8 @@ void Console::Add (wxString text, bool memorize)
 	bool have_newline;
 	wxString text_copy, rstr;
 	int n = 0;
-	char c, str[2];
+	unsigned char c;
+	char str[2];
 
 	if (text.Last () == '\n')
 		have_newline = TRUE;
@@ -117,7 +118,7 @@ void Console::Add (wxString text, bool memorize)
 		have_newline = FALSE;
 
 	// borramos todos los CR's
-	text.Replace ("\r\n", "\n");
+	text.Replace ("\r", "");
 
 	// borramos el texto repetido
 	text_copy = text;
@@ -139,6 +140,13 @@ void Console::Add (wxString text, bool memorize)
 		if (str[0] == '\n')
 			continue;
 
+		rstr.Printf ("[%02x]", c);
+		text.Replace (str, rstr.c_str ());
+	}
+	for (c = 128; c < 160; ++c)
+	{
+		str[0] = c;
+		str[1] = '\0';
 		rstr.Printf ("[%02x]", c);
 		text.Replace (str, rstr.c_str ());
 	}
