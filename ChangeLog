@@ -1,5 +1,7 @@
 2004-06-23  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
+	* Released SAGS Client 0.3.0.
+
 	* src/Network.cpp:
 		- Fixed GetMD5() for better generation of MD5 hash.
 
