@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.25 $
-// $Date: 2004/06/29 03:53:48 $
+// $Revision: 1.26 $
+// $Date: 2004/06/30 03:47:07 $
 //
 
 #include <wx/wx.h>
@@ -79,12 +79,21 @@ MainWindow::MainWindow (const wxString& title,
 	MenuProcess->Append (Ids::ConsoleSave, _("&Save to file..."),
 			     _("Save console's messages to a file"));
 	MenuProcess->AppendSeparator ();
-	MenuProcess->Append (Ids::ProcessKill, _("&Kill"),
-			     _("Terminates the actual process"));
-	MenuProcess->Append (Ids::ProcessLaunch, _("&Launch"),
-			     _("Launch the actual process"));
-	MenuProcess->Append (Ids::ProcessRestart, _("Force to &restart"),
-			     _("Force to restart the actual process"));
+	MenuItemProcessKill = new wxMenuItem (MenuProcess, Ids::ProcessKill,
+					      _("&Kill"),
+					      _("Terminates the actual process"),
+					      wxITEM_NORMAL);
+	MenuProcess->Append (MenuItemProcessKill);
+	MenuItemProcessLaunch = new wxMenuItem (MenuProcess, Ids::ProcessLaunch,
+						_("&Launch"),
+						_("Launch the actual process"),
+						wxITEM_NORMAL);
+	MenuProcess->Append (MenuItemProcessLaunch);
+	MenuItemProcessRestart = new wxMenuItem (MenuProcess, Ids::ProcessRestart,
+						 _("Force to &restart"),
+						 _("Force to restart the actual process"),
+						 wxITEM_NORMAL);
+	MenuProcess->Append (MenuItemProcessRestart);
 
 	// menú View
 	MenuItemShowLogs = new wxMenuItem (MenuView, Ids::ShowLogs, _("Show &logs"),
@@ -103,8 +112,11 @@ MainWindow::MainWindow (const wxString& title,
 	MenuBar->Append (MenuHelp, _("&Help"));
 	SetMenuBar (MenuBar);
 
-	// al inicio la opción desconectar está inhabilitada
+	// deshabilitamos algunos menús
 	MenuItemDisconnect->Enable (FALSE);
+	MenuItemProcessKill->Enable (FALSE);
+	MenuItemProcessLaunch->Enable (FALSE);
+	MenuItemProcessRestart->Enable (FALSE);
 
 	// mostramos los logs?
 	long ShowLogs;
@@ -126,12 +138,21 @@ MainWindow::MainWindow (const wxString& title,
 		 (wxObjectEventFunction) &MainWindow::OnDisconnect);
 	Connect (Ids::Quit, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnQuit);
+
 	Connect (Ids::ConsoleSave, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnConsoleSave);
 	Connect (Ids::ConsoleFont, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnConsoleFont);
+	Connect (Ids::ProcessKill, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnProcessKill);
+	Connect (Ids::ProcessLaunch, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnProcessLaunch);
+	Connect (Ids::ProcessRestart, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnProcessRestart);
+
 	Connect (Ids::ShowLogs, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnShowLogs);
+
 	Connect (Ids::Help, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnHelp);
 	Connect (Ids::About, wxEVT_COMMAND_MENU_SELECTED,
@@ -377,6 +398,9 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 	LoggingTab->Append (text);
 
 	MenuItemDisconnect->Enable (TRUE);
+	MenuItemProcessKill->Enable (TRUE);
+	MenuItemProcessLaunch->Enable (TRUE);
+	MenuItemProcessRestart->Enable (TRUE);
 }
 
 void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
@@ -557,6 +581,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 					+ newitem.m_text,
 				FALSE);
 			Proc->ProcConsole->Hide ();
+			MainNotebook->SetSelection (MainNotebook->GetPageCount () - 1);
 #endif
 			LoggingTab->Append (wxString::Format (_("Added page \"Process %d\""),
 							      Pkt->GetIndex ()));
@@ -684,24 +709,24 @@ void MainWindow::ProtoError (Packet *Pkt)
 
 	case Error::ProcessNotKilled:
 		LoggingTab->Append ("Error::ProcessNotKilled");
-		wxMessageBox (wxString::Format (_("Process %d can't be terminated."),
-  						Pkt->GetIndex ()),
+		wxMessageBox (wxString::Format (_("Process %s can't be terminated."),
+  						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		break;
 
 	case Error::ProcessNotLaunched:
 		LoggingTab->Append ("Error::ProcessNotLaunched");
-		wxMessageBox (wxString::Format (_("Process %d can't be launched."),
-  						Pkt->GetIndex ()),
+		wxMessageBox (wxString::Format (_("Process %s can't be launched."),
+  						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		break;
 
 	case Error::ProcessNotRestarted:
 		LoggingTab->Append ("Error::ProcessNotRestarted");
-		wxMessageBox (wxString::Format (_("Process %d can't be restarted."),
-  						Pkt->GetIndex ()),
+		wxMessageBox (wxString::Format (_("Process %s can't be restarted."),
+  						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		break;
@@ -833,7 +858,11 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 		nb_selected = MainNotebook->GetSelection ();
 		if (nb_selected >= 0)
 		{
+#ifdef __WXMSW__
 			if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
+#else
+			if (MenuItemShowLogs->IsChecked () && nb_selected == MainNotebook->GetPageCount () - 1)
+#endif
 				LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
 			else
 			{
@@ -938,4 +967,84 @@ void MainWindow::OnShowLogs (wxCommandEvent& WXUNUSED(event))
 #endif
 		AppConfig->Write ("/Options/ShowLogs", 0l);
 	}
+}
+
+void MainWindow::OnProcessKill (wxCommandEvent& WXUNUSED(event))
+{
+	wxNotebookPage *CurrentNB;
+	int nb_selected = MainNotebook->GetSelection ();
+	unsigned int idx;
+	wxListItem info;
+
+	// FIXME: el proceso seleccionado se debería sacar
+	// de la lista de procesos
+/*	info.m_state = wxLIST_STATE_SELECTED;
+	info.m_stateMask = wxLIST_STATE_SELECTED;
+	info.m_col = 0;
+	info.m_data = 0;
+	info.m_mask = wxLIST_MASK_STATE;
+	ProcListPanel->ProcessList->GetItem (info);
+
+	printf ("m_data: %ld\n", info.m_data);
+*/
+	if (nb_selected >= 0)
+	{
+#ifdef __WXMSW__
+		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+#else
+		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+#endif
+		{
+			CurrentNB = MainNotebook->GetPage (nb_selected);
+			idx = ((Console *)(CurrentNB))->GetIndex ();
+			Net->AddOut (idx, Session::ProcessKill);
+			Net->Send ();
+		}
+	}
+}
+
+void MainWindow::OnProcessLaunch (wxCommandEvent& WXUNUSED(event))
+{
+	wxNotebookPage *CurrentNB;
+	int nb_selected = MainNotebook->GetSelection ();
+	unsigned int idx;
+
+	if (nb_selected >= 0)
+	{
+#ifdef __WXMSW__
+		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+#else
+		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+#endif
+		{
+			CurrentNB = MainNotebook->GetPage (nb_selected);
+			idx = ((Console *)(CurrentNB))->GetIndex ();
+			Net->AddOut (idx, Session::ProcessLaunch);
+			Net->Send ();
+		}
+	}
+
+}
+
+void MainWindow::OnProcessRestart (wxCommandEvent& WXUNUSED(event))
+{
+	wxNotebookPage *CurrentNB;
+	int nb_selected = MainNotebook->GetSelection ();
+	unsigned int idx;
+
+	if (nb_selected >= 0)
+	{
+#ifdef __WXMSW__
+		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+#else
+		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+#endif
+		{
+			CurrentNB = MainNotebook->GetPage (nb_selected);
+			idx = ((Console *)(CurrentNB))->GetIndex ();
+			Net->AddOut (idx, Session::ProcessRestart);
+			Net->Send ();
+		}
+	}
+
 }

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/06/19 23:59:23 $
+// $Revision: 1.7 $
+// $Date: 2004/06/30 03:47:07 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -87,6 +87,7 @@ public:
 	void AddBuffer (List<Packet> &PktList, unsigned int idx,
 			unsigned int com, const char *data);
 	void AddBufferOut (unsigned int idx, unsigned int com, const char *data);
+	void AddOut (unsigned int idx, unsigned int com);
 
 	int Connect (void);
 	int Disconnect (bool exiting = FALSE);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.14 $
-// $Date: 2004/06/29 03:53:48 $
+// $Revision: 1.15 $
+// $Date: 2004/06/30 03:47:07 $
 //
 
 #include <cstdio>
@@ -105,6 +105,13 @@ void Network::AddBufferOut (unsigned int idx, unsigned int com, const char *data
 {
 	Lock (OutgoingMutex);
 	AddBuffer (Outgoing, idx, com, data);
+	Unlock (OutgoingMutex);
+}
+
+void Network::AddOut (unsigned int idx, unsigned int com)
+{
+	Lock (OutgoingMutex);
+	Outgoing << new Packet (idx, com);
 	Unlock (OutgoingMutex);
 }
 

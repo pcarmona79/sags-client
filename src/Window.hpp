@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.11 $
-// $Date: 2004/06/23 00:29:42 $
+// $Revision: 1.12 $
+// $Date: 2004/06/30 03:47:07 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -55,6 +55,9 @@ private:
 	wxMenuItem *MenuItemConnect;
 	wxMenuItem *MenuItemDisconnect;
 	wxMenuItem *MenuItemShowLogs;
+	wxMenuItem *MenuItemProcessKill;
+	wxMenuItem *MenuItemProcessLaunch;
+	wxMenuItem *MenuItemProcessRestart;
 
 public:
 	MainWindow (const wxString& title,
@@ -79,6 +82,9 @@ public:
 	void OnConsoleSave (wxCommandEvent& event);
 	void OnProcessSelected (wxListEvent& event);
 	void OnShowLogs (wxCommandEvent& event);
+	void OnProcessKill (wxCommandEvent& event);
+	void OnProcessLaunch (wxCommandEvent& event);
+	void OnProcessRestart (wxCommandEvent& event);
 
 	// señales de sockets
 	void OnSocketConnected (wxCommandEvent& event);
