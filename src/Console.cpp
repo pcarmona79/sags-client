@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.18 $
-// $Date: 2004/06/28 01:32:14 $
+// $Revision: 1.19 $
+// $Date: 2004/06/29 03:53:48 $
 //
 
 #include "Console.hpp"
@@ -200,10 +200,15 @@ void Console::Add (wxString text, bool memorize)
 #ifdef __WXMSW__
 	// el foco debe estar en el widget de entrada, pero
 	// de la consola que esta seccionada
-	if (!MenuItemShowLogs->IsChecked () || ParentNB->GetPageCount () != 1)
-		((Console *)(ParentNB->GetPage (0)))->InputSetFocus ();
+	if (ParentNB->GetPageCount () > 0)
+	{
+		if (!MenuItemShowLogs->IsChecked () || ParentNB->GetPageCount () != 1)
+			((Console *)(ParentNB->GetPage (0)))->InputSetFocus ();
+		else
+			Input->SetFocus ();
+	}
 	else
-		Input->SetFocus ();
+			Input->SetFocus ();
 #endif
 
 	if (memorize)

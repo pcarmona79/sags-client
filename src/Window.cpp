@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.24 $
-// $Date: 2004/06/28 22:44:25 $
+// $Revision: 1.25 $
+// $Date: 2004/06/29 03:53:48 $
 //
 
 #include <wx/wx.h>
@@ -356,8 +356,11 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 {
 	// borrar las consolas del notebook
 #ifdef __WXMSW__
-	if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
-		MainNotebook->DeletePage (0);
+	if (MainNotebook->GetPageCount () > 0)
+	{
+		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+			MainNotebook->DeletePage (0);
+	}
 #else
 	while (MainNotebook->GetPageCount () > 1)
 		MainNotebook->DeletePage (0);
@@ -489,7 +492,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 	case Session::ConsoleSuccess:
 
-		text.Printf ("Session::ConsoleSuccess on %d", Pkt->GetIndex ());
+		text.Printf ("Session::ConsoleSuccess on process %d", Pkt->GetIndex ());
 		LoggingTab->Append (text);
 		break;
 
@@ -679,6 +682,30 @@ void MainWindow::ProtoError (Packet *Pkt)
 			      wxOK | wxICON_ERROR, this);
 		break;
 
+	case Error::ProcessNotKilled:
+		LoggingTab->Append ("Error::ProcessNotKilled");
+		wxMessageBox (wxString::Format (_("Process %d can't be terminated."),
+  						Pkt->GetIndex ()),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	case Error::ProcessNotLaunched:
+		LoggingTab->Append ("Error::ProcessNotLaunched");
+		wxMessageBox (wxString::Format (_("Process %d can't be launched."),
+  						Pkt->GetIndex ()),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	case Error::ProcessNotRestarted:
+		LoggingTab->Append ("Error::ProcessNotRestarted");
+		wxMessageBox (wxString::Format (_("Process %d can't be restarted."),
+  						Pkt->GetIndex ()),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
 	case Error::Generic:
 		text.Printf ("Error::Generic (%d bytes): %s",
 			     Pkt->GetLength (), Pkt->GetData ());
@@ -729,10 +756,35 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 	unsigned int i;
 
 	// obtenemos la fuente actual usada
-
-	if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
+	if (MainNotebook->GetPageCount () > 0)
 	{
-		// no hay tabs de procesos
+		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
+		{
+			// no hay tabs de procesos
+#ifdef __WXMSW__
+			if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
+				AppConfig->Write ("/Console/FontName", "Courier New");
+#else
+			if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
+				AppConfig->Write ("/Console/FontName", "fixed");
+#endif
+			if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
+				AppConfig->Write ("/Console/FontSize", 12);
+
+			// creamos un wxFont con los valores leídos
+			wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
+					    wxNORMAL, FALSE, FontName);
+			ActualFontData.SetInitialFont (ConsoleFont);
+		}
+		else
+		{
+			FirstNB = MainNotebook->GetPage (0);
+			ActualFontData.SetInitialFont (((Console*)FirstNB)->GetConsoleFont ());
+		}
+	}
+	else
+	{
+		// no hay ningun tab
 #ifdef __WXMSW__
 		if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
 			AppConfig->Write ("/Console/FontName", "Courier New");
@@ -747,11 +799,6 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 		wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
 				    wxNORMAL, FALSE, FontName);
 		ActualFontData.SetInitialFont (ConsoleFont);
-	}
-	else
-	{
-		FirstNB = MainNotebook->GetPage (0);
-		ActualFontData.SetInitialFont (((Console*)FirstNB)->GetConsoleFont ());
 	}
 
 	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
@@ -784,12 +831,15 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 	if (SaveDialog->ShowModal () == wxID_OK)
 	{
 		nb_selected = MainNotebook->GetSelection ();
-		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
-			LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
-		else
+		if (nb_selected >= 0)
 		{
-			CurrentNB = MainNotebook->GetPage (nb_selected);
-			((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
+			if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
+				LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
+			else
+			{
+				CurrentNB = MainNotebook->GetPage (nb_selected);
+				((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
+			}
 		}
 	}
 }
@@ -832,11 +882,14 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 	{
 #ifdef __WXMSW__
 		// si se están mostrando los logs, no debe ser removido
-		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+		if (MainNotebook->GetPageCount () > 0)
 		{
-			CurrentNB = MainNotebook->GetPage (0);
-			CurrentNB->Hide ();
-			MainNotebook->RemovePage (0);
+			if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+			{
+				CurrentNB = MainNotebook->GetPage (0);
+				CurrentNB->Hide ();
+				MainNotebook->RemovePage (0);
+			}
 		}
 
 		MainNotebook->InsertPage (0, (wxNotebookPage *) ProcessToShow->ProcConsole,

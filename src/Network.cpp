@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.13 $
-// $Date: 2004/06/24 00:12:57 $
+// $Revision: 1.14 $
+// $Date: 2004/06/29 03:53:48 $
 //
 
 #include <cstdio>
@@ -126,8 +126,12 @@ int Network::Disconnect (bool exiting)
 
 	// enviar un paquete de desconexión
 	// FIXME: esto bloquea la GUI!
-	if (SendPacket (new Packet (Session::MainIndex, Session::Disconnect)) < 0)
-		return -1;
+	Lock (OutgoingMutex);
+	Outgoing << new Packet (Session::MainIndex, Session::Disconnect);
+	Unlock (OutgoingMutex);
+	Send ();
+	//if (SendPacket (new Packet (Session::MainIndex, Session::Disconnect)) < 0)
+	//	return -1;
 
 	return 0;
 }

@@ -5,6 +5,15 @@
 
 	* src/Window.cpp:
 		- Added three new menu items.
+		- Fixed bug on win32 version which causes a segmentation fault
+		when trying to get a innexistent notebook page.
+
+	* src/Console.cpp:
+		- Fixed bug on win32 version which causes a segmentation fault
+		when trying to get a innexistent notebook page.
+
+	* src/Network.cpp:
+		- Trying to change desconection method.
 
 
 2004-06-27  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
