@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/08/10 03:17:15 $
+// $Revision: 1.3 $
+// $Date: 2004/08/12 07:12:17 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -28,6 +28,7 @@
 
 #include <wx/wx.h>
 #include <wx/config.h>
+#include <wx/listctrl.h>
 #include "Network.hpp"
 
 class Channel : public wxPanel
@@ -35,6 +36,9 @@ class Channel : public wxPanel
 private:
 	wxTextCtrl *Output;
 	wxTextCtrl *Input;
+	wxTextCtrl *Topic;
+	wxListCtrl *UserList;
+
 	wxButton *SendButton;
 	bool last_had_newline;
 	wxString last_input;
@@ -46,7 +50,7 @@ private:
 	wxNotebook *ParentNB;
 
 public:
-	Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
+	Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		 unsigned int idx = 0);
 	~Channel ();
 
@@ -58,11 +62,11 @@ public:
 	bool SaveChannelToFile (const wxString& filename);
 	void ClearOutput (void);
 	void ClearInput (void);
-	void ChangeChannelFont (void);
 	void ScrollToBottom (void);
 	void InputSetFocus (void);
 	void OutputSetFocus (void);
 	unsigned int GetIndex (void);
+	void SetNetwork (Network *N);
 
 	void OnSend (wxCommandEvent& event);
 };

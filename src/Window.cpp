@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.31 $
-// $Date: 2004/08/12 02:12:39 $
+// $Revision: 1.32 $
+// $Date: 2004/08/12 07:12:17 $
 //
 
 #include <wx/wx.h>
@@ -190,7 +190,7 @@ MainWindow::MainWindow (const wxString& title,
 
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, Ids::WindowLogs);
-	GeneralChannel = new Channel (MainNotebook, Ids::WindowChat, Net, AppConfig);
+	GeneralChannel = new Channel (MainNotebook, Ids::WindowChat, AppConfig);
 
 #ifdef __WXMSW__
 	if (ShowLogs)
@@ -503,13 +503,19 @@ void MainWindow::ProtoAuth (Packet *Pkt)
 	case Auth::Successful:
 
 		LoggingTab->Append (_("Logged in successfully."));
+
 		text = _("Getting process's log...");
 		SetStatusText (text, 1);
 		LoggingTab->Append (text);
+
 		windowtitle.Printf (_("SAGS Client %s"), VERSION);
 		windowtitle += " - " + Net->GetUsername () + "@[";
 		windowtitle += Net->GetAddress () + "]:" + Net->GetPort ();
 		SetTitle (windowtitle);
+
+		// el chat necesita el objeto Net para funcionar
+		GeneralChannel->SetNetwork (Net);
+
 		break;
 
 	default:

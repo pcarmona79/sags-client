@@ -1,3 +1,20 @@
+2004-08-12  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Channel.hpp:
+	* src/Channel.cpp:
+		- Added topic text entry, user's list, input entry and chat
+		output.
+		- Added SetNetwork() method to set the network object to be
+		used by chat tab when sending messages.
+
+	* src/Ids.hpp:
+		- Added ids for text entry and button of chat tab.
+
+	* src/Window.cpp:
+		- Now set the network object for the chat immediately after to
+		get logged in.
+
+
 2004-08-11  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Ids.hpp:
@@ -14,6 +31,9 @@
 	* src/Console.hpp:
 	* src/Console.cpp:
 		- Removed unused ChangeConsoleFont() method.
+
+	* src/Packet.hpp:
+		- Added two packet types to manage the channel's topic.
 
 	* src/Window.hpp:
 	* src/Window.cpp:

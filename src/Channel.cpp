@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/08/12 02:51:26 $
+// $Revision: 1.4 $
+// $Date: 2004/08/12 07:12:17 $
 //
 
 #include "Channel.hpp"
@@ -28,14 +28,15 @@
 #include <wx/fontdlg.h>
 #include <wx/notebook.h>
 
-Channel::Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
+Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		  unsigned int idx)
 	: wxPanel (parent, id)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
+	wxBoxSizer *TopicSizer = new wxBoxSizer (wxHORIZONTAL);
+	wxBoxSizer *OutputSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *InputSizer = new wxBoxSizer (wxHORIZONTAL);
 
-	Net = N;
 	AppConfig = AppCfg;
 	index = idx;
 	ParentNB = (wxNotebook *) parent;
@@ -75,43 +76,77 @@ Channel::Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 	Output->Refresh ();
 
 	Input = new wxTextCtrl (this,
-				Ids::Input,
+				Ids::ChatInput,
 				"",
 				wxDefaultPosition,
 				wxDefaultSize,
 				wxTE_RICH | wxTE_PROCESS_ENTER);
 
-	SendButton = new wxButton (this, Ids::SendButton, _("Send"));
+	UserList = new wxListCtrl (this,
+				   -1,
+				   wxDefaultPosition,
+				   wxSize (100, 1),
+				   wxLC_REPORT | wxLC_NO_HEADER |
+				   wxLC_SINGLE_SEL | wxLC_HRULES);
 
-	TopSizer->Add (Output,
+	UserList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, 100);
+
+	Topic = new wxTextCtrl (this,
+				-1,
+				"Here comes the channel's topic",
+				wxDefaultPosition,
+				wxDefaultSize,
+				wxTE_RICH | wxTE_READONLY);
+
+	SendButton = new wxButton (this, Ids::ChatSend, _("Send"));
+
+	TopicSizer->Add (new wxStaticText (this, -1, _("Channel's topic:")),
+			 0,
+			 wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT | wxTOP,
+			 5);
+
+	TopicSizer->Add (Topic,
+			 1,
+			 wxALIGN_CENTER_VERTICAL | wxRIGHT | wxTOP,
+			 5);
+
+	TopSizer->Add (TopicSizer,
+		       0,
+		       wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL,
+		       0);
+
+	OutputSizer->Add (Output,
+			  1,
+			  wxALIGN_CENTER_VERTICAL | wxEXPAND |
+			  wxLEFT | wxRIGHT | wxTOP | wxBOTTOM,
+			  5);
+
+	OutputSizer->Add (UserList,
+			  0,
+			  wxALIGN_CENTER_VERTICAL | wxEXPAND |
+			  wxRIGHT | wxTOP | wxBOTTOM,
+			  5);
+
+	TopSizer->Add (OutputSizer,
 		       1,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxEXPAND |
-		       wxALL,
-		       5);
+		       wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL,
+		       0);
 
 	InputSizer->Add (Input,
 			 1,
-			 wxALIGN_CENTER_VERTICAL |
-			 wxALIGN_CENTER_HORIZONTAL |
-			 wxLEFT |
-			 wxRIGHT |
-			 wxBOTTOM,
+			 wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL |
+			 wxLEFT | wxRIGHT | wxBOTTOM,
 			 5);
 
 	InputSizer->Add (SendButton,
 			 0,
-			 wxALIGN_CENTER_VERTICAL |
-			 wxALIGN_CENTER_HORIZONTAL |
-			 wxRIGHT |
-			 wxBOTTOM,
+			 wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL |
+			 wxRIGHT | wxBOTTOM,
 			 5);
 
 	TopSizer->Add (InputSizer,
 		       0,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxEXPAND |
-		       wxALL,
+		       wxALIGN_CENTER_VERTICAL | wxEXPAND | wxALL,
 		       0);
 
 	SetAutoLayout (TRUE);
@@ -125,10 +160,10 @@ Channel::Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 	// el foco debe estar en el widget de entrada
 	Input->SetFocus ();
 
-	// señales de la consola
-	Connect (Ids::Input, wxEVT_COMMAND_TEXT_ENTER,
+	// señales
+	Connect (Ids::ChatInput, wxEVT_COMMAND_TEXT_ENTER,
 		 (wxObjectEventFunction) &Channel::OnSend);
-	Connect (Ids::SendButton, wxEVT_COMMAND_BUTTON_CLICKED,
+	Connect (Ids::ChatSend, wxEVT_COMMAND_BUTTON_CLICKED,
 		 (wxObjectEventFunction) &Channel::OnSend);
 }
 
@@ -269,29 +304,6 @@ void Channel::ClearInput (void)
 	Input->Clear ();
 }
 
-void Channel::ChangeChannelFont (void)
-{
-	wxFontData ActualFontData, NewFontData;
-
-	// obtenemos la fuente actual usada en ConsoleOutput
-	ActualFontData.SetInitialFont (GetChannelFont ());
-	wxFontDialog *ChannelFontDialog = new wxFontDialog (this, ActualFontData);
-
-	if (ChannelFontDialog->ShowModal () == wxID_OK)
-	{
-		// obtener el wxFontData y usarlo para
-		// cambiar la fuente a ConsoleOutput
-		NewFontData = ChannelFontDialog->GetFontData ();
-		SetChannelFont (NewFontData.GetChosenFont ());
-
-		// los nuevos valores deben ser guardados en la configuración
-		AppConfig->Write ("/Channel/FontName",
-				  (NewFontData.GetChosenFont ()).GetFaceName ());
-		AppConfig->Write ("/Channel/FontSize",
-				  (NewFontData.GetChosenFont ()).GetPointSize ());
-	}
-}
-
 void Channel::ScrollToBottom (void)
 {
 	Output->ShowPosition (Output->GetLastPosition ());
@@ -310,7 +322,7 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 		Add (data, TRUE);
 		SetOutputStyle ();
 
-		Net->AddBufferOut (index, Session::ConsoleInput, data.c_str ());
+		Net->AddBufferOut (index, Session::ChatMessage, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
 	}
 }
@@ -328,4 +340,9 @@ void Channel::OutputSetFocus (void)
 unsigned int Channel::GetIndex (void)
 {
 	return index;
+}
+
+void Channel::SetNetwork (Network *N)
+{
+	Net = N;
 }
