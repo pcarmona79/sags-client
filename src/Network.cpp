@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/05/23 21:12:50 $
+// $Revision: 1.5 $
+// $Date: 2004/05/29 19:59:23 $
 //
 
 #include <cstdio>
@@ -213,7 +213,7 @@ void *Network::Entry (void)
 {
 	int val;
 	bool send_now = FALSE;
-	char hello_msg[21];
+	char hello_msg[26];
 
 	if (!Connected)
 		Connect ();
@@ -231,7 +231,7 @@ void *Network::Entry (void)
 	EvtParent->AddPendingEvent ((wxEvent&) ConnectSuccessful);
 
 	// La autenticación comieza enviando un SyncHello
-	snprintf (hello_msg, 20, "SAGS Client %s", VERSION);
+	snprintf (hello_msg, 25, "SAGS Client %s", VERSION);
 	OutgoingMutex.Lock ();
 	AddBuffer (Outgoing, Pckt::SyncHello, hello_msg);
 	OutgoingMutex.Unlock ();

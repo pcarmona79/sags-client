@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/05/21 22:18:28 $
+// $Revision: 1.9 $
+// $Date: 2004/05/29 19:59:23 $
 //
 
 #include <wx/wx.h>
@@ -271,6 +271,10 @@ void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
 	{
 		SetStatusText (_("Not connected"), 1);
 	}
+
+	wxString windowtitle;
+	windowtitle.Printf (_("SAGS Client %s"), VERSION);
+	SetTitle (windowtitle);
 }
 
 void MainWindow::OnClose (wxCommandEvent& WXUNUSED(event))
@@ -310,7 +314,7 @@ void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
 {
-	wxString text = _("Authenticating...");
+	wxString text = _("Connected to server. Authenticating...");
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
@@ -319,7 +323,7 @@ void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 {
-	wxString text;
+	wxString text, windowtitle;
 	Packet *Pkt = Net->Get ();
 	static int bytes = 0;
 
@@ -353,6 +357,9 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 				text = _("Getting process's log...");
 				SetStatusText (text, 1);
 				LoggingTab->Append (text);
+				windowtitle.Printf (_("SAGS Client %s"), VERSION);
+				windowtitle += " - [" + Net->GetAddress () + "]:" + Net->GetPort ();
+				SetTitle (windowtitle);
 				break;
 
 			case Pckt::SessionConsoleOutput:

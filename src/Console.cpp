@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/05/23 21:12:50 $
+// $Revision: 1.10 $
+// $Date: 2004/05/29 19:59:23 $
 //
 
 #include "Console.hpp"
@@ -150,7 +150,7 @@ void Console::Add (wxString text, bool memorize)
 
 	if (!text.IsEmpty ())
 	{
-		if (Output->GetLastPosition () > 0 && last_had_newline)
+		if (last_had_newline)
 			Output->AppendText ("\n");
 		Output->AppendText (text);
 	}

@@ -1,3 +1,13 @@
+2004-05-29  Pablo Carmona Amigo  <kernel@dday.cl>
+
+	* configure.in: Append "cvs" to current version on CVS.
+	* src/Window.cpp: Added server's IP and port to window title.
+	* src/Window.cpp: Changed the authenticating message to include a
+	connect text.
+	* src/Console.cpp: Removed innecesary check of console's text length
+	when adding text to widget.
+
+
 2004-05-23  Pablo Carmona Amigo  <kernel@dday.cl>
 
 	* Version 0.2.1.
