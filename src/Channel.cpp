@@ -19,14 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/08/13 00:55:37 $
+// $Revision: 1.6 $
+// $Date: 2004/08/14 00:23:24 $
 //
 
 #include "Channel.hpp"
 #include "Ids.hpp"
 #include <wx/fontdlg.h>
 #include <wx/notebook.h>
+#include <wx/colour.h>
 
 Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		  unsigned int idx)
@@ -68,13 +69,15 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	// creamos un wxFont con los valores leídos
 	wxFont ChannelFont (FontSize, wxDEFAULT, wxNORMAL,
 			    wxNORMAL, FALSE, FontName);
-
-	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour, ChannelFont);
+	TextStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
+	ActionStyle = new wxTextAttr (wxColour ("ORANGE"), wxNullColour, ChannelFont);
+	NoticeStyle = new wxTextAttr (wxColour ("PURPLE"), wxNullColour, ChannelFont);
+	JoinLeaveStyle = new wxTextAttr (wxColour ("BLUE"), wxNullColour, ChannelFont);
+	NickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
+	MyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
 	ChannelFont.SetWeight (wxBOLD);
-	InputStyle = new wxTextAttr (wxNullColour, wxNullColour, ChannelFont);
-
-	Output->SetDefaultStyle (*OutputStyle);
-	Output->Refresh ();
+	LimiterStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour, ChannelFont);
+	MyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour, ChannelFont);
 
 	Input = new wxTextCtrl (this,
 				Ids::ChatInput,
@@ -255,14 +258,96 @@ void Channel::Add (wxString text, bool memorize)
 	last_had_newline = have_newline;
 }
 
-void Channel::SetInputStyle (void)
+void Channel::AddMessage (wxString usr, wxString txt)
 {
-	Output->SetDefaultStyle (*InputStyle);
+	if (usr == Username)
+	{
+		SetMyLimiterStyle ();
+		Add ("<");
+		SetMyNickStyle ();
+		Add (usr);
+		SetMyLimiterStyle ();
+	}
+	else
+	{
+		SetLimiterStyle ();
+		Add ("<");
+		SetNickStyle ();
+		Add (usr);
+		SetLimiterStyle ();
+	}
+
+	Add (">");
+	SetTextStyle ();
+	Add (" " + txt + "\n");
 }
 
-void Channel::SetOutputStyle (void)
+void Channel::AddAction (wxString usr, wxString txt)
 {
-	Output->SetDefaultStyle (*OutputStyle);
+	SetActionStyle ();
+	Add ("* " + usr + " " + txt + "\n");
+	SetTextStyle ();
+}
+
+void Channel::AddNotice (wxString usr, wxString txt)
+{
+	SetNoticeStyle ();
+	Add ("-" + usr + "- " + txt + "\n");
+	SetTextStyle ();
+}
+
+void Channel::AddJoin (wxString usr)
+{
+	SetJoinLeaveStyle ();
+	Add (wxString::Format (_("---> %s has joined to the channel\n"), usr.c_str ()));
+	SetTextStyle ();
+}
+
+void Channel::AddLeave (wxString usr)
+{
+	SetJoinLeaveStyle ();
+	Add (wxString::Format (_("<--- %s leaves the channel\n"), usr.c_str ()));
+	SetTextStyle ();
+}
+
+void Channel::SetTextStyle (void)
+{
+	Output->SetDefaultStyle (*TextStyle);
+}
+
+void Channel::SetActionStyle (void)
+{
+	Output->SetDefaultStyle (*ActionStyle);
+}
+
+void Channel::SetNoticeStyle (void)
+{
+	Output->SetDefaultStyle (*NoticeStyle);
+}
+
+void Channel::SetJoinLeaveStyle (void)
+{
+	Output->SetDefaultStyle (*JoinLeaveStyle);
+}
+
+void Channel::SetNickStyle (void)
+{
+	Output->SetDefaultStyle (*NickStyle);
+}
+
+void Channel::SetMyNickStyle (void)
+{
+	Output->SetDefaultStyle (*MyNickStyle);
+}
+
+void Channel::SetLimiterStyle (void)
+{
+	Output->SetDefaultStyle (*LimiterStyle);
+}
+
+void Channel::SetMyLimiterStyle (void)
+{
+	Output->SetDefaultStyle (*MyLimiterStyle);
 }
 
 const wxFont& Channel::GetChannelFont (void)
@@ -273,19 +358,55 @@ const wxFont& Channel::GetChannelFont (void)
 void Channel::SetChannelFont (wxFont newfont)
 {
 	wxTextAttr *LastStyle = NULL;
-	wxTextAttr *NewOutputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
+	wxTextAttr *NewTextStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
+	wxTextAttr *NewActionStyle = new wxTextAttr (wxColour ("ORANGE"), wxNullColour,
+						     newfont);
+	wxTextAttr *NewNoticeStyle = new wxTextAttr (wxColour ("PURPLE"), wxNullColour,
+						     newfont);
+	wxTextAttr *NewJoinLeaveStyle = new wxTextAttr (wxColour ("BLUE"), wxNullColour,
+							newfont);
+	wxTextAttr *NewNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
+	wxTextAttr *NewMyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
 	newfont.SetWeight (wxBOLD);
-	wxTextAttr *NewInputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
+	wxTextAttr *NewLimiterStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour,
+						      newfont);
+	wxTextAttr *NewMyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour,
+							newfont);
 
-	LastStyle = OutputStyle;
-	OutputStyle = NewOutputStyle;
-	delete LastStyle;
-	LastStyle = InputStyle;
-	InputStyle = NewInputStyle;
+	LastStyle = TextStyle;
+	TextStyle = NewTextStyle;
 	delete LastStyle;
 
-	Output->SetDefaultStyle (*OutputStyle);
-	Output->SetStyle (0, Output->GetLastPosition (), *OutputStyle);
+	LastStyle = ActionStyle;
+	ActionStyle = NewActionStyle;
+	delete LastStyle;
+
+	LastStyle = NoticeStyle;
+	NoticeStyle = NewNoticeStyle;
+	delete LastStyle;
+
+	LastStyle = JoinLeaveStyle;
+	JoinLeaveStyle = NewJoinLeaveStyle;
+	delete LastStyle;
+
+	LastStyle = NickStyle;
+	NickStyle = NewNickStyle;
+	delete LastStyle;
+
+	LastStyle = MyNickStyle;
+	MyNickStyle = NewMyNickStyle;
+	delete LastStyle;
+
+	LastStyle = LimiterStyle;
+	LimiterStyle = NewLimiterStyle;
+	delete LastStyle;
+
+	LastStyle = MyLimiterStyle;
+	MyLimiterStyle = NewMyLimiterStyle;
+	delete LastStyle;
+
+	Output->SetDefaultStyle (*TextStyle);
+	//Output->SetStyle (0, Output->GetLastPosition (), *TextStyle);
 }
 
 bool Channel::SaveChannelToFile (const wxString& filename)
@@ -318,14 +439,29 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 
 	if (data.Length () > 0 && Net != NULL)
 	{
-		SetInputStyle ();
-		Add (data + "\n", TRUE);
-		SetOutputStyle ();
+		// buscamos comandos /me y /notice
+		if (data.First ("/me ") == 0)
+		{
+			data = data.Mid (4, wxSTRING_MAXLEN);
+			AddAction (Username, data);
+			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
+			Net->AddBufferOut (index, Session::ChatAction, data.c_str ());
+		}
+		else if (data.First ("/notice ") == 0)
+		{
+			data = data.Mid (8, wxSTRING_MAXLEN);
+			AddNotice (Username, data);
+			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
+			Net->AddBufferOut (index, Session::ChatNotice, data.c_str ());
+		}
+		else
+		{
+			AddMessage (Username, data);
+			// TODO: forzar data a UTF-8!
+			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
+			Net->AddBufferOut (index, Session::ChatMessage, data.c_str ());
+		}
 
-		// TODO: forzar a UTF-8
-		data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
-
-		Net->AddBufferOut (index, Session::ChatMessage, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
 	}
 }
@@ -349,4 +485,9 @@ void Channel::SetNetwork (Network *N)
 {
 	Net = N;
 	Username = Net->GetUsername ();
+}
+
+void Channel::ProcessMessage (Packet *Pkt)
+{
+	
 }

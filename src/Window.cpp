@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.32 $
-// $Date: 2004/08/12 07:12:17 $
+// $Revision: 1.33 $
+// $Date: 2004/08/14 00:23:24 $
 //
 
 #include <wx/wx.h>
@@ -645,6 +645,20 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 		LoggingTab->Append (wxString::Format (_("Process %d start: \"%s\""),
 						      Pkt->GetIndex (), Pkt->GetData ()));
+		break;
+
+	case Session::ChatUserList:
+	case Session::ChatTopic:
+	case Session::ChatJoin:
+	case Session::ChatLeave:
+	case Session::ChatMessage:
+	case Session::ChatAction:
+	case Session::ChatNotice:
+	case Session::ChatPrivMessage:
+	case Session::ChatPrivAction:
+	case Session::ChatPrivNotice:
+
+		GeneralChannel->ProcessMessage (Pkt);
 		break;
 
 	case Session::Disconnect:

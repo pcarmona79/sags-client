@@ -1,3 +1,17 @@
+2004-08-13  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Channel.hpp:
+	* src/Channel.cpp:
+		- Added more text styles for normal, action, notice, joins and
+		leaves messages.
+		- Enables /me and /notice command for the channel.
+		- Added ProcessMessage() to generate right messages on chat
+		window.
+
+	* src/Window.cpp:
+		- Now we manage the chat network messages.
+
+
 2004-08-12  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Channel.hpp:
