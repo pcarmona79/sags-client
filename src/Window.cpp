@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.34 $
-// $Date: 2004/08/17 02:29:48 $
+// $Revision: 1.35 $
+// $Date: 2004/08/20 03:47:27 $
 //
 
 #include <wx/wx.h>
@@ -928,7 +928,6 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
 #ifdef __WXGTK__
-		// TODO: ver si esta función funciona bien en win32
 		ProcessToShow->ProcConsole->ScrollToBottom ();
 #endif
 	}

@@ -19,12 +19,13 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.23 $
-// $Date: 2004/08/17 02:29:48 $
+// $Revision: 1.24 $
+// $Date: 2004/08/20 03:47:27 $
 //
 
 #include "Console.hpp"
 #include "Ids.hpp"
+#include "Channel.hpp"
 #include <wx/fontdlg.h>
 #include <wx/notebook.h>
 
@@ -209,6 +210,8 @@ void Console::Add (wxString text, bool memorize)
 		if (CurrentNBP->GetId () != Ids::WindowChat &&
 		    CurrentNBP->GetId () != Ids::WindowLogs)
 			((Console *)CurrentNBP)->InputSetFocus ();
+		else if (CurrentNBP->GetId () == Ids::WindowChat)
+			((Channel *)CurrentNBP)->InputSetFocus ();
 		else
 			Input->SetFocus ();
 	}

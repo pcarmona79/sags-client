@@ -1,3 +1,12 @@
+2004-08-19  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Console.cpp:
+		- Fixed bug which changing chat window focus.
+
+	* src/Window.cpp:
+		- ScrollToBottom() don't work on win32. Removed comment.
+
+
 2004-08-18  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Network.cpp:
