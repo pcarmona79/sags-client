@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.3.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2005-02-04 17:04-0300\n"
+"POT-Creation-Date: 2005-02-09 20:34-0300\n"
 "PO-Revision-Date: 2005-01-26 18:10-0300\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -22,33 +22,37 @@ msgstr ""
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/Channel.cpp:119 src/Console.cpp:87
+#: src/Channel.cpp:122 src/Console.cpp:86
 msgid "Send"
 msgstr "Enviar"
 
-#: src/Channel.cpp:121
+#: src/Channel.cpp:124
 msgid "Channel's topic:"
 msgstr "Tópico del canal:"
 
-#: src/Channel.cpp:282
+#: src/Channel.cpp:325
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr "---> %s ha entrado al canal\n"
 
-#: src/Channel.cpp:289
+#: src/Channel.cpp:332
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr "<--- %s deja el canal\n"
 
-#: src/Channel.cpp:297
+#: src/Channel.cpp:340
 #, c-format
 msgid ">>> The channel's topic is: %s\n"
 msgstr ">>> El tópico del canal es: %s\n"
 
-#: src/Channel.cpp:305
+#: src/Channel.cpp:348
 #, c-format
 msgid ">>> %s sets topic to: %s\n"
 msgstr ">>> %s cambia el tópico a: %s\n"
+
+#: src/Channel.cpp:530
+msgid "To: "
+msgstr "Para: "
 
 #: src/Config.cpp:42
 msgid "Close"
@@ -78,7 +82,7 @@ msgstr "Contraseña:"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: src/Main.cpp:43 src/Window.cpp:293 src/Window.cpp:434 src/Window.cpp:548
+#: src/Main.cpp:43 src/Window.cpp:288 src/Window.cpp:437 src/Window.cpp:551
 #, c-format
 msgid "SAGS Client %s"
 msgstr "Cliente SAGS %s"
@@ -131,8 +135,8 @@ msgstr "&Guardar en archivo..."
 msgid "Save console's messages to a file"
 msgstr "Guarda los mensajes de la consola a un archivo"
 
-#: src/Window.cpp:87 src/Window.cpp:735 src/Window.cpp:1023
-#: src/Window.cpp:1157
+#: src/Window.cpp:87 src/Window.cpp:739 src/Window.cpp:1034
+#: src/Window.cpp:1168
 msgid "&Maintenance mode OFF"
 msgstr "&Modo de mantenimiento apagado"
 
@@ -232,7 +236,7 @@ msgstr "&Ver"
 msgid "&Help"
 msgstr "A&yuda"
 
-#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1037
+#: src/Window.cpp:224 src/Window.cpp:231 src/Window.cpp:1048
 msgid "Logs"
 msgstr "Registros"
 
@@ -240,39 +244,39 @@ msgstr "Registros"
 msgid "Chat"
 msgstr "Conversación"
 
-#: src/Window.cpp:290 src/Window.cpp:899 src/Window.cpp:911
+#: src/Window.cpp:285 src/Window.cpp:910 src/Window.cpp:922
 msgid "Disconnected"
 msgstr "Desconectado"
 
-#: src/Window.cpp:291 src/Window.cpp:913
+#: src/Window.cpp:286 src/Window.cpp:924
 msgid "Disconnected."
 msgstr "Desconectado."
 
-#: src/Window.cpp:315
+#: src/Window.cpp:318
 msgid "Connect to..."
 msgstr "Conectar a..."
 
-#: src/Window.cpp:335
+#: src/Window.cpp:338
 msgid "Connecting to server ["
 msgstr "Conectando al servidor ["
 
-#: src/Window.cpp:393 src/Window.cpp:394
+#: src/Window.cpp:396 src/Window.cpp:397
 msgid "Disconnecting..."
 msgstr "Desconectando..."
 
-#: src/Window.cpp:398 src/Window.cpp:402
+#: src/Window.cpp:401 src/Window.cpp:405
 msgid "Not connected"
 msgstr "No conectado"
 
-#: src/Window.cpp:422
+#: src/Window.cpp:425
 msgid "No help available yet."
 msgstr "Aún no hay ayuda disponible."
 
-#: src/Window.cpp:423
+#: src/Window.cpp:426
 msgid "Information"
 msgstr "Información"
 
-#: src/Window.cpp:429
+#: src/Window.cpp:432
 msgid ""
 "Secure Administrator of Game Servers\n"
 "http://sags.sourceforge.net/\n"
@@ -286,95 +290,101 @@ msgstr ""
 "(C) 2004 Pablo Carmona Amigo\n"
 "Licenciado bajo la GNU GPL"
 
-#: src/Window.cpp:436
+#: src/Window.cpp:439
 msgid "About"
 msgstr "Acerca de"
 
-#: src/Window.cpp:456
+#: src/Window.cpp:459
 msgid "Connected to server. Authenticating..."
 msgstr "Conectado al servidor. Autenticando..."
 
-#: src/Window.cpp:542
+#: src/Window.cpp:545
 msgid "Logged in successfully."
 msgstr "Autenticado exitosamente."
 
-#: src/Window.cpp:544
+#: src/Window.cpp:547
 msgid "Getting process's log..."
 msgstr "Obteniendo registros del proceso..."
 
-#: src/Window.cpp:599
+#: src/Window.cpp:588
+#, c-format
+msgid "Session::ConsoleSuccess on process %d"
+msgstr "Session::ConsoleSuccess en proceso %d"
+
+#: src/Window.cpp:602
 #, c-format
 msgid "Receiving logs for process %d: %.1f KB (%.1f%%)"
 msgstr "Recibiendo registros del proceso %d: %.1f KB (%.1f%%)"
 
-#: src/Window.cpp:608
+#: src/Window.cpp:611
 #, c-format
 msgid "Received %.1f KB of logs of process %d"
 msgstr "Recibidos %.1f KB de registros del proceso %d"
 
-#: src/Window.cpp:611
+#: src/Window.cpp:614
 msgid "User: "
 msgstr "Usuario: "
 
-#: src/Window.cpp:612
+#: src/Window.cpp:615
 msgid " Server: ["
 msgstr " Servidor: ["
 
-#: src/Window.cpp:654 src/Window.cpp:992
+#: src/Window.cpp:657 src/Window.cpp:1003
 #, c-format
 msgid "Process %d: "
 msgstr "Proceso %d: "
 
-#: src/Window.cpp:660
+#: src/Window.cpp:663
 #, c-format
 msgid "Added page \"Process %d\""
 msgstr "Agregada página \"Process %d\""
 
-#: src/Window.cpp:674
+#: src/Window.cpp:677
 msgid "You are an administrator of this server"
 msgstr "Eres un administrador de este servidor"
 
-#: src/Window.cpp:688
+#: src/Window.cpp:692
 #, c-format
 msgid "Creating new process with index %d"
 msgstr "Creando nuevo proceso con índice %d"
 
-#: src/Window.cpp:694
+#: src/Window.cpp:698
 #, c-format
 msgid "Process %d exits: \"%s\""
 msgstr "Proceso %d sale: \"%s\""
 
-#: src/Window.cpp:700
+#: src/Window.cpp:704
 #, c-format
 msgid "Process %d start: \"%s\""
 msgstr "Proceso %d se inicia: \"%s\""
 
-#: src/Window.cpp:715 src/Window.cpp:1018 src/Window.cpp:1152
+#: src/Window.cpp:719 src/Window.cpp:1029 src/Window.cpp:1163
 msgid "&Maintenance mode ON"
 msgstr "&Modo de mantenimiento encendido"
 
-#: src/Window.cpp:720
+#: src/Window.cpp:724
 #, c-format
 msgid "Process %d has maintenance mode ON"
 msgstr "Proceso %d tiene el modo de mantenimiento encendido"
 
-#: src/Window.cpp:740
+#: src/Window.cpp:744
 #, c-format
 msgid "Process %d has maintenance mode OFF"
 msgstr "Proceso %d tiene el modo de mantenimiento apagado"
 
-#: src/Window.cpp:763
+#: src/Window.cpp:767
 msgid "Disconnected from server."
 msgstr "Desconectado desde el servidor."
 
-#: src/Window.cpp:764 src/Window.cpp:784 src/Window.cpp:793 src/Window.cpp:802
-#: src/Window.cpp:811 src/Window.cpp:820 src/Window.cpp:829 src/Window.cpp:839
-#: src/Window.cpp:847 src/Window.cpp:855 src/Window.cpp:863 src/Window.cpp:871
-#: src/Window.cpp:878 src/Window.cpp:888 src/Window.cpp:902 src/Window.cpp:916
+#: src/Window.cpp:768 src/Window.cpp:788 src/Window.cpp:797 src/Window.cpp:806
+#: src/Window.cpp:815 src/Window.cpp:824 src/Window.cpp:833 src/Window.cpp:843
+#: src/Window.cpp:851 src/Window.cpp:859 src/Window.cpp:867 src/Window.cpp:875
+#: src/Window.cpp:882 src/Window.cpp:889 src/Window.cpp:899 src/Window.cpp:913
+#: src/Window.cpp:927
 msgid "Error"
 msgstr "Error"
 
-#: src/Window.cpp:783
+#: src/Window.cpp:787
 msgid ""
 "Server is full.\n"
 "Disconnected."
@@ -382,7 +392,7 @@ msgstr ""
 "El servidor está lleno.\n"
 "Desconectado."
 
-#: src/Window.cpp:792
+#: src/Window.cpp:796
 msgid ""
 "Protocol's version not valid.\n"
 "Disconnected."
@@ -390,7 +400,7 @@ msgstr ""
 "Versión de protocolo no válida.\n"
 "Desconectado."
 
-#: src/Window.cpp:801
+#: src/Window.cpp:805
 msgid ""
 "Username or password not valid.\n"
 "Disconnected."
@@ -398,7 +408,7 @@ msgstr ""
 "Nombre de usuario o contraseña no válida.\n"
 "Desconectado."
 
-#: src/Window.cpp:810
+#: src/Window.cpp:814
 msgid ""
 "Time for authentication has expired.\n"
 "Disconnected."
@@ -406,7 +416,7 @@ msgstr ""
 "Expiró el tiempo para la autenticación.\n"
 "Desconectado."
 
-#: src/Window.cpp:819
+#: src/Window.cpp:823
 msgid ""
 "Server is shutting down.\n"
 "Disconnected."
@@ -414,7 +424,7 @@ msgstr ""
 "El servidor se está cerrando.\n"
 "Desconectado."
 
-#: src/Window.cpp:828
+#: src/Window.cpp:832
 msgid ""
 "User logged in from other place.\n"
 "Disconnected."
@@ -422,7 +432,7 @@ msgstr ""
 "Usuario conectado desde otro lugar.\n"
 "Desconectado."
 
-#: src/Window.cpp:837
+#: src/Window.cpp:841
 msgid ""
 "Bad process on server:\n"
 "\n"
@@ -430,30 +440,34 @@ msgstr ""
 "Proceso no válido en el servidor:\n"
 "\n"
 
-#: src/Window.cpp:846
+#: src/Window.cpp:850
 msgid "Server can't write to the process."
 msgstr "Servidor no puede escribir en el proceso."
 
-#: src/Window.cpp:853
+#: src/Window.cpp:857
 #, c-format
 msgid "Process %s couldn't be terminated."
 msgstr "Proceso %s no pudo ser terminado."
 
-#: src/Window.cpp:861
+#: src/Window.cpp:865
 #, c-format
 msgid "Process %s couldn't be launched."
 msgstr "Proceso %s no pudo ser lanzado."
 
-#: src/Window.cpp:869
+#: src/Window.cpp:873
 #, c-format
 msgid "Process %s couldn't be restarted."
 msgstr "Proceso %s no pudo ser reiniciado."
 
-#: src/Window.cpp:877
+#: src/Window.cpp:881
 msgid "Maintenance mode not allowed"
 msgstr "Modo de mantenimiento no permitido"
 
-#: src/Window.cpp:886
+#: src/Window.cpp:888
+msgid "User don't exists in channel"
+msgstr "Usuario no existe en el canal"
+
+#: src/Window.cpp:897
 msgid ""
 "Generic Error:\n"
 "\n"
@@ -461,15 +475,15 @@ msgstr ""
 "Error genérico:\n"
 "\n"
 
-#: src/Window.cpp:900 src/Window.cpp:901
+#: src/Window.cpp:911 src/Window.cpp:912
 msgid "Failed to connect to server."
 msgstr "Falló la conexión al servidor."
 
-#: src/Window.cpp:912
+#: src/Window.cpp:923
 msgid "Failed to read data from server."
 msgstr "Falló la lectura de datos desde el servidor."
 
-#: src/Window.cpp:914
+#: src/Window.cpp:925
 msgid ""
 "Failed to read data from server.\n"
 "Disconnected."
@@ -477,11 +491,11 @@ msgstr ""
 "Falló la lectura de datos desde el servidor.\n"
 "Desconectado."
 
-#: src/Window.cpp:929 src/Window.cpp:1180 src/Window.cpp:1192
+#: src/Window.cpp:940 src/Window.cpp:1191 src/Window.cpp:1203
 msgid "Save to file"
 msgstr "Guardar en archivo"
 
-#: src/Window.cpp:1056
+#: src/Window.cpp:1067
 msgid "Preferences"
 msgstr "Preferencias"
 

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/08/30 00:38:09 $
+// $Revision: 1.10 $
+// $Date: 2005/02/10 21:56:58 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -51,6 +51,7 @@ private:
 	wxTextAttr *MyNickStyle;
 	wxTextAttr *LimiterStyle;
 	wxTextAttr *MyLimiterStyle;
+	wxTextAttr *PrivateStyle;
 
 	StatusIconList *StatusIcons;
 
@@ -62,6 +63,8 @@ private:
 	wxString Username;
 	bool last_had_newline;
 
+	bool admin_mode;
+
 public:
 	Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		 unsigned int idx = 0);
@@ -71,6 +74,9 @@ public:
 	void AddMessage (wxString usr, wxString txt);
 	void AddAction (wxString usr, wxString txt);
 	void AddNotice (wxString usr, wxString txt);
+	void AddPrivMessage (wxString usr, wxString txt);
+	void AddPrivAction (wxString usr, wxString txt);
+	void AddPrivNotice (wxString usr, wxString txt);
 	void AddJoin (wxString usr);
 	void AddLeave (wxString usr);
 	void SetTopic (wxString newtopic);
@@ -85,6 +91,7 @@ public:
 	void SetMyNickStyle (void);
 	void SetLimiterStyle (void);
 	void SetMyLimiterStyle (void);
+	void SetPrivateStyle (void);
 
 	const wxFont& GetChannelFont (void);
 	void SetChannelFont (wxFont newfont);
@@ -109,7 +116,10 @@ public:
 	void AddUser (wxString usr, wxString status);
 	void RemoveUser (wxString usr);
 
+	void SetAdminMode (bool mode);
+
 	void OnSend (wxCommandEvent& event);
+	void OnTopic (wxCommandEvent& event);
 };
 
 #endif // __CHANNEL_HPP__

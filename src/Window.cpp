@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.38 $
-// $Date: 2005/02/03 22:03:40 $
+// $Revision: 1.39 $
+// $Date: 2005/02/10 21:56:59 $
 //
 
 #include <wx/wx.h>
@@ -257,20 +257,15 @@ MainWindow::MainWindow (const wxString& title,
 
 MainWindow::~MainWindow ()
 {
-	// antes de cerrar la configuración hay que
+	int w, h;
+
 	// leer el tamaño de la ventana y guardarlo en
 	// el archivo de configuración
-	int w, h;
 	GetSize (&w, &h);
 	AppConfig->Write ("/Options/WindowWidth", w);
 	AppConfig->Write ("/Options/WindowHeight", h);
 
-/*	printf ("GetSize        w=%d h=%d\n", w, h);
-	GetVirtualSize (&w, &h);
-	printf ("GetVirtualSize w=%d h=%d\n", w, h);
-	GetClientSize (&w, &h);
-	printf ("GetClientSize  w=%d h=%d\n", w, h); */
-
+	// ahora podemos guardar la configuración
 	delete AppConfig;
 
 	if (Net != NULL)
@@ -299,6 +294,14 @@ void MainWindow::Disconnect (void)
 	MenuItemProcessKill->Enable (FALSE);
 	MenuItemProcessLaunch->Enable (FALSE);
 	MenuItemProcessRestart->Enable (FALSE);
+
+	GeneralChannel->SetAdminMode (FALSE);
+	GeneralChannel->SetNetwork (NULL);
+	
+	for (int i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
+		if ((MainNotebook->GetPage (i))->GetId () != Ids::WindowChat &&
+		    (MainNotebook->GetPage (i))->GetId () != Ids::WindowLogs)
+			((Console *) MainNotebook->GetPage (i))->SetNetwork (NULL);
 }
 
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
@@ -582,7 +585,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 	case Session::ConsoleSuccess:
 
-		text.Printf ("Session::ConsoleSuccess on process %d", Pkt->GetIndex ());
+		text.Printf (_("Session::ConsoleSuccess on process %d"), Pkt->GetIndex ());
 		LoggingTab->Append (text);
 		break;
 
@@ -672,6 +675,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		{
 			// somos un administrador!
 			LoggingTab->Append (_("You are an administrator of this server"));
+			GeneralChannel->SetAdminMode (TRUE);
 			break;
 		}
 
@@ -875,6 +879,13 @@ void MainWindow::ProtoError (Packet *Pkt)
 	case Error::MaintenanceDenied:
 		LoggingTab->Append ("Error::MaintenanceDenied");
 		wxMessageBox (wxString::Format (_("Maintenance mode not allowed")),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		break;
+
+	case Error::ChatUserDontExists:
+		LoggingTab->Append ("Error::ChatUserDontExists");
+		wxMessageBox (wxString::Format (_("User don't exists in channel")),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		break;

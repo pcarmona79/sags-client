@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.12 $
-// $Date: 2004/08/12 02:12:39 $
+// $Revision: 1.13 $
+// $Date: 2005/02/10 21:56:59 $
 //
 
 #ifndef __CONSOLE_HPP__
@@ -34,7 +34,7 @@ class Console : public wxPanel
 {
 private:
 	wxTextCtrl *Output;
-	wxTextCtrl *Input;
+	wxComboBox *Input;
 	wxButton *SendButton;
 	bool last_had_newline;
 	wxString last_input;
@@ -63,6 +63,8 @@ public:
 	void InputSetFocus (void);
 	void OutputSetFocus (void);
 	unsigned int GetIndex (void);
+	void AddInputCommand (wxString com);
+	void SetNetwork (Network *N);
 
 	void OnSend (wxCommandEvent& event);
 };

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.25 $
-// $Date: 2005/02/03 22:03:40 $
+// $Revision: 1.26 $
+// $Date: 2005/02/10 21:56:59 $
 //
 
 #include "Console.hpp"
@@ -77,12 +77,11 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 	Output->SetDefaultStyle (*OutputStyle);
 	Output->Refresh ();
 
-	Input = new wxTextCtrl (this,
+	Input = new wxComboBox (this,
 				Ids::Input,
 				"",
 				wxDefaultPosition,
-				wxDefaultSize,
-				wxTE_RICH | wxTE_PROCESS_ENTER);
+				wxDefaultSize);
 
 	SendButton = new wxButton (this, Ids::SendButton, _("Send"));
 
@@ -276,7 +275,7 @@ void Console::ClearOutput (void)
 
 void Console::ClearInput (void)
 {
-	Input->Clear ();
+	Input->SetValue ("");
 }
 
 void Console::ScrollToBottom (void)
@@ -292,6 +291,9 @@ void Console::OnSend (wxCommandEvent& WXUNUSED(event))
 
 	if (data.Length () > 0 && Net != NULL)
 	{
+		// agregamos data al combobox
+		AddInputCommand (data);
+
 		data += "\n";
 		SetInputStyle ();
 		Add (data, TRUE);
@@ -315,4 +317,15 @@ void Console::OutputSetFocus (void)
 unsigned int Console::GetIndex (void)
 {
 	return index;
+}
+
+void Console::AddInputCommand (wxString com)
+{
+	if (Input->FindString (com) < 0)
+		Input->Append (com);
+}
+
+void Console::SetNetwork (Network *N)
+{
+	Net = N;
 }

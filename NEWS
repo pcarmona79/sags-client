@@ -1,5 +1,19 @@
-New version 0.4.1
+New version 0.5.0
 -----------------
+
+This new version includes:
+
+1) Implementation of maintenance mode on processes.
+2) Chat's users list is now resizable.
+3) Console's input widget has been changed to a combo box to allow
+storing of typed commands by the user.
+4) Topic widget is editable when the user is a administrator.
+5) Managing of private messaging. The user must use /to command to send
+a private message. It usage is like: /to nick message.
+
+
+Version 0.4.1
+-------------
 
 This new release includes:
 

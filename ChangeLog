@@ -1,3 +1,41 @@
+2005-02-10  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* po/es.po: Updated spanish translation.
+
+	* src/Channel.cpp, src/Channel.hpp: [admin_mode]: Added to
+	represent an administrator mode.
+	(SetAdminMode): Added to permit to set editable the channel's
+	topic widget.
+	(SetPrivateStyle, SetChannelFont), [PrivateStyle]: A new text
+	attribute to be used when print private messages.
+	(AddPrivMessage, AddPrivAction, AddPrivNotice): new methods to
+	print private messages with nice colors.
+	(OnSend): Added /to command. Usage: /to nick message.
+	(ProcessMessage): Managing Session::ChatPriv* packets.
+	(OnTopic): New method to manage Enter key events at topic
+	widget. It send a packet to the server to change the channel's
+	topic.
+
+	* src/Console.hpp, src/Console.cpp: [Input]: Changed type from
+	wxTextCtrl to wxComboBox to allow storing of typed commands by the
+	user.
+	(AddInputCommand): New method to add commands to combobox.
+	(ClearInput): Changed to only clear the text field.
+	(OnSend): Changed to store input commands.
+	(SetNetwork): New method to allow MainWindow class to update
+	Network object on Console class.
+
+	* src/Ids.hpp: [Ids::ChatTopic]: New window id.
+
+	* src/Packet.hpp: [Error::ChatUserDontExists]: New error packet.
+
+	* src/Window.cpp (~MainWindow): Removed some comments.
+	(Disconnect): Disable admin mode and set null all Network objects
+	of all tabs.
+	(ProtoSession): Enable admin mode when a Session::Authorized
+	packet with index 0 is received.
+	(ProtoError): handle Error::ChatUserDontExists packets.
+
 2004-01-26  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Channel.cpp:

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Ids.hpp,v $
-// $Revision: 1.11 $
-// $Date: 2005/02/03 22:03:40 $
+// $Revision: 1.12 $
+// $Date: 2005/02/10 21:56:59 $
 //
 
 namespace Ids
@@ -48,6 +48,7 @@ namespace Ids
 		Preferences,
 		ChatSend,
 		ChatInput,
+		ChatTopic,
 		Maintenance,
 		SaveLogs,
 		SaveChat

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.11 $
-// $Date: 2005/02/03 22:03:24 $
+// $Revision: 1.12 $
+// $Date: 2005/02/10 21:56:56 $
 //
 
 #include "Channel.hpp"
@@ -51,6 +51,8 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	AppConfig = AppCfg;
 	index = idx;
 	ParentNB = (wxNotebook *) parent;
+	last_had_newline = FALSE;
+	admin_mode = FALSE;
 
 	Output = new wxTextCtrl (SeparatorWindow,
 				 -1,
@@ -89,6 +91,7 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	ChannelFont.SetWeight (wxBOLD);
 	LimiterStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour, ChannelFont);
 	MyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour, ChannelFont);
+	PrivateStyle = new wxTextAttr (wxColour ("RED"), wxNullColour, ChannelFont);
 
 	Input = new wxTextCtrl (this,
 				Ids::ChatInput,
@@ -110,11 +113,11 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	UserList->SetImageList (StatusIcons->GetImageList (), wxIMAGE_LIST_SMALL);
 
 	Topic = new wxTextCtrl (this,
-				-1,
+				Ids::ChatTopic,
 				"",
 				wxDefaultPosition,
 				wxDefaultSize,
-				wxTE_RICH | wxTE_READONLY);
+				wxTE_RICH | wxTE_READONLY | wxTE_PROCESS_ENTER);
 
 	SendButton = new wxButton (this, Ids::ChatSend, _("Send"));
 
@@ -177,6 +180,8 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		 (wxObjectEventFunction) &Channel::OnSend);
 	Connect (Ids::ChatSend, wxEVT_COMMAND_BUTTON_CLICKED,
 		 (wxObjectEventFunction) &Channel::OnSend);
+	Connect (Ids::ChatTopic, wxEVT_COMMAND_TEXT_ENTER,
+		 (wxObjectEventFunction) &Channel::OnTopic);
 }
 
 Channel::~Channel ()
@@ -276,6 +281,44 @@ void Channel::AddNotice (wxString usr, wxString txt)
 	SetTextStyle ();
 }
 
+void Channel::AddPrivMessage (wxString usr, wxString txt)
+{
+	SetPrivateStyle ();
+	Add ("=(");
+	SetNickStyle ();
+	Add (usr);
+	SetPrivateStyle ();
+	Add (")=");
+	SetTextStyle ();
+	Add (" " + txt + "\n");
+}
+
+void Channel::AddPrivAction (wxString usr, wxString txt)
+{
+	SetPrivateStyle ();
+	Add ("=(");
+	SetNickStyle ();
+	Add (usr);
+	SetPrivateStyle ();
+	Add (")=");
+	SetActionStyle ();
+	Add (" * " + usr + " " + txt + "\n");
+	SetTextStyle ();
+}
+
+void Channel::AddPrivNotice (wxString usr, wxString txt)
+{
+	SetPrivateStyle ();
+	Add ("=(");
+	SetNickStyle ();
+	Add (usr);
+	SetPrivateStyle ();
+	Add (")=");
+	SetNoticeStyle ();
+	Add (" -" + usr + "- " + txt + "\n");
+	SetTextStyle ();
+}
+
 void Channel::AddJoin (wxString usr)
 {
 	SetJoinLeaveStyle ();
@@ -352,6 +395,11 @@ void Channel::SetMyLimiterStyle (void)
 	Output->SetDefaultStyle (*MyLimiterStyle);
 }
 
+void Channel::SetPrivateStyle (void)
+{
+	Output->SetDefaultStyle (*PrivateStyle);
+}
+
 const wxFont& Channel::GetChannelFont (void)
 {
 	return (Output->GetDefaultStyle ()).GetFont ();
@@ -376,6 +424,8 @@ void Channel::SetChannelFont (wxFont newfont)
 						      newfont);
 	wxTextAttr *NewMyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour,
 							newfont);
+	wxTextAttr *NewPrivateStyle = new wxTextAttr (wxColour ("RED"), wxNullColour,
+						      newfont);
 
 	LastStyle = TextStyle;
 	TextStyle = NewTextStyle;
@@ -413,6 +463,10 @@ void Channel::SetChannelFont (wxFont newfont)
 	MyLimiterStyle = NewMyLimiterStyle;
 	delete LastStyle;
 
+	LastStyle = PrivateStyle;
+	PrivateStyle = NewPrivateStyle;
+	delete LastStyle;
+
 	Output->SetDefaultStyle (*TextStyle);
 	//Output->SetStyle (0, Output->GetLastPosition (), *TextStyle);
 }
@@ -439,7 +493,8 @@ void Channel::ScrollToBottom (void)
 
 void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 {
-	wxString data = Input->GetValue ();
+	wxString to, data = Input->GetValue ();
+	int to_end;
 
 	ClearInput ();
 
@@ -465,6 +520,18 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 			data = data.Mid (7, wxSTRING_MAXLEN);
 			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 			Net->AddBufferOut (index, Session::ChatTopicChange, data.c_str ());
+		}
+		else if (data.First ("/to ") == 0)
+		{
+			data = data.Mid (4, wxSTRING_MAXLEN);
+			to_end = data.First (" ");
+			to = data.Mid (0, to_end);
+			data = data.Mid (to_end + 1, wxSTRING_MAXLEN);
+			AddPrivMessage (_("To: ") + to, data);
+			data = "To: " + to + "\n" +
+			       "Content-Type: text/plain; charset=UTF-8\n\n" +
+			       data;
+			Net->AddBufferOut (index, Session::ChatPrivMessage, data.c_str ());
 		}
 		else
 		{
@@ -496,13 +563,14 @@ unsigned int Channel::GetIndex (void)
 void Channel::SetNetwork (Network *N)
 {
 	Net = N;
-	Username = Net->GetUsername ();
+	if (Net != NULL)
+		Username = Net->GetUsername ();
 }
 
 void Channel::ProcessMessage (Packet *Pkt)
 {
 	wxString header, body, from_user, all, nick, stat;
-	static wxString newuserlist, newtopic, newmessage;
+	static wxString newuserlist, newtopic, newmessage, newprivate;
 	int colon_pos;
 
 	switch (Pkt->GetCommand ())
@@ -603,7 +671,30 @@ void Channel::ProcessMessage (Packet *Pkt)
 	case Session::ChatPrivAction:
 	case Session::ChatPrivNotice:
 
-		// no están aun implementados
+		newprivate += Pkt->GetData ();
+
+		if (Pkt->GetSequence () == 1)
+		{
+			header = ExtractHeader (newprivate);
+			body = ExtractBody (newprivate);
+			from_user = GetValueFromHeader (header, "From");
+
+			switch (Pkt->GetCommand ())
+			{
+			case Session::ChatPrivMessage:
+				AddPrivMessage (from_user, body);
+				break;
+			case Session::ChatPrivAction:
+				AddPrivAction (from_user, body);
+				break;
+			case Session::ChatPrivNotice:
+				AddPrivNotice (from_user, body);
+				break;
+			}
+
+			newprivate.Empty ();
+		}
+
 		break;
 
 	default:
@@ -733,4 +824,26 @@ void Channel::RemoveUser (wxString usr)
 {
 	long item = UserList->FindItem (-1, usr);
 	UserList->DeleteItem (item);
+}
+
+void Channel::SetAdminMode (bool mode)
+{
+	if (admin_mode != mode)
+	{
+		admin_mode = mode;
+		Topic->SetEditable (admin_mode);
+	}
+}
+
+void Channel::OnTopic (wxCommandEvent& WXUNUSED(event))
+{
+	wxString data = Topic->GetValue ();
+
+	if (admin_mode && data.Length () > 0 && Net != NULL)
+	{
+		// TODO: forzar data a UTF-8!
+		data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
+		Net->AddBufferOut (index, Session::ChatTopicChange, data.c_str ());
+		Net->Send ();
+	}
 }
