@@ -6,6 +6,8 @@
 		output.
 		- Added SetNetwork() method to set the network object to be
 		used by chat tab when sending messages.
+		- OnSend() event handler send a message with a header
+		indicating the content type.
 
 	* src/Ids.hpp:
 		- Added ids for text entry and button of chat tab.
@@ -13,6 +15,12 @@
 	* src/Window.cpp:
 		- Now set the network object for the chat immediately after to
 		get logged in.
+
+	* src/Packet.hpp:
+		- Added PCKT_VERSION to represent version of network protocol.
+
+	* src/Network.cpp:
+		- Using PCKT_VERSION for version checking.
 
 
 2004-08-11  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

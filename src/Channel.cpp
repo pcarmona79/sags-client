@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/08/12 07:12:17 $
+// $Revision: 1.5 $
+// $Date: 2004/08/13 00:55:37 $
 //
 
 #include "Channel.hpp"
@@ -37,6 +37,7 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	wxBoxSizer *OutputSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *InputSizer = new wxBoxSizer (wxHORIZONTAL);
 
+	Net = NULL;
 	AppConfig = AppCfg;
 	index = idx;
 	ParentNB = (wxNotebook *) parent;
@@ -317,10 +318,12 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 
 	if (data.Length () > 0 && Net != NULL)
 	{
-		data += "\n";
 		SetInputStyle ();
-		Add (data, TRUE);
+		Add (data + "\n", TRUE);
 		SetOutputStyle ();
+
+		// TODO: forzar a UTF-8
+		data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 
 		Net->AddBufferOut (index, Session::ChatMessage, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
@@ -345,4 +348,5 @@ unsigned int Channel::GetIndex (void)
 void Channel::SetNetwork (Network *N)
 {
 	Net = N;
+	Username = Net->GetUsername ();
 }

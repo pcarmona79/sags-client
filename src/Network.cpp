@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.16 $
-// $Date: 2004/08/07 22:36:34 $
+// $Revision: 1.17 $
+// $Date: 2004/08/13 00:55:37 $
 //
 
 #include <cstdio>
@@ -358,10 +358,8 @@ void *Network::Entry (void)
 				switch (Pkt->GetCommand ())
 				{
 				case Sync::Hello:
-					// ahora manejamos la versión 3
-					// del protocolo
 					Outgoing << new Packet (Sync::Index, Sync::Version,
-								1, 1, "3");
+								1, 1, PCKT_VERSION);
 					send_now = TRUE;
 					break;
 

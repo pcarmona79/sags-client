@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/08/12 07:12:17 $
+// $Revision: 1.4 $
+// $Date: 2004/08/13 00:55:37 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -48,6 +48,8 @@ private:
 	wxConfig *AppConfig;
 	unsigned int index;
 	wxNotebook *ParentNB;
+
+	wxString Username;
 
 public:
 	Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
