@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.19 $
-// $Date: 2004/08/19 01:34:40 $
+// $Revision: 1.20 $
+// $Date: 2005/01/21 23:06:28 $
 //
 
 #include <cstdio>
@@ -298,7 +298,7 @@ wxString Network::GetMD5 (wxString password)
 void *Network::Entry (void)
 {
 	int val, idx;
-	bool send_now = FALSE, not_ask_for_logs = FALSE;
+	bool send_now = FALSE;
 	wxString hello_msg, pwdhash;
 	Packet *Pkt = NULL;
 
@@ -395,33 +395,12 @@ void *Network::Entry (void)
 				case Session::Authorized:
 
 					ProcsReceived << Pkt->GetIndex ();
-
-					Outgoing << new Packet (Pkt->GetIndex (),
-								Session::ProcessGetInfo);
-					send_now = TRUE;
-					break;
-
-				case Session::ProcessInfo:
-
-					if (Pkt->GetSequence () == 1)
-					{
-						if (not_ask_for_logs)
-							not_ask_for_logs = FALSE;
-						else
-						{
-							Outgoing << new Packet (
-								Pkt->GetIndex(),
-								Session::ConsoleNeedLogs);
-							send_now = TRUE;
-						}
-					}
 					break;
 
 				case Session::ProcessStart:
-					// si recibimos uno de estos paquetes
-					// no deberíamos pedir los logs pero sí
-					// pedir info del proceso
-					not_ask_for_logs = TRUE;
+				case Session::MaintainceOn:
+				case Session::MaintainceOff:
+
 					Outgoing << new Packet (Pkt->GetIndex (),
 								Session::ProcessGetInfo);
 					send_now = TRUE;
