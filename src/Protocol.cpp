@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Protocol.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/06/22 04:58:53 $
+// $Revision: 1.5 $
+// $Date: 2004/08/19 01:34:40 $
 //
 
 #include <cstdio>
@@ -146,9 +146,10 @@ int Protocol::Connect (const char *address, const char *port)
 #endif
 }
 
-void Protocol::Disconnect (void)
+void Protocol::Disconnect (bool shutdown_ssl)
 {
-	SSL_shutdown (ssl);
+	if (shutdown_ssl)
+		SSL_shutdown (ssl);
 
 #ifdef _WIN32
 	BIO_free (bio_server);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.18 $
-// $Date: 2004/08/17 02:29:48 $
+// $Revision: 1.19 $
+// $Date: 2004/08/19 01:34:40 $
 //
 
 #include <cstdio>
@@ -143,10 +143,10 @@ int Network::Disconnect (bool exiting)
 	return 0;
 }
 
-void Network::Drop (void)
+void Network::Drop (bool shutdown_ssl)
 {
 	// cerramos la conexión SSL
-	Protocol::Disconnect ();
+	Protocol::Disconnect (shutdown_ssl);
 	Connected = FALSE;
 }
 
@@ -194,6 +194,8 @@ int Network::Receive (void)
 		switch (Pkt->GetCommand ())
 		{
 			case Error::ServerFull:
+				Unlock (IncomingMutex);
+				return 2;
 			case Error::NotValidVersion:
 			case Error::LoginFailed:
 			case Error::AuthTimeout:
@@ -296,7 +298,6 @@ wxString Network::GetMD5 (wxString password)
 void *Network::Entry (void)
 {
 	int val, idx;
-	unsigned int idx2;
 	bool send_now = FALSE, not_ask_for_logs = FALSE;
 	wxString hello_msg, pwdhash;
 	Packet *Pkt = NULL;
@@ -442,11 +443,14 @@ void *Network::Entry (void)
 			wxSocketEvent ReadSuccessful (NetEvt::Read);
 			EvtParent->AddPendingEvent ((wxEvent&) ReadSuccessful);
 
-			// si es 1 entonces recibimos SessionDisconnect
+			// si es mayor que 1 entonces recibimos SessionDisconnect
 			// o algún error por lo que debemos salir
-			if (val == 1)
+			if (val > 0)
 			{
-				Drop ();
+				if (val == 2)
+					Drop (FALSE);
+				else
+					Drop ();
 				break;
 			}
 		}

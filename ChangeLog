@@ -1,3 +1,22 @@
+2004-08-18  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Network.cpp:
+	* src/Network.hpp:
+	* src/Protocol.cpp:
+	* src/Protocol.hpp:
+		- Fixed broken pipe when received a Error::ServerFull. Now we
+		don't shutdown SSL when receive this packet.
+
+	* po/es.po:
+		- Updated spanish translation.
+
+	* win32/sagscl.dev:
+		- Enables XP themes support.
+
+	* win32/sagscl.iss.in:
+		- Now install sagscl.exe.Manifest for XP theme support.
+
+
 2004-08-17  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Channel.cpp:

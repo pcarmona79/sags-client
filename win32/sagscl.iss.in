@@ -19,8 +19,8 @@
 ; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ;
 ; $Source: /home/pablo/Desarrollo/sags-cvs/client/win32/sagscl.iss.in,v $
-; $Revision: 1.4 $
-; $Date: 2004/07/07 00:06:19 $
+; $Revision: 1.5 $
+; $Date: 2004/08/19 01:34:40 $
 ;
 
 [Setup]
@@ -43,6 +43,7 @@ OutputBaseFilename=sagscl-@VERSION@-setup
 
 [Files]
 Source: "sagscl.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "sagscl.exe.Manifest"; DestDir: "{app}"; Flags: ignoreversion
 Source: "libeay32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "libssl32.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\pixmaps\*.png"; DestDir: "{app}\pixmaps"; Flags: ignoreversion

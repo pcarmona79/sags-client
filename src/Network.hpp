@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/06/30 03:47:07 $
+// $Revision: 1.8 $
+// $Date: 2004/08/19 01:34:40 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -91,7 +91,7 @@ public:
 
 	int Connect (void);
 	int Disconnect (bool exiting = FALSE);
-	void Drop (void);
+	void Drop (bool shutdown_ssl = TRUE);
 
 	int Send (void);
 	int Receive (void);

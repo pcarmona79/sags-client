@@ -19,15 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Protocol.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/08/19 01:34:40 $
 //
 
 #ifndef __PROTOCOL_HPP__
 #define __PROTOCOL_HPP__
 
 #include <openssl/ssl.h>
-
+#include <wx/wx.h>
 #include "Packet.hpp"
 
 class Protocol
@@ -47,7 +47,7 @@ public:
 	~Protocol ();
 
 	int Connect (const char *address, const char *port);
-	void Disconnect (void);
+	void Disconnect (bool shutdown_ssl = TRUE);
 
 	int SendPacket (Packet *Pkt);
 	Packet *RecvPacket (void);
