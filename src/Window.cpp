@@ -19,14 +19,15 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/04/17 22:00:14 $
+// $Revision: 1.4 $
+// $Date: 2004/04/17 22:04:06 $
 //
 
 #include <wx/wx.h>
 #include <wx/notebook.h>
 #include <wx/socket.h>
 #include <wx/fontdlg.h>
+#include <wx/filedlg.h>
 
 #include "Window.hpp"
 #include "Login.hpp"
