@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/05/06 00:39:58 $
+// $Revision: 1.8 $
+// $Date: 2004/05/21 22:18:28 $
 //
 
 #include <wx/wx.h>
@@ -167,6 +167,16 @@ MainWindow::~MainWindow ()
 	}
 }
 
+void MainWindow::Disconnect (void)
+{
+	Net->Wait ();
+	Net->Delete ();
+	Net = NULL;
+	
+	SetStatusText (_("Disconnected"), 1);
+	LoggingTab->Append (_("Disconnected."));
+}
+
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 {
 	int i;
@@ -252,6 +262,7 @@ void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
 			Net->Disconnect (TRUE);
 			SetStatusText (_("Disconnecting..."), 1);
 			LoggingTab->Append (_("Disconnecting..."));
+			Disconnect ();
 		}
 		else
 			SetStatusText (_("Not connected"), 1);
@@ -309,8 +320,7 @@ void MainWindow::OnConnected (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 {
 	wxString text;
-	bool ex;
-	Packet *Ans = NULL, *Pkt = Net->Get ();
+	Packet *Pkt = Net->Get ();
 	static int bytes = 0;
 
 	if (Pkt != NULL)
@@ -386,25 +396,81 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 			case Pckt::SessionDrop:
 				text.Printf ("SessionDisconnect");
 				LoggingTab->Append (text);
-				ex = Net->IsExiting ();
-				Net->Wait ();
-				Net->Delete ();
-				Net = NULL;
-				SetStatusText (_("Disconnected"), 1);
-				LoggingTab->Append (_("Disconnected."));
-				if (ex == FALSE)
-				{
-					wxMessageBox (_("Disconnected from server."),
-						      _("Error"),
-						      wxOK | wxICON_EXCLAMATION, this);
-				}
+				Disconnect ();
+				wxMessageBox (_("Disconnected from server."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
 				return;
+
+			case Pckt::ErrorServerFull:
+				text.Printf ("ErrorServerFull");
+				LoggingTab->Append (text);
+				Disconnect ();
+				wxMessageBox (_("Server is full.\nDisconnected."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+
+			case Pckt::ErrorNotValidVersion:
+				text.Printf ("ErrorNotValidVersion");
+				LoggingTab->Append (text);
+				Disconnect ();
+				wxMessageBox (_("Protocol's version not valid.\nDisconnected."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+
+			case Pckt::ErrorLoginFailed:
+				text.Printf ("ErrorLoginFailed");
+				LoggingTab->Append (text);
+				Disconnect ();
+				wxMessageBox (_("Username or password not valid.\nDisconnected."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+
+			case Pckt::ErrorAuthTimeout:
+				text.Printf ("ErrorAuthTimeout");
+				LoggingTab->Append (text);
+				Disconnect ();
+				wxMessageBox (_("Time for authentication has expired.\nDisconnected."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+
+			case Pckt::ErrorServerQuit:
+				text.Printf ("ErrorServerQuit");
+				LoggingTab->Append (text);
+				Disconnect ();
+				wxMessageBox (_("Server is shutting down.\nDisconnected."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				return;
+
+			case Pckt::ErrorBadProcess:
+				text.Printf ("ErrorBadProcess (%d bytes): %s",
+					     Pkt->GetLength (), Pkt->GetData ());
+				LoggingTab->Append (text);
+				wxMessageBox ((wxString)(_("Bad process on server:\n\n")) +
+					      (wxString)(Pkt->GetData ()),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				break;
+
+			case Pckt::ErrorCantWriteToProcess:
+				text.Printf ("ErrorCantWriteToProcess");
+				LoggingTab->Append (text);
+				wxMessageBox (_("Server can't write to the process."),
+					      _("Error"),
+					      wxOK | wxICON_ERROR, this);
+				break;
 
 			case Pckt::ErrorGeneric:
 				text.Printf ("ErrorGeneric (%d bytes): %s",
 					     Pkt->GetLength (), Pkt->GetData ());
 				LoggingTab->Append (text);
-				wxMessageBox (Pkt->GetData (),
+				wxMessageBox ((wxString)(_("Generic Error:\n\n")) +
+					      (wxString)(Pkt->GetData ()),
 					      _("Error"),
 					      wxOK | wxICON_ERROR, this);
 				break;
@@ -412,15 +478,10 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 			default:
 				;
 		}
+		delete Pkt;
 	}
 	else
-		LoggingTab->Append ("Pkt NULL");
-
-	if (Ans != NULL)
-	{
-		Net->AddOut (Ans);
-		Net->Send (); // esto bloquea la GUI?
-	}
+		LoggingTab->Append ("Nothing in Incoming list");
 }
 
 void MainWindow::OnFailConnect (wxCommandEvent& WXUNUSED(event))
@@ -446,7 +507,6 @@ void MainWindow::OnFailRead (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
 {
 	wxString data = ServerConsole->Input->GetValue ();
-	Packet *Pkt = NULL;
 
 	ServerConsole->Input->Clear ();
 
@@ -457,8 +517,7 @@ void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
 		ServerConsole->Add (data, TRUE);
 		ServerConsole->SetOutputStyle ();
 
-		Pkt = new Packet (Pckt::SessionConsoleInput, data.c_str ());
-		Net->AddOut (Pkt);
+		Net->AddBufferOut (Pckt::SessionConsoleInput, data.c_str ());
 		Net->Send (); // esto bloquea la GUI?
 	}
 }

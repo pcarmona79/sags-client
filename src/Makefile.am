@@ -20,6 +20,7 @@ sagscl_SOURCES = \
 		 About.hpp    \
 		 Console.hpp  \
 		 Ids.hpp      \
+		 List.hpp     \
 		 Login.hpp    \
 		 Logs.hpp     \
 		 Main.hpp     \

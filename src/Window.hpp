@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/04/21 04:45:46 $
+// $Revision: 1.5 $
+// $Date: 2004/05/21 22:18:28 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -47,6 +47,7 @@ public:
 		    const wxPoint& position,
 		    const wxSize& size);
 	~MainWindow ();
+	void Disconnect (void);
 
 	// manejadores de señales
 	void OnConnect (wxCommandEvent& event);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/05/18 05:37:31 $
+// $Revision: 1.3 $
+// $Date: 2004/05/21 22:18:28 $
 //
 
 #include <cstdio>
@@ -37,8 +37,6 @@ Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 		  wxString username, wxString password)
 	: wxThread (wxTHREAD_JOINABLE)
 {
-	Outgoing = NULL;
-	Incoming = NULL;
 	EvtParent = parent;
 	Address = address;
 	Port = port;
@@ -50,63 +48,36 @@ Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 
 Network::~Network ()
 {
-	Packet *UnLink;
-
-	// liberamos la lista de paquetes
-	while (Outgoing)
-	{
-		UnLink = Outgoing;
-		Outgoing = UnLink->Next;
-		delete UnLink;
-	}
-	while (Incoming)
-	{
-		UnLink = Incoming;
-		Incoming = UnLink->Next;
-		delete UnLink;
-	}
+	
 }
 
-void Network::AddOut (Packet *NewItem)
+void Network::AddBuffer (List<Packet> &PktList, unsigned int type, const char *data)
 {
-	Packet *Searched = Outgoing;
+	const char *p = data;
+	int s;
 
-	if (Searched)
+	// data NO DEBE ser nulo!!!
+
+	// calculamos cuantos paquetes necesitaremos
+	// que corresponde a la parte entera más uno de
+	// TamañoTotal / 1024
+	s = (int) trunc (strlen (data) / PCKT_MAXDATA) + 1;
+
+	while (strlen (p) >= PCKT_MAXDATA)
 	{
-		// buscamos el último elemento
-		while (Searched->Next)
-			Searched = Searched->Next;
-		Searched->Next = NewItem;
+		PktList << new Packet (type, s--, strlen (p), p); // asigna hasta PCKT_MAXDATA bytes
+		p += PCKT_MAXDATA;
 	}
-	else
-		Outgoing = NewItem;  // lista estaba vacía
+
+	if (strlen (p) > 0 && strlen (p) < PCKT_MAXDATA)
+		PktList << new Packet (type, s--, strlen (p), p);
 }
 
-void Network::AddFirstOut (Packet *NewItem)
+void Network::AddBufferOut (unsigned int type, const char *data)
 {
-	NewItem->Next = Outgoing;
-	Outgoing = NewItem;
-}
-
-void Network::AddIn (Packet *NewItem)
-{
-	Packet *Searched = Incoming;
-
-	if (Searched)
-	{
-		// buscamos el último elemento
-		while (Searched->Next)
-			Searched = Searched->Next;
-		Searched->Next = NewItem;
-	}
-	else
-		Incoming = NewItem;  // lista estaba vacía
-}
-
-void Network::AddFirstIn (Packet *NewItem)
-{
-	NewItem->Next = Incoming;
-	Incoming = NewItem;
+	OutgoingMutex.Lock ();
+	AddBuffer (Outgoing, type, data);
+	OutgoingMutex.Unlock ();
 }
 
 int Network::Connect (void)
@@ -123,14 +94,10 @@ int Network::Connect (void)
 
 int Network::Disconnect (bool exiting)
 {
-	Packet *Disc;
-
 	Exiting = (exiting) ? TRUE : FALSE;
 
 	// enviar un paquete de desconexión
-	Disc = new Packet (Pckt::SessionDisconnect);
-
-	if (SendPacket (Disc) < 0)
+	if (SendPacket (new Packet (Pckt::SessionDisconnect)) < 0)
 		return -1;
 
 	return 0;
@@ -145,11 +112,15 @@ void Network::Drop (void)
 
 int Network::Send (void)
 {
-	Packet *Sending = Outgoing;
+	Packet *Sending = NULL;
 	int bytes = 0, total = 0;
 
-	while (Outgoing)
+	while (Outgoing.GetCount ())
 	{
+		OutgoingMutex.Lock ();
+		Sending = Outgoing.ExtractFirst ();
+		OutgoingMutex.Unlock ();
+
 		bytes = SendPacket (Sending);
 
 		if (bytes < 0)
@@ -159,12 +130,9 @@ int Network::Send (void)
 			return -1; 
 		}
 
-		// avanzamos la lista en un paquete
-		// y borramos el paquete usado
+		// borramos el paquete usado
 		total += bytes;
-		Outgoing = Outgoing->Next;
 		delete Sending;
-		Sending = Outgoing;
 	}
 
 	return bytes;
@@ -177,10 +145,20 @@ int Network::Receive (void)
 	if (Pkt == NULL)
 		return -1;
 
-	AddIn (Pkt);
+	IncomingMutex.Lock ();
+	Incoming << Pkt;
+	IncomingMutex.Unlock ();
 
-	if (Pkt->GetType () == Pckt::SessionDisconnect)
-		return 1;
+	switch (Pkt->GetType ())
+	{
+		case Pckt::SessionDisconnect:
+		case Pckt::ErrorServerFull:
+		case Pckt::ErrorNotValidVersion:
+		case Pckt::ErrorLoginFailed:
+		case Pckt::ErrorAuthTimeout:
+		case Pckt::ErrorServerQuit:
+			return 1;
+	}
 
 	return 0;
 }
@@ -217,16 +195,15 @@ wxString Network::GetPassword (void)
 
 Packet *Network::Get (void)
 {
-	Packet *Item = Incoming;
+	IncomingMutex.Lock ();
+	Packet *Item = Incoming.ExtractFirst ();
+	IncomingMutex.Unlock ();
 
-	if (Incoming == NULL)
+	if (Item == NULL)
 	{
 		printf ("Incoming NULL\n");
 		return NULL;
 	}
-
-	Incoming = Incoming->Next;
-	//Item->Next = NULL;
 
 	return Item;
 }
@@ -234,7 +211,7 @@ Packet *Network::Get (void)
 void *Network::Entry (void)
 {
 	int val;
-	Packet *StartAuth, *Ans = NULL;
+	bool send_now = FALSE;
 	char hello_msg[21];
 
 	if (!Connected)
@@ -254,11 +231,9 @@ void *Network::Entry (void)
 
 	// La autenticación comieza enviando un SyncHello
 	snprintf (hello_msg, 20, "SAGS Client %s", VERSION);
-	StartAuth = new Packet (Pckt::SyncHello, hello_msg);
-	printf ("StartAuth: TYPE: %04X SEQ: %d LEN: %d DATA: \"%s\"\n",
-		StartAuth->GetType (), StartAuth->GetSequence (),
-		StartAuth->GetLength (), StartAuth->GetData ());
-	AddOut (StartAuth);
+	OutgoingMutex.Lock ();
+	AddBuffer (Outgoing, Pckt::SyncHello, hello_msg);
+	OutgoingMutex.Unlock ();
 	Send ();
 
 	// Si se leen datos se envía el evento NetEvt::Read
@@ -272,6 +247,10 @@ void *Network::Entry (void)
 			// error al leer, cerrar la conexión
 			Drop ();
 
+			// si estamos saliendo... salimos :)
+			if (Exiting)
+				break;
+
 			// enviar evento
 			wxSocketEvent ReadFailed (NetEvt::FailRead);
 			EvtParent->AddPendingEvent ((wxEvent&) ReadFailed);
@@ -280,30 +259,35 @@ void *Network::Entry (void)
 		else
 		{
 			// manejamos la autenticación
-			switch (Incoming->GetType ())
+			OutgoingMutex.Lock ();
+			switch (Incoming[0]->GetType ())
 			{
 				case Pckt::SyncHello:
-					Ans = new Packet (Pckt::SyncVersion, 1, 1, "1");
+					Outgoing << new Packet (Pckt::SyncVersion, 1, 1, "1");
+					send_now = TRUE;
 					break;
 
 				case Pckt::SyncVersion:
-					Ans = new Packet (Pckt::AuthUsername, Username.c_str ());
+					AddBuffer (Outgoing, Pckt::AuthUsername, Username.c_str ());
+					send_now = TRUE;
 					break;
 
 				case Pckt::AuthPassword:
-					Ans = new Packet (Pckt::AuthPassword, Password.c_str ());
+					AddBuffer (Outgoing, Pckt::AuthPassword, Password.c_str ());
+					send_now = TRUE;
 					break;
 
 				case Pckt::AuthSuccessful:
-					Ans = new Packet (Pckt::SessionConsoleNeedLogs);
+					Outgoing << new Packet (Pckt::SessionConsoleNeedLogs);
+					send_now = TRUE;
 					break;
 			}
+			OutgoingMutex.Unlock ();
 
-			if (Ans != NULL)
+			if (send_now)
 			{
-				AddOut (Ans);
 				Send ();
-				Ans = NULL;
+				send_now = FALSE;
 			}
 
 			// recibimos un paquete, enviar evento
@@ -312,7 +296,7 @@ void *Network::Entry (void)
 			EvtParent->AddPendingEvent ((wxEvent&) ReadSuccessful);
 
 			// si es 1 entonces recibimos SessionDisconnect
-			// por lo que debemos salir
+			// o algún error por lo que debemos salir
 			if (val == 1)
 			{
 				Drop ();

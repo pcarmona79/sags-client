@@ -8,5 +8,11 @@ Standards-Version: 3.6.0
 Package: sagscl
 Architecture: any
 Depends: ${shlibs:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Client for Secure Administrator of Game Servers
+ SAGS (Secure Administrator of Game Servers) is a client-server
+ application to administer game servers on GNU/Linux using a SSL
+ connection.
+ .
+ This is the client needed to connect to the SAGS server.
+ .
+ See more at http://sags.sourceforge.net/.

@@ -1,1 +1,14 @@
-No news yes
+New version 0.2.0
+-----------------
+
+This version is an improvement of the series 0.1.x that includes the
+following changes:
+
+1) Added List template to manage the outgoing and incoming packet
+   lists.
+   
+2) Added mutexes to lock the access to packet lists.
+
+3) The desconnection method now send a SessionDisconnect and exits
+   immediately.
+

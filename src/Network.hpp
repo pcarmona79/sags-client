@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/05/21 22:18:28 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -31,6 +31,7 @@
 
 #include "Protocol.hpp"
 #include "Packet.hpp"
+#include "List.hpp"
 
 namespace NetEvt
 {
@@ -50,8 +51,12 @@ class Network : private Protocol, public wxThread
 {
 private:
 	// lista de paquetes
-	Packet *Outgoing;
-	Packet *Incoming;
+	List<Packet> Outgoing;
+	List<Packet> Incoming;
+
+	// mutexes para las listas
+	wxMutex OutgoingMutex;
+	wxMutex IncomingMutex;
 
 	// datos
 	wxString Address;
@@ -72,10 +77,8 @@ public:
 		 wxString password);
 	~Network ();
 
-	void AddOut (Packet *NewItem);
-	void AddFirstOut (Packet *NewItem);
-	void AddIn (Packet *NewItem);
-	void AddFirstIn (Packet *NewItem);
+	void AddBuffer (List<Packet> &PktList, unsigned int type, const char *data);
+	void AddBufferOut (unsigned int type, const char *data);
 
 	int Connect (void);
 	int Disconnect (bool exiting = FALSE);
