@@ -12,6 +12,7 @@ This new version includes the following changes:
    program manages error packets and desconnections from the server.
 6) Win32 version has XP themes support.
 7) Fixed broken pipe when received a Error::ServerFull packet.
+8) Program now remembers window's size.
 
 
 Version 0.3.4

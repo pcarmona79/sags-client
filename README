@@ -21,7 +21,12 @@ The major features of the client are:
 
  - You can save the console's messages to a file.
 
- - It is portable to Windows platform.
+ - It is portable to Windows platform (with XP themes support).
+
+ - IRC-based chat support.
+
+ - Chat window manages normal messages and /me, /notice and /topic
+   commands. Also shows when users joins and leaves the channel.
 
 The client have the GUI writed with wxWidgets and uses OpenSSL for
 network communication. Also it can be compiled with Dev-C++ to
