@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.cpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/05/06 00:39:58 $
+// $Revision: 1.6 $
+// $Date: 2004/05/18 05:37:31 $
 //
 
 #include <wx/combobox.h>
@@ -36,9 +36,7 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 	: wxDialog (parent, id, title, pos, size, style)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
-	wxBoxSizer *ServerSizer = new wxBoxSizer (wxHORIZONTAL);
-	wxBoxSizer *UsernameSizer = new wxBoxSizer (wxHORIZONTAL);
-	wxBoxSizer *PasswordSizer = new wxBoxSizer (wxHORIZONTAL);
+	wxFlexGridSizer *DataSizer = new wxFlexGridSizer (2);
 	wxBoxSizer *ButtonSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxButton *OkButton = new wxButton (this, wxID_OK, _("OK"));
 
@@ -67,86 +65,65 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 				   wxDefaultSize,
 				   wxTE_PASSWORD);
 
-	ServerSizer->Add (new wxStaticText (this, -1, _("Server:")),
-			  0,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALIGN_RIGHT |
-			  wxALL,
-			  5);
+	DataSizer->Add (new wxStaticText (this, -1, _("Server:")),
+			0,
+			wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT |
+			wxALL,
+			5);
 
-	ServerSizer->Add (Server,
-			  1,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALL,
-			  5);
+	DataSizer->Add (Server,
+			1,
+			wxALIGN_CENTER_VERTICAL | wxEXPAND |
+			wxALL,
+			5);
 
-	TopSizer->Add (ServerSizer,
+	DataSizer->Add (new wxStaticText (this, -1, _("Username:")),
+			0,
+			wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT |
+			wxALL,
+			5);
+
+	DataSizer->Add (Username,
+			1,
+			wxALIGN_CENTER_VERTICAL | wxEXPAND |
+			wxALL,
+			5);
+
+	DataSizer->Add (new wxStaticText (this, -1, _("Password:")),
+			0,
+			wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT |
+			wxALL,
+			5);
+
+	DataSizer->Add (Password,
+			1,
+			wxALIGN_CENTER_VERTICAL | wxEXPAND |
+			wxALL,
+			5);
+
+	TopSizer->Add (DataSizer,
 		       1,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxEXPAND |
+		       wxALIGN_CENTER_VERTICAL | wxEXPAND |
 		       wxALL,
-		       0);
-
-	UsernameSizer->Add (new wxStaticText (this, -1, _("Username:")),
-			    0,
-			    wxALIGN_CENTER_VERTICAL |
-			    wxALIGN_RIGHT |
-			    wxALL,
-			    5);
-
-	UsernameSizer->Add (Username,
-			    1,
-			    wxALIGN_CENTER_VERTICAL |
-			    wxALL,
-			    5);
-
-	TopSizer->Add (UsernameSizer,
-		       1,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxEXPAND |
-		       wxALL,
-		       0);
-
-	PasswordSizer->Add (new wxStaticText (this, -1, _("Password:")),
-			    0,
-			    wxALIGN_CENTER_VERTICAL |
-			    wxALIGN_RIGHT |
-			    wxALL,
-			    5);
-
-	PasswordSizer->Add (Password,
-			    1,
-			    wxALIGN_CENTER_VERTICAL |
-			    wxALL,
-			    5);
-
-	TopSizer->Add (PasswordSizer,
-		       1,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxEXPAND |
-		       wxALL,
-		       0);
+		       5);
 
 	ButtonSizer->Add (OkButton,
 			  0,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALIGN_CENTER_HORIZONTAL |
+			  wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL |
 			  wxALL,
 			  5);
 
 	ButtonSizer->Add (new wxButton (this, wxID_CANCEL, _("Cancel")),
 			  0,
-			  wxALIGN_CENTER_VERTICAL |
-			  wxALIGN_CENTER_HORIZONTAL |
+			  wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL |
 			  wxALL,
 			  5);
 
 	TopSizer->Add (ButtonSizer,
 		       0,
-		       wxALIGN_CENTER_VERTICAL |
-		       wxALIGN_CENTER_HORIZONTAL |
-		       wxALL,
-		       0);
+		       wxALIGN_CENTER_VERTICAL | wxALIGN_CENTER_HORIZONTAL |
+		       wxLEFT | wxBOTTOM | wxRIGHT,
+		       5);
 
 	SetAutoLayout (TRUE);
 	SetSizer (TopSizer);

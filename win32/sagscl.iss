@@ -19,14 +19,14 @@
 ; Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 ;
 ; $Source: /home/pablo/Desarrollo/sags-cvs/client/win32/Attic/sagscl.iss,v $
-; $Revision: 1.1 $
-; $Date: 2004/05/06 00:39:58 $
+; $Revision: 1.2 $
+; $Date: 2004/05/18 05:37:31 $
 ;
 
 [Setup]
 AppName=SAGS Client
-AppVerName=SAGS Client version 0.1.1
-AppVersion=0.1.1
+AppVerName=SAGS Client version 0.1.2
+AppVersion=0.1.2
 AppPublisher=Pablo Carmona Amigo
 AppPublisherURL=http://sags.sourceforge.net/
 AppCopyright=Copyright (C) 2004 Pablo Carmona Amigo
@@ -39,7 +39,7 @@ LicenseFile=..\COPYING
 Compression=bzip/9
 SourceDir=.
 OutputDir=.
-OutputBaseFilename=sagscl-0.1.1-setup
+OutputBaseFilename=sagscl-0.1.2-setup
 
 [Files]
 Source: "sagscl.exe"; DestDir: "{app}"; Flags: ignoreversion

@@ -1,9 +1,20 @@
+2004-05-16  Pablo Carmona Amigo  <kernel@dday.cl>
+
+	* Version 0.1.2
+	* Changed wxBoxSizer of Login window to wxFlexGridSizer. This permits
+	a better look of the window.
+	* Fixed the method used to delete the trailing and leading new lines
+	chars in the console window.
+	* SyncHello is now sent with a correct version of the program.
+
+
 2004-05-04  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add intl,
 	(ACLOCAL_AMFLAGS): New variable.
 	(EXTRA_DIST): New variable.
 	* configure.in (AC_OUTPUT): Add intl/Makefile,
+
 
 2004-05-04  Pablo Carmona Amigo  <kernel@dday.cl>
 

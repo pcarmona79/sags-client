@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/04/21 04:45:46 $
+// $Revision: 1.8 $
+// $Date: 2004/05/18 05:37:31 $
 //
 
 #include "Console.hpp"
@@ -125,8 +125,10 @@ void Console::Add (wxString text, bool memorize)
 		text.Replace (last_input, "", FALSE);
 
 	// borramos el primer y el último LF
-	text.Trim (FALSE);
-	text.Trim ();
+	if (text.GetChar (0) == '\n')
+		text.Remove (0, 1);
+	if (text.Last () == '\n')
+		text.RemoveLast ();
 
 	// borrar caracteres especiales emitidos por servers de Q2
 	for (i = 1; i < 32; ++i)

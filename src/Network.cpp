@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/05/18 05:37:31 $
 //
 
 #include <cstdio>
@@ -28,6 +28,10 @@
 #include <wx/socket.h>
 
 #include "Network.hpp"
+
+#ifdef HAVE_CONFIG_H
+#  include <config.h>
+#endif
 
 Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 		  wxString username, wxString password)
@@ -231,6 +235,7 @@ void *Network::Entry (void)
 {
 	int val;
 	Packet *StartAuth, *Ans = NULL;
+	char hello_msg[21];
 
 	if (!Connected)
 		Connect ();
@@ -248,7 +253,8 @@ void *Network::Entry (void)
 	EvtParent->AddPendingEvent ((wxEvent&) ConnectSuccessful);
 
 	// La autenticación comieza enviando un SyncHello
-	StartAuth = new Packet (Pckt::SyncHello, "RPA Client 0.1");
+	snprintf (hello_msg, 20, "SAGS Client %s", VERSION);
+	StartAuth = new Packet (Pckt::SyncHello, hello_msg);
 	printf ("StartAuth: TYPE: %04X SEQ: %d LEN: %d DATA: \"%s\"\n",
 		StartAuth->GetType (), StartAuth->GetSequence (),
 		StartAuth->GetLength (), StartAuth->GetData ());
