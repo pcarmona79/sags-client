@@ -7,6 +7,13 @@ following changes:
 1) 
 
 
+Version 0.2.3
+-------------
+
+This release fixed the bug which could send repeteadly the same packet.
+Now we get rightly the last packet of the incoming list.
+
+
 Version 0.2.2
 -------------
 

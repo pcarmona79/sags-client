@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.10 $
-// $Date: 2004/06/19 09:11:18 $
+// $Revision: 1.11 $
+// $Date: 2004/06/19 23:59:23 $
 //
 
 #include <cstdio>
@@ -36,15 +36,21 @@
 #endif
 
 // definiciones de objetos estáticos
-static wxMutex OutgoingMutex;
-static wxMutex IncomingMutex;
+//static wxMutex OutgoingMutex;
+//static wxMutex IncomingMutex;
 
-List<Packet> Network::Outgoing;
-List<Packet> Network::Incoming;
+//List<Packet> Network::Outgoing;
+//List<Packet> Network::Incoming;
 
-Network::Network () : wxThread (wxTHREAD_JOINABLE)
+Network::Network (wxEvtHandler *parent, wxString address, wxString port,
+		  wxString username, wxString password)
+	: wxThread (wxTHREAD_JOINABLE)
 {
-	EvtParent = (wxEvtHandler*) NULL;
+	EvtParent = parent;
+	Address = address;
+	Port = port;
+	Username = username;
+	Password = password;
 	Connected = FALSE;
 	Exiting = FALSE;
 }
@@ -62,7 +68,6 @@ void Network::Lock (wxMutex &mtx)
 		//Sleep (10); // dormir 10 milisegundos
 		Yield ();
 	}
-	//printf ("mtx.Lock () == wxMUTEX_NO_ERROR\n");
 }
 
 void Network::Unlock (wxMutex &mtx)
@@ -78,18 +83,6 @@ void Network::Unlock (wxMutex &mtx)
 	}
 	if (val == wxMUTEX_UNLOCKED)
 		printf ("mtx.Unlock () == wxMUTEX_UNLOCKED\n");
-	//else
-	//	printf ("mtx.Unlock () == wxMUTEX_NO_ERROR\n");
-}
-
-void Network::SetData (wxEvtHandler *parent, wxString address, wxString port,
-		       wxString username, wxString password)
-{
-	EvtParent = parent;
-	Address = address;
-	Port = port;
-	Username = username;
-	Password = password;	
 }
 
 void Network::AddBuffer (List<Packet> &PktList, unsigned int idx,
@@ -159,7 +152,7 @@ int Network::Send (void)
 
 	Lock (OutgoingMutex);
 
-	while (Outgoing.GetCount () > 0)
+	while (Outgoing.GetCount ())
 	{
 		Sending = Outgoing.ExtractFirst ();
 		bytes = SendPacket (Sending);
@@ -294,8 +287,9 @@ wxString Network::GetMD5 (wxString password)
 
 void *Network::Entry (void)
 {
-	int val;
-	bool send_now = FALSE;
+	int val, idx;
+	unsigned int idx2;
+	bool send_now = FALSE, not_ask_for_logs = FALSE;
 	wxString hello_msg, pwdhash;
 	Packet *Pkt = NULL;
 
@@ -346,7 +340,12 @@ void *Network::Entry (void)
 			// manejamos la autenticación
 			Lock (OutgoingMutex);
 			Lock (IncomingMutex);
-			Pkt = Incoming[Incoming.GetCount () - 1];
+
+			idx = Incoming.GetCount () - 1;
+			if (idx < 0)
+				continue;
+			Pkt = Incoming[idx];
+
 			if (Pkt->GetIndex () == Sync::Index)
 			{
 				switch (Pkt->GetCommand ())
@@ -388,18 +387,39 @@ void *Network::Entry (void)
 				switch (Pkt->GetCommand ())
 				{
 				case Session::Authorized:
+
+					ProcsReceived << Pkt->GetIndex ();
+
 					Outgoing << new Packet (Pkt->GetIndex (),
 								Session::ProcessGetInfo);
 					send_now = TRUE;
 					break;
 
 				case Session::ProcessInfo:
+
 					if (Pkt->GetSequence () == 1)
 					{
-						Outgoing << new Packet (Pkt->GetIndex(),
+						if (not_ask_for_logs)
+							not_ask_for_logs = FALSE;
+						else
+						{
+							Outgoing << new Packet (
+								Pkt->GetIndex(),
 								Session::ConsoleNeedLogs);
-						send_now = TRUE;
+							send_now = TRUE;
+						}
 					}
+					break;
+
+				case Session::ProcessStart:
+					// ver si el índice existía antes
+					// si no existía significa que es un nuevo proceso
+					// agregado al servidor, por lo que no deberíamos
+					// pedir los logs
+					idx2 =Pkt->GetIndex ();
+					if (ProcsReceived.Find (idx2) == NULL)
+						not_ask_for_logs = TRUE;
+					break;
 				}
 			}
 			Unlock (OutgoingMutex);

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/06/19 09:11:18 $
+// $Revision: 1.6 $
+// $Date: 2004/06/19 23:59:23 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -51,8 +51,12 @@ class Network : private Protocol, public wxThread
 {
 private:
 	// lista de paquetes
-	static List<Packet> Outgoing;
-	static List<Packet> Incoming;
+	List<Packet> Outgoing;
+	List<Packet> Incoming;
+
+	// mutexes para las listas
+	wxMutex OutgoingMutex;
+	wxMutex IncomingMutex;
 
 	// datos
 	wxString Address;
@@ -65,19 +69,20 @@ private:
 	bool Connected;
 	bool Exiting;
 
+	// lista de índices de procesos
+	List<unsigned int> ProcsReceived;
+
 	// para bloquear y desbloquear mutexes
 	void Lock (wxMutex &mtx);
 	void Unlock (wxMutex &mtx);
 
 public:
-	Network ();
+	Network (wxEvtHandler *parent,
+		 wxString address,
+		 wxString port,
+		 wxString username,
+		 wxString password);
 	~Network ();
-
-	void Network::SetData (wxEvtHandler *parent,
-			       wxString address,
-			       wxString port,
-			       wxString username,
-			       wxString password);
 
 	void AddBuffer (List<Packet> &PktList, unsigned int idx,
 			unsigned int com, const char *data);

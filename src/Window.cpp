@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.15 $
-// $Date: 2004/06/19 09:11:18 $
+// $Revision: 1.16 $
+// $Date: 2004/06/19 23:59:23 $
 //
 
 #include <wx/wx.h>
@@ -51,7 +51,9 @@ MainWindow::MainWindow (const wxString& title,
 	wxMenu *MenuHelp = new wxMenu;
 
 	AppConfig = new wxConfig (PACKAGE);
-	Net = new Network;
+
+	// al comienzo no tenemos red
+	Net = NULL;
 
 #ifdef __WXMSW__
 	SetIcon (wxICON(A));
@@ -145,16 +147,19 @@ MainWindow::~MainWindow ()
 {
 	delete AppConfig;
 
-	if (Net->IsRunning ())
-		Net->Wait ();
-	Net->Delete ();	
+	if (Net != NULL)
+	{
+		if (Net->IsRunning ())
+			Net->Wait ();
+		Net->Delete ();	
+	}
 }
 
 void MainWindow::Disconnect (void)
 {
 	Net->Wait ();
-	//Net->Delete ();
-	//Net = NULL;
+	Net->Delete ();
+	Net = NULL;
 	
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Disconnected."));
@@ -169,8 +174,9 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 	char keystr[] = "/Login/Server";
 	int repeated = 5;
 
-	if (Net->IsConnected ())
-		return;
+	if (Net != NULL)
+		if (Net->IsConnected ())
+			return;
 
 	LoginDialog *Login = new LoginDialog (this, -1, _("Connect to..."),
 					      wxDefaultPosition, wxSize (200, 100));
@@ -195,11 +201,11 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 		SetStatusText (text, 1);
 		LoggingTab->Append (text);
 
-		Net->SetData ((wxEvtHandler *) this,
-			      Login->GetServer (),
-			      Login->GetPort (),
-			      Login->GetUsername (),
-			      Login->GetPassword ());
+		Net = new Network ((wxEvtHandler *) this,
+				   Login->GetServer (),
+				   Login->GetPort (),
+				   Login->GetUsername (),
+				   Login->GetPassword ());
 		Net->Create ();
 		Net->Run ();
 
@@ -239,21 +245,29 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
 {
-	if (Net->IsConnected ())
+	if (Net != NULL)
 	{
-		Net->Disconnect (TRUE);
-		SetStatusText (_("Disconnecting..."), 1);
-		LoggingTab->Append (_("Disconnecting..."));
-		Disconnect ();
+		if (Net->IsConnected ())
+		{
+			Net->Disconnect (TRUE);
+			SetStatusText (_("Disconnecting..."), 1);
+			LoggingTab->Append (_("Disconnecting..."));
+			Disconnect ();
+		}
+		else
+			SetStatusText (_("Not connected"), 1);
 	}
 	else
+	{
 		SetStatusText (_("Not connected"), 1);
+	}
 }
 
 void MainWindow::OnClose (wxCommandEvent& WXUNUSED(event))
 {
-	if (Net->IsConnected ())
-		Net->Disconnect (TRUE);
+	if (Net != NULL)
+		if (Net->IsConnected ())
+			Net->Disconnect (TRUE);
 
 	Destroy ();
 }
@@ -290,7 +304,7 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
-	//ServerConsole->ClearOutput ();
+	// borrar las consolas del notebook
 }
 
 void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))

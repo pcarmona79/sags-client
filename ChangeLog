@@ -1,3 +1,48 @@
+2004-06-19  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Console.hpp:
+	* src/Console.cpp:
+		- The signal registration is now done in the constructor.
+		- Net, AppConfig and a index will needed by the constructor to
+		access to network, configuration and set the process index.
+
+	* src/Logs.cpp:
+		- wxTextCtrl object is now created with wxDefaultSize as size
+		value.
+
+	* src/Main.hpp:
+	* src/Main.cpp:
+		- Now the window's size is not passed to the constructor of
+		MainWindow.
+
+	* src/Network.hpp:
+	* src/Network.cpp:
+		- Fixed Entry() where we didn't get the last packet to do
+		the checking.
+		- Writed better Lock() and Unlock() method to deal with wxMutex.
+		- We save the indexes values of process to deal with new
+		processes created on server after the client has logged in.
+
+	* src/Panels.hpp:
+	* src/Panels.cpp:
+		- Contains InfoPanel and ListPanel classes.
+		- InfoPanel contains a wxListCtrl to display the process's
+		information.
+		- ListPanel will contain the list of process in the server.
+
+	* src/Process.hpp:
+	* src/Process.cpp:
+		- Added ProcList class to implement and manage a list of
+		process.
+		- Added Index() to get a process by its index.
+
+	* src/Window.hpp:
+	* src/Window.cpp:
+		- Very changes on GUI.
+		- Window's size will be calculated on constructor.
+		- Removed code about Console class.
+
+
 2004-06-17  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Packet.hpp:
