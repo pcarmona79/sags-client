@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/08/17 02:29:48 $
+// $Revision: 1.8 $
+// $Date: 2004/08/18 03:33:20 $
 //
 
 #include "Channel.hpp"
@@ -77,6 +77,7 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	ActionStyle = new wxTextAttr (wxColour ("ORANGE"), wxNullColour, ChannelFont);
 	NoticeStyle = new wxTextAttr (wxColour ("PURPLE"), wxNullColour, ChannelFont);
 	JoinLeaveStyle = new wxTextAttr (wxColour ("BLUE"), wxNullColour, ChannelFont);
+	TopicStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour, ChannelFont);
 	NickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
 	MyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
 	ChannelFont.SetWeight (wxBOLD);
@@ -97,11 +98,11 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 				   wxLC_REPORT | wxLC_NO_HEADER |
 				   wxLC_SINGLE_SEL | wxLC_HRULES);
 
-	UserList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, 100);
+	UserList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, 80);
 
 	Topic = new wxTextCtrl (this,
 				-1,
-				"Here comes the channel's topic",
+				"",
 				wxDefaultPosition,
 				wxDefaultSize,
 				wxTE_RICH | wxTE_READONLY);
@@ -271,6 +272,8 @@ void Channel::AddNotice (wxString usr, wxString txt)
 
 void Channel::AddJoin (wxString usr)
 {
+	AddUser (usr);
+
 	SetJoinLeaveStyle ();
 	Add (wxString::Format (_("---> %s has joined the channel\n"), usr.c_str ()));
 	SetTextStyle ();
@@ -278,8 +281,27 @@ void Channel::AddJoin (wxString usr)
 
 void Channel::AddLeave (wxString usr)
 {
+	RemoveUser (usr);
+
 	SetJoinLeaveStyle ();
 	Add (wxString::Format (_("<--- %s leaves the channel\n"), usr.c_str ()));
+	SetTextStyle ();
+}
+
+void Channel::SetTopic (wxString newtopic)
+{
+	Topic->SetValue (newtopic);
+	SetTopicStyle ();
+	Add (wxString::Format (_(">>> The channel's topic is: %s\n"), newtopic.c_str ()));
+	SetTextStyle ();
+}
+
+void Channel::ChangeTopic (wxString who, wxString newtopic)
+{
+	Topic->SetValue (newtopic);
+	SetTopicStyle ();
+	Add (wxString::Format (_(">>> %s sets topic to: %s\n"), who.c_str (),
+			       newtopic.c_str ()));
 	SetTextStyle ();
 }
 
@@ -301,6 +323,11 @@ void Channel::SetNoticeStyle (void)
 void Channel::SetJoinLeaveStyle (void)
 {
 	Output->SetDefaultStyle (*JoinLeaveStyle);
+}
+
+void Channel::SetTopicStyle (void)
+{
+	Output->SetDefaultStyle (*TopicStyle);
 }
 
 void Channel::SetNickStyle (void)
@@ -338,6 +365,8 @@ void Channel::SetChannelFont (wxFont newfont)
 						     newfont);
 	wxTextAttr *NewJoinLeaveStyle = new wxTextAttr (wxColour ("BLUE"), wxNullColour,
 							newfont);
+	wxTextAttr *NewTopicStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour,
+						    newfont);
 	wxTextAttr *NewNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
 	wxTextAttr *NewMyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
 	newfont.SetWeight (wxBOLD);
@@ -360,6 +389,10 @@ void Channel::SetChannelFont (wxFont newfont)
 
 	LastStyle = JoinLeaveStyle;
 	JoinLeaveStyle = NewJoinLeaveStyle;
+	delete LastStyle;
+
+	LastStyle = TopicStyle;
+	TopicStyle = NewTopicStyle;
 	delete LastStyle;
 
 	LastStyle = NickStyle;
@@ -425,6 +458,12 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 			Net->AddBufferOut (index, Session::ChatNotice, data.c_str ());
 		}
+		else if (data.First ("/topic ") == 0)
+		{
+			data = data.Mid (7, wxSTRING_MAXLEN);
+			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
+			Net->AddBufferOut (index, Session::ChatTopicChange, data.c_str ());
+		}
 		else
 		{
 			AddMessage (Username, data);
@@ -461,14 +500,39 @@ void Channel::SetNetwork (Network *N)
 void Channel::ProcessMessage (Packet *Pkt)
 {
 	wxString header, body, from_user;
+	static wxString newuserlist, newtopic, newmessage;
 
 	switch (Pkt->GetCommand ())
 	{
 	case Session::ChatUserList:
 
+		newuserlist += Pkt->GetData ();
+
+		if (Pkt->GetSequence () == 1)
+		{
+			SetUserList (newuserlist);
+			newuserlist.Empty ();
+		}
+
 		break;
 
 	case Session::ChatTopic:
+
+		newtopic += Pkt->GetData ();
+
+		if (Pkt->GetSequence () == 1)
+		{
+			header = ExtractHeader (newtopic);
+			body = ExtractBody (newtopic);
+			from_user = GetValueFromHeader (header, "From");
+
+			if (from_user.IsEmpty ())
+				SetTopic (body);
+			else
+				ChangeTopic (from_user, body);
+
+			newtopic.Empty ();
+		}
 
 		break;
 
@@ -486,24 +550,31 @@ void Channel::ProcessMessage (Packet *Pkt)
 	case Session::ChatAction:
 	case Session::ChatNotice:
 
-		header = ExtractHeader (Pkt->GetData ());
-		body = ExtractBody (Pkt->GetData ());
-		from_user = GetValueFromHeader (header, "From");
+		newmessage += Pkt->GetData ();
 
-		if (from_user == Username)
-			break;
-
-		switch (Pkt->GetCommand ())
+		if (Pkt->GetSequence () == 1)
 		{
-		case Session::ChatMessage:
-			AddMessage (from_user, body);
-			break;
-		case Session::ChatAction:
-			AddAction (from_user, body);
-			break;
-		case Session::ChatNotice:
-			AddNotice (from_user, body);
-			break;
+			header = ExtractHeader (newmessage);
+			body = ExtractBody (newmessage);
+			from_user = GetValueFromHeader (header, "From");
+
+			if (from_user == Username)
+				break;
+
+			switch (Pkt->GetCommand ())
+			{
+			case Session::ChatMessage:
+				AddMessage (from_user, body);
+				break;
+			case Session::ChatAction:
+				AddAction (from_user, body);
+				break;
+			case Session::ChatNotice:
+				AddNotice (from_user, body);
+				break;
+			}
+
+			newmessage.Empty ();
 		}
 
 		break;
@@ -567,7 +638,9 @@ wxString Channel::GetValueFromHeader (wxString hdr, wxString name)
 
 	n = hdr.First (name + ":");
 
-	if (n > 0 && hdr.GetChar (n - 1) != '\n')
+	if (n < 0)
+		return wxEmptyString;
+	else if (n > 0 && hdr.GetChar (n - 1) != '\n')
 		return wxEmptyString;
 
 	for (i = n; hdr.GetChar (i) != '\n' && hdr.GetChar (i) != '\0'; ++i)
@@ -577,4 +650,40 @@ wxString Channel::GetValueFromHeader (wxString hdr, wxString name)
 	newlinepos = i;
 
 	return hdr.Mid (colonpos + 2, newlinepos - colonpos - 2);
+}
+
+void Channel::SetUserList (wxString newlist)
+{
+	wxString nick;
+	int i, last_pos = 0, item = -1;
+
+	UserList->DeleteAllItems ();
+
+	// la lista de usuarios por ahora sólo contiene los nicks
+
+	for (i = 0; i <= (int) newlist.Length () - 1; ++i)
+	{
+		if (newlist.GetChar (i) == '\n')
+		{
+			nick = newlist.Mid (last_pos, i - last_pos);
+			UserList->InsertItem (++item, nick);
+			last_pos = i + 1;
+		}
+
+		if (newlist.GetChar (i) == '\n' &&
+		    newlist.GetChar (i + 1) == '\n')
+			break;
+	}
+}
+
+void Channel::AddUser (wxString usr)
+{
+	long item = UserList->GetItemCount ();
+	UserList->InsertItem (item, usr);
+}
+
+void Channel::RemoveUser (wxString usr)
+{
+	long item = UserList->FindItem (-1, usr);
+	UserList->DeleteItem (item);
 }

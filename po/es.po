@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.3.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-08-16 21:42-0400\n"
-"PO-Revision-Date: 2004-08-16 21:44-0400\n"
+"POT-Creation-Date: 2004-08-17 23:03-0400\n"
+"PO-Revision-Date: 2004-08-17 23:05-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,33 +22,43 @@ msgstr ""
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/Channel.cpp:109 src/Console.cpp:85
+#: src/Channel.cpp:110 src/Console.cpp:85
 msgid "Send"
 msgstr "Enviar"
 
-#: src/Channel.cpp:111
+#: src/Channel.cpp:112
 msgid "Channel's topic:"
 msgstr "Tópico del canal:"
 
-#: src/Channel.cpp:275
+#: src/Channel.cpp:278
 #, c-format
 msgid "---> %s has joined the channel\n"
 msgstr "---> %s ha entrado al canal\n"
 
-#: src/Channel.cpp:282
+#: src/Channel.cpp:287
 #, c-format
 msgid "<--- %s leaves the channel\n"
 msgstr "<--- %s deja el canal\n"
+
+#: src/Channel.cpp:295
+#, c-format
+msgid ">>> The channel's topic is: %s\n"
+msgstr ">>> El tópico del canal es: %s\n"
+
+#: src/Channel.cpp:303
+#, c-format
+msgid ">>> %s sets topic to: %s\n"
+msgstr ">>> %s cambia el tópico a: %s\n"
 
 #: src/Config.cpp:42
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/Config.cpp:89
+#: src/Config.cpp:88
 msgid "Console font"
 msgstr "Fuente de las consolas"
 
-#: src/Config.cpp:101
+#: src/Config.cpp:100
 msgid "Chat font"
 msgstr "Fuente del canal de chat"
 

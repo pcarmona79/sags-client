@@ -1,3 +1,12 @@
+2004-08-17  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Channel.cpp:
+		- Added handling of channel's topic.
+		- Fixed bug in GetValueFromHeader().
+		- Added /topic command to change the topic.
+		- Now we show/add/remove users on the wxListCtrl.
+
+
 2004-08-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Window.cpp:

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/08/17 02:29:48 $
+// $Revision: 1.7 $
+// $Date: 2004/08/18 03:33:20 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -44,6 +44,7 @@ private:
 	wxTextAttr *ActionStyle;
 	wxTextAttr *NoticeStyle;
 	wxTextAttr *JoinLeaveStyle;
+	wxTextAttr *TopicStyle;
 
 	wxTextAttr *NickStyle;
 	wxTextAttr *MyNickStyle;
@@ -69,11 +70,14 @@ public:
 	void AddNotice (wxString usr, wxString txt);
 	void AddJoin (wxString usr);
 	void AddLeave (wxString usr);
+	void SetTopic (wxString newtopic);
+	void ChangeTopic (wxString who, wxString newtopic);
 
 	void SetTextStyle (void);
 	void SetActionStyle (void);
 	void SetNoticeStyle (void);
 	void SetJoinLeaveStyle (void);
+	void SetTopicStyle (void);
 	void SetNickStyle (void);
 	void SetMyNickStyle (void);
 	void SetLimiterStyle (void);
@@ -97,6 +101,10 @@ public:
 	wxString ExtractHeader (wxString msg);
 	wxString ExtractBody (wxString msg);
 	wxString GetValueFromHeader (wxString hdr, wxString name);
+
+	void SetUserList (wxString newlist);
+	void AddUser (wxString usr);
+	void RemoveUser (wxString usr);
 
 	void OnSend (wxCommandEvent& event);
 };

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Config.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/08/12 02:12:39 $
+// $Revision: 1.2 $
+// $Date: 2004/08/18 03:33:20 $
 //
 
 #include "Config.hpp"
@@ -52,7 +52,6 @@ ConfigDialog::ConfigDialog (wxConfig *AppCfg, ProcessTree *ProcLst, Channel *Gen
 	SetIcon (wxIcon (sagscl_xpm));
 #endif
 
-	// TODO: sacar los valores de la configuración
 	wxString ConsoleFontName, ChannelFontName;
 	long ConsoleFontSize, ChannelFontSize;
 
