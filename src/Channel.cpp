@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/08/10 03:17:15 $
+// $Revision: 1.3 $
+// $Date: 2004/08/12 02:51:26 $
 //
 
 #include "Channel.hpp"
@@ -159,8 +159,8 @@ void Channel::Add (wxString text, bool memorize)
 		n = text.Replace (last_input, "", FALSE);
 
 	// borramos el primer y el último LF
-	if (text.GetChar (0) == '\n')
-		text.Remove (0, 1);
+	//if (text.GetChar (0) == '\n')
+	//	text.Remove (0, 1);
 	if (text.Last () == '\n')
 		text.RemoveLast ();
 
