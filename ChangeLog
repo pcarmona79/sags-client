@@ -1,3 +1,18 @@
+2004-06-27  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.3.2 version.
+
+	* src/Console.hpp:
+	* src/Console.cpp:
+		- Constructor now needs the "Show logs" menu item.
+		- New method to determinate which console is already selected
+		and set the keyboard focus for it. Only used with wxMSW.
+
+	* src/Window.cpp:
+		- Changed creation of Console objects passing "Show logs" menu
+		item.
+
+
 2004-06-26  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.3.1 version.

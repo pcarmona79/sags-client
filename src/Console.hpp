@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/06/24 00:12:57 $
+// $Revision: 1.10 $
+// $Date: 2004/06/28 01:32:14 $
 //
 
 #ifndef __CONSOLE_HPP__
@@ -43,10 +43,12 @@ private:
 	Network *Net;
 	wxConfig *AppConfig;
 	unsigned int index;
+	wxNotebook *ParentNB;
+	wxMenuItem *MenuItemShowLogs;
 
 public:
 	Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
-		 unsigned int idx);
+		 wxMenuItem *ShowLogs, unsigned int idx);
 	~Console ();
 
 	void Add (wxString text, bool memorize = FALSE);
@@ -59,6 +61,8 @@ public:
 	void ClearInput (void);
 	void ChangeConsoleFont (void);
 	void ScrollToBottom (void);
+	void InputSetFocus (void);
+	void OutputSetFocus (void);
 
 	void OnSend (wxCommandEvent& event);
 };

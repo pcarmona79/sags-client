@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.22 $
-// $Date: 2004/06/26 22:30:36 $
+// $Revision: 1.23 $
+// $Date: 2004/06/28 01:32:14 $
 //
 
 #include <wx/wx.h>
@@ -565,7 +565,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		// creamos un nuevo proceso
 		NewProc = new Process (Pkt->GetIndex ());
 		NewProc->ProcConsole = new Console (MainNotebook, -1, Net, AppConfig,
-						    Pkt->GetIndex ());
+						    MenuItemShowLogs, Pkt->GetIndex ());
 #ifdef __WXMSW__
 		NewProc->ProcConsole->Hide ();
 #endif

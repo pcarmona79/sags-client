@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sagscl 0.3.0\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-06-26 17:06-0400\n"
+"POT-Creation-Date: 2004-06-27 21:21-0400\n"
 "PO-Revision-Date: 2004-06-26 18:04-0400\n"
 "Last-Translator: Pablo Carmona Amigo <pcarm@users.sourceforge.net>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/Console.cpp:82
+#: src/Console.cpp:85
 msgid "Send"
 msgstr "Enviar"
 
