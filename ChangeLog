@@ -1,6 +1,38 @@
+2004-07-06  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* pixmaps/icon-*.png:
+		- New icons for process identification.
+
+	* src/Icons.hpp:
+	* src/Icons.cpp:
+		- New files.
+		- Contains a wxImageList and a list of the image indexes and
+		their associated process type.
+
+	* src/Panels.hpp:
+	* src/Panels.cpp:
+		- Added a IconList object.
+
+	* src/Window.cpp:
+		- The processes list items are added with a image index.
+
+	* src/About.cpp:
+		- Removed instruction to load image handlers. This is done on
+		IconList class's constructor.
+
+
 2004-06-30  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released 0.3.3 version.
+
+
+2004-07-05  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* pixmaps/icon-quake1.png:
+	* pixmaps/icon-quake2.png:
+	* pixmaps/icon-quake3.png:
+	* pixmaps/icon-rtcw.png:
+		- New icons to show in the process list.
 
 
 2004-06-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

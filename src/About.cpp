@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/About.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/05/23 21:12:50 $
+// $Revision: 1.3 $
+// $Date: 2004/07/07 00:06:19 $
 //
 
 #include "About.hpp"
@@ -52,7 +52,6 @@ AboutDialog::AboutDialog (wxWindow *parent, const wxString& title, const wxStrin
 #endif
 
 	// cargar sagscl.png y agregar a ContentsSizer
-	wxInitAllImageHandlers ();
 	wxBitmap AppIcon (PACKAGE_PIXMAPS_DIR "/sagscl.png", wxBITMAP_TYPE_PNG);
 
 	ContentsSizer->Add (new wxStaticBitmap (this, -1, AppIcon),

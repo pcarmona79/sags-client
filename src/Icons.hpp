@@ -18,37 +18,47 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.hpp,v $
-// $Revision: 1.3 $
+// $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Icons.hpp,v $
+// $Revision: 1.1 $
 // $Date: 2004/07/07 00:06:19 $
 //
 
-#ifndef __PANELS_HPP__
-#define __PANELS_HPP__
+#ifndef __ICONS_HPP__
+#define __ICONS_HPP__
 
 #include <wx/wx.h>
-#include <wx/listctrl.h>
-#include "Icons.hpp"
+#include <wx/imaglist.h>
+#include "List.hpp"
 
-class ListPanel : public wxPanel
+struct proc_type
 {
-public:
-	ListPanel (wxWindow *parent, wxWindowID id);
-	~ListPanel ();
+	wxString pt_name;
+	int pt_index;
 
-	wxListCtrl *ProcessList;
-	IconList *ProcessIcons;
+	proc_type ()
+	{
+		pt_name = wxEmptyString;
+		pt_index = 0;
+	}
+
+	bool operator== (const struct proc_type &op)
+	{
+		return (pt_name == op.pt_name);
+	}
 };
 
-class InfoPanel : public wxPanel
+class IconList
 {
+private:
+	wxImageList *ImageList;
+	List<struct proc_type> Inventory;
+
 public:
-	InfoPanel (wxWindow *parent, wxWindowID id);
-	~InfoPanel ();
+	IconList ();
+	~IconList ();
 
-	wxListCtrl *InfoList;
-
-	void SetInfo (wxString info);
+	wxImageList *GetImageList (void);
+	int GetIconIndex (wxString type);
 };
 
-#endif // __PANELS_HPP__
+#endif // __ICONS_HPP__

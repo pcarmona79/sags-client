@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-06-30 12:59-0400\n"
+"POT-Creation-Date: 2004-07-06 17:24-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,15 +49,15 @@ msgstr ""
 msgid "Process list"
 msgstr ""
 
-#: src/Panels.cpp:74
+#: src/Panels.cpp:78
 msgid "Process's information"
 msgstr ""
 
-#: src/Panels.cpp:83
+#: src/Panels.cpp:87
 msgid "Name"
 msgstr ""
 
-#: src/Panels.cpp:84
+#: src/Panels.cpp:88
 msgid "Value"
 msgstr ""
 
@@ -165,15 +165,15 @@ msgstr ""
 msgid "&Help"
 msgstr ""
 
-#: src/Window.cpp:194 src/Window.cpp:201 src/Window.cpp:956
+#: src/Window.cpp:194 src/Window.cpp:201 src/Window.cpp:958
 msgid "Logs"
 msgstr ""
 
-#: src/Window.cpp:234 src/Window.cpp:751 src/Window.cpp:763
+#: src/Window.cpp:234 src/Window.cpp:753 src/Window.cpp:765
 msgid "Disconnected"
 msgstr ""
 
-#: src/Window.cpp:235 src/Window.cpp:765
+#: src/Window.cpp:235 src/Window.cpp:767
 msgid "Disconnected."
 msgstr ""
 
@@ -244,121 +244,121 @@ msgstr ""
 msgid " Server: ["
 msgstr ""
 
-#: src/Window.cpp:580 src/Window.cpp:925
+#: src/Window.cpp:582 src/Window.cpp:927
 #, c-format
 msgid "Process %d: "
 msgstr ""
 
-#: src/Window.cpp:586
+#: src/Window.cpp:588
 #, c-format
 msgid "Added page \"Process %d\""
 msgstr ""
 
-#: src/Window.cpp:596
+#: src/Window.cpp:598
 msgid "You are an administrator of this server"
 msgstr ""
 
-#: src/Window.cpp:610
+#: src/Window.cpp:612
 #, c-format
 msgid "Creating new process with index %d"
 msgstr ""
 
-#: src/Window.cpp:616
+#: src/Window.cpp:618
 #, c-format
 msgid "Process %d exits: \"%s\""
 msgstr ""
 
-#: src/Window.cpp:622
+#: src/Window.cpp:624
 #, c-format
 msgid "Process %d start: \"%s\""
 msgstr ""
 
-#: src/Window.cpp:631
+#: src/Window.cpp:633
 msgid "Disconnected from server."
 msgstr ""
 
-#: src/Window.cpp:632 src/Window.cpp:652 src/Window.cpp:661 src/Window.cpp:670
-#: src/Window.cpp:679 src/Window.cpp:688 src/Window.cpp:698 src/Window.cpp:706
-#: src/Window.cpp:714 src/Window.cpp:722 src/Window.cpp:730 src/Window.cpp:740
-#: src/Window.cpp:754 src/Window.cpp:768
+#: src/Window.cpp:634 src/Window.cpp:654 src/Window.cpp:663 src/Window.cpp:672
+#: src/Window.cpp:681 src/Window.cpp:690 src/Window.cpp:700 src/Window.cpp:708
+#: src/Window.cpp:716 src/Window.cpp:724 src/Window.cpp:732 src/Window.cpp:742
+#: src/Window.cpp:756 src/Window.cpp:770
 msgid "Error"
 msgstr ""
 
-#: src/Window.cpp:651
+#: src/Window.cpp:653
 msgid ""
 "Server is full.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:660
+#: src/Window.cpp:662
 msgid ""
 "Protocol's version not valid.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:669
+#: src/Window.cpp:671
 msgid ""
 "Username or password not valid.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:678
+#: src/Window.cpp:680
 msgid ""
 "Time for authentication has expired.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:687
+#: src/Window.cpp:689
 msgid ""
 "Server is shutting down.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:696
+#: src/Window.cpp:698
 msgid ""
 "Bad process on server:\n"
 "\n"
 msgstr ""
 
-#: src/Window.cpp:705
+#: src/Window.cpp:707
 msgid "Server can't write to the process."
 msgstr ""
 
-#: src/Window.cpp:712
+#: src/Window.cpp:714
 #, c-format
 msgid "Process %s couldn't be terminated."
 msgstr ""
 
-#: src/Window.cpp:720
+#: src/Window.cpp:722
 #, c-format
 msgid "Process %s couldn't be launched."
 msgstr ""
 
-#: src/Window.cpp:728
+#: src/Window.cpp:730
 #, c-format
 msgid "Process %s couldn't be restarted."
 msgstr ""
 
-#: src/Window.cpp:738
+#: src/Window.cpp:740
 msgid ""
 "Generic Error:\n"
 "\n"
 msgstr ""
 
-#: src/Window.cpp:752 src/Window.cpp:753
+#: src/Window.cpp:754 src/Window.cpp:755
 msgid "Failed to connect to server."
 msgstr ""
 
-#: src/Window.cpp:764
+#: src/Window.cpp:766
 msgid "Failed to read data from server."
 msgstr ""
 
-#: src/Window.cpp:766
+#: src/Window.cpp:768
 msgid ""
 "Failed to read data from server.\n"
 "Disconnected."
 msgstr ""
 
-#: src/Window.cpp:852
+#: src/Window.cpp:854
 msgid "Save to file"
 msgstr ""

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.27 $
-// $Date: 2004/07/01 00:03:43 $
+// $Revision: 1.28 $
+// $Date: 2004/07/07 00:06:19 $
 //
 
 #include <wx/wx.h>
@@ -570,7 +570,9 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			newitem.m_itemId = ProcListPanel->ProcessList->GetItemCount ();
 			newitem.m_text = Proc->GetName ();
 			newitem.m_data = Pkt->GetIndex ();
-			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_DATA;
+			newitem.m_image = ProcListPanel->ProcessIcons->GetIconIndex (Proc->GetType ());
+			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_DATA |
+					 wxLIST_MASK_IMAGE;
 
 			ProcListPanel->ProcessList->InsertItem (newitem);
 #ifdef __WXGTK__

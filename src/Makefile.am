@@ -1,9 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
 sagscl_CXXFLAGS = \
-		-Wall \
-		-g    \
-		-O2
+		  -Wall \
+		  -g    \
+		  -O2
 
 bin_PROGRAMS = sagscl
 
@@ -12,6 +12,8 @@ sagscl_SOURCES = \
 		 About.hpp    \
 		 Console.cpp  \
 		 Console.hpp  \
+		 Icons.cpp    \
+		 Icons.hpp    \
 		 Ids.hpp      \
 		 List.hpp     \
 		 Login.cpp    \

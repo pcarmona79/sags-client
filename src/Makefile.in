@@ -180,9 +180,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
 sagscl_CXXFLAGS = \
-		-Wall \
-		-g    \
-		-O2
+		  -Wall \
+		  -g    \
+		  -O2
 
 
 bin_PROGRAMS = sagscl
@@ -192,6 +192,8 @@ sagscl_SOURCES = \
 		 About.hpp    \
 		 Console.cpp  \
 		 Console.hpp  \
+		 Icons.cpp    \
+		 Icons.hpp    \
 		 Ids.hpp      \
 		 List.hpp     \
 		 Login.cpp    \
@@ -222,11 +224,11 @@ bin_PROGRAMS = sagscl$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
 am_sagscl_OBJECTS = sagscl-About.$(OBJEXT) sagscl-Console.$(OBJEXT) \
-	sagscl-Login.$(OBJEXT) sagscl-Logs.$(OBJEXT) \
-	sagscl-Main.$(OBJEXT) sagscl-Network.$(OBJEXT) \
-	sagscl-Packet.$(OBJEXT) sagscl-Panels.$(OBJEXT) \
-	sagscl-Process.$(OBJEXT) sagscl-Protocol.$(OBJEXT) \
-	sagscl-Window.$(OBJEXT)
+	sagscl-Icons.$(OBJEXT) sagscl-Login.$(OBJEXT) \
+	sagscl-Logs.$(OBJEXT) sagscl-Main.$(OBJEXT) \
+	sagscl-Network.$(OBJEXT) sagscl-Packet.$(OBJEXT) \
+	sagscl-Panels.$(OBJEXT) sagscl-Process.$(OBJEXT) \
+	sagscl-Protocol.$(OBJEXT) sagscl-Window.$(OBJEXT)
 sagscl_OBJECTS = $(am_sagscl_OBJECTS)
 sagscl_LDADD = $(LDADD)
 sagscl_DEPENDENCIES =
@@ -237,6 +239,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 @AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/sagscl-About.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Console.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sagscl-Icons.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Login.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Logs.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/sagscl-Main.Po \
@@ -315,6 +318,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-About.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Console.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Icons.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Login.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Logs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sagscl-Main.Po@am__quote@
@@ -423,6 +427,39 @@ sagscl-Console.lo: Console.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Console.Plo' tmpdepfile='$(DEPDIR)/sagscl-Console.TPlo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Console.lo `test -f 'Console.cpp' || echo '$(srcdir)/'`Console.cpp
+
+sagscl-Icons.o: Icons.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Icons.o -MD -MP -MF "$(DEPDIR)/sagscl-Icons.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Icons.o `test -f 'Icons.cpp' || echo '$(srcdir)/'`Icons.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Icons.Tpo" "$(DEPDIR)/sagscl-Icons.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Icons.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Icons.cpp' object='sagscl-Icons.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Icons.Po' tmpdepfile='$(DEPDIR)/sagscl-Icons.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Icons.o `test -f 'Icons.cpp' || echo '$(srcdir)/'`Icons.cpp
+
+sagscl-Icons.obj: Icons.cpp
+@am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Icons.obj -MD -MP -MF "$(DEPDIR)/sagscl-Icons.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Icons.obj `if test -f 'Icons.cpp'; then $(CYGPATH_W) 'Icons.cpp'; else $(CYGPATH_W) '$(srcdir)/Icons.cpp'; fi`; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Icons.Tpo" "$(DEPDIR)/sagscl-Icons.Po"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Icons.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Icons.cpp' object='sagscl-Icons.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Icons.Po' tmpdepfile='$(DEPDIR)/sagscl-Icons.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Icons.obj `if test -f 'Icons.cpp'; then $(CYGPATH_W) 'Icons.cpp'; else $(CYGPATH_W) '$(srcdir)/Icons.cpp'; fi`
+
+sagscl-Icons.lo: Icons.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Icons.lo -MD -MP -MF "$(DEPDIR)/sagscl-Icons.Tpo" \
+@am__fastdepCXX_TRUE@	  -c -o sagscl-Icons.lo `test -f 'Icons.cpp' || echo '$(srcdir)/'`Icons.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/sagscl-Icons.Tpo" "$(DEPDIR)/sagscl-Icons.Plo"; \
+@am__fastdepCXX_TRUE@	else rm -f "$(DEPDIR)/sagscl-Icons.Tpo"; exit 1; \
+@am__fastdepCXX_TRUE@	fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Icons.cpp' object='sagscl-Icons.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	depfile='$(DEPDIR)/sagscl-Icons.Plo' tmpdepfile='$(DEPDIR)/sagscl-Icons.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -c -o sagscl-Icons.lo `test -f 'Icons.cpp' || echo '$(srcdir)/'`Icons.cpp
 
 sagscl-Login.o: Login.cpp
 @am__fastdepCXX_TRUE@	if $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(sagscl_CXXFLAGS) $(CXXFLAGS) -MT sagscl-Login.o -MD -MP -MF "$(DEPDIR)/sagscl-Login.Tpo" \

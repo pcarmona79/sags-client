@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/06/26 22:30:36 $
+// $Revision: 1.5 $
+// $Date: 2004/07/07 00:06:19 $
 //
 
 #include "Panels.hpp"
@@ -40,9 +40,10 @@ ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 
 	ProcessList = new wxListCtrl (this, Ids::ProcessSelected, wxDefaultPosition,
 				      wxDefaultSize,
-				      wxLC_REPORT | wxLC_NO_HEADER | wxLC_SINGLE_SEL);
+				      wxLC_REPORT | wxLC_NO_HEADER | wxLC_SINGLE_SEL |
+				      wxLC_HRULES);
 
-	ProcessList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
+	ProcessList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, 120);//wxLIST_AUTOSIZE);
 
 	//ProcessList->SetItemState (0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 	//ProcessList->SetFocus ();
@@ -59,11 +60,14 @@ ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 	SetSizer (TopSizer);
 	TopSizer->Fit (this);
 	TopSizer->SetSizeHints (this);
+
+	ProcessIcons = new IconList;
+	ProcessList->SetImageList (ProcessIcons->GetImageList (), wxIMAGE_LIST_SMALL);
 }
 
 ListPanel::~ListPanel ()
 {
-	
+	delete ProcessIcons;
 }
 
 InfoPanel::InfoPanel (wxWindow *parent, wxWindowID id)
