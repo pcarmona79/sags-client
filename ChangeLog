@@ -1,3 +1,19 @@
+2004-06-30  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.3.3 version.
+
+
+2004-06-29  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Window.cpp:
+		- Fixed check of logs notebook tab on wxGTK.
+		- Added menu items to kill, launch and restart the actual
+		process.
+
+	* po/es.po:
+		- Updated spanish translation.
+
+
 2004-06-28  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Packet.hpp:
@@ -6,14 +22,14 @@
 	* src/Window.cpp:
 		- Added three new menu items.
 		- Fixed bug on win32 version which causes a segmentation fault
-		when trying to get a innexistent notebook page.
+		when trying to get an inexistent notebook page.
 
 	* src/Console.cpp:
 		- Fixed bug on win32 version which causes a segmentation fault
-		when trying to get a innexistent notebook page.
+		when trying to get an inexistent notebook page.
 
 	* src/Network.cpp:
-		- Trying to change desconection method.
+		- Trying to change desconnection method.
 
 
 2004-06-27  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

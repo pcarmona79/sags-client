@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.26 $
-// $Date: 2004/06/30 03:47:07 $
+// $Revision: 1.27 $
+// $Date: 2004/07/01 00:03:43 $
 //
 
 #include <wx/wx.h>
@@ -709,7 +709,7 @@ void MainWindow::ProtoError (Packet *Pkt)
 
 	case Error::ProcessNotKilled:
 		LoggingTab->Append ("Error::ProcessNotKilled");
-		wxMessageBox (wxString::Format (_("Process %s can't be terminated."),
+		wxMessageBox (wxString::Format (_("Process %s couldn't be terminated."),
   						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
@@ -717,7 +717,7 @@ void MainWindow::ProtoError (Packet *Pkt)
 
 	case Error::ProcessNotLaunched:
 		LoggingTab->Append ("Error::ProcessNotLaunched");
-		wxMessageBox (wxString::Format (_("Process %s can't be launched."),
+		wxMessageBox (wxString::Format (_("Process %s couldn't be launched."),
   						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
@@ -725,7 +725,7 @@ void MainWindow::ProtoError (Packet *Pkt)
 
 	case Error::ProcessNotRestarted:
 		LoggingTab->Append ("Error::ProcessNotRestarted");
-		wxMessageBox (wxString::Format (_("Process %s can't be restarted."),
+		wxMessageBox (wxString::Format (_("Process %s couldn't be restarted."),
   						Pkt->GetData ()),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);

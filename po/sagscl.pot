@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: pcarm@users.sourceforge.net\n"
-"POT-Creation-Date: 2004-06-29 16:11-0400\n"
+"POT-Creation-Date: 2004-06-30 12:59-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -326,17 +326,17 @@ msgstr ""
 
 #: src/Window.cpp:712
 #, c-format
-msgid "Process %s can't be terminated."
+msgid "Process %s couldn't be terminated."
 msgstr ""
 
 #: src/Window.cpp:720
 #, c-format
-msgid "Process %s can't be launched."
+msgid "Process %s couldn't be launched."
 msgstr ""
 
 #: src/Window.cpp:728
 #, c-format
-msgid "Process %s can't be restarted."
+msgid "Process %s couldn't be restarted."
 msgstr ""
 
 #: src/Window.cpp:738

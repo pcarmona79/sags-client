@@ -4,6 +4,7 @@ New version 0.3.3
 This version includes:
 
 1) Now the user can kill, start or restart a process.
+2) Fixed segmentation fault on win32 version.
 
 
 Version 0.3.2
