@@ -11,6 +11,10 @@
 		- Added event handlers for buttons to update immediately
 		console and chat widgets.
 
+	* src/Console.hpp:
+	* src/Console.cpp:
+		- Removed unused ChangeConsoleFont() method.
+
 	* src/Window.hpp:
 	* src/Window.cpp:
 		- Changed method to detect the logs and chat windows.
