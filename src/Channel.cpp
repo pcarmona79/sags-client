@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.9 $
-// $Date: 2004/08/29 22:16:07 $
+// $Revision: 1.10 $
+// $Date: 2004/08/30 00:38:09 $
 //
 
 #include "Channel.hpp"
@@ -275,8 +275,6 @@ void Channel::AddNotice (wxString usr, wxString txt)
 
 void Channel::AddJoin (wxString usr)
 {
-	AddUser (usr);
-
 	SetJoinLeaveStyle ();
 	Add (wxString::Format (_("---> %s has joined the channel\n"), usr.c_str ()));
 	SetTextStyle ();
@@ -284,8 +282,6 @@ void Channel::AddJoin (wxString usr)
 
 void Channel::AddLeave (wxString usr)
 {
-	RemoveUser (usr);
-
 	SetJoinLeaveStyle ();
 	Add (wxString::Format (_("<--- %s leaves the channel\n"), usr.c_str ()));
 	SetTextStyle ();
@@ -502,8 +498,9 @@ void Channel::SetNetwork (Network *N)
 
 void Channel::ProcessMessage (Packet *Pkt)
 {
-	wxString header, body, from_user;
+	wxString header, body, from_user, all, nick, stat;
 	static wxString newuserlist, newtopic, newmessage;
+	int colon_pos;
 
 	switch (Pkt->GetCommand ())
 	{
@@ -541,11 +538,28 @@ void Channel::ProcessMessage (Packet *Pkt)
 
 	case Session::ChatJoin:
 
-		AddJoin (Pkt->GetData ());
+		all = Pkt->GetData ();
+		colon_pos = all.Find (':');
+
+		if (colon_pos >= 0)
+		{
+			nick = all.Mid (0, colon_pos);
+			stat = all.Mid (colon_pos + 1, wxSTRING_MAXLEN);
+		}
+		else
+		{
+			nick = all;
+			stat = "normal";
+		}
+
+		AddUser (nick, stat);
+		AddJoin (nick);
+
 		break;
 
 	case Session::ChatLeave:
 
+		RemoveUser (Pkt->GetData ());
 		AddLeave (Pkt->GetData ());
 		break;
 
@@ -657,30 +671,39 @@ wxString Channel::GetValueFromHeader (wxString hdr, wxString name)
 
 void Channel::SetUserList (wxString newlist)
 {
-	wxString nick;
-	int i, last_pos = 0, item = -1;
+	wxString all, nick, stat;
+	int i, last_pos = 0, item = -1, colon_pos;
 	wxListItem newitem;
 
 	UserList->DeleteAllItems ();
 
-	// la lista de usuarios por ahora sólo contiene los nicks
+	// Desde la versión 0.4.1 del servidor, la lista es enviada
+	// con el estado del usuario.
 
 	for (i = 0; i <= (int) newlist.Length () - 1; ++i)
 	{
 		if (newlist.GetChar (i) == '\n')
 		{
-			nick = newlist.Mid (last_pos, i - last_pos);
+			all = newlist.Mid (last_pos, i - last_pos);
+			colon_pos = all.Find (':');
 
-			// FIXME: por ahora no hay info del tipo de usuario por
-			//        lo que usaremos "normal".
+			if (colon_pos >= 0)
+			{
+				nick = all.Mid (0, colon_pos);
+				stat = all.Mid (colon_pos + 1, wxSTRING_MAXLEN);
+			}
+			else
+			{
+				nick = all;
+				stat = "normal";
+			}
+
 			newitem.m_itemId = ++item;
 			newitem.m_text = nick;
-			newitem.m_image = StatusIcons->GetIconIndex ("normal");
+			newitem.m_image = StatusIcons->GetIconIndex (stat);
 			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_IMAGE;
 
 			UserList->InsertItem (newitem);
-			//UserList->InsertItem (++item, nick);
-
 			last_pos = i + 1;
 		}
 
@@ -690,20 +713,17 @@ void Channel::SetUserList (wxString newlist)
 	}
 }
 
-void Channel::AddUser (wxString usr)
+void Channel::AddUser (wxString usr, wxString status)
 {
 	long item = UserList->GetItemCount ();
 	wxListItem newitem;
 
-	// FIXME: por ahora no hay info del tipo de usuario por
-	//        lo que usaremos "normal".
 	newitem.m_itemId = item;
 	newitem.m_text = usr;
-	newitem.m_image = StatusIcons->GetIconIndex ("normal");
+	newitem.m_image = StatusIcons->GetIconIndex (status);
 	newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_IMAGE;
 
 	UserList->InsertItem (newitem);
-	//UserList->InsertItem (item, usr);
 }
 
 void Channel::RemoveUser (wxString usr)

@@ -17,7 +17,7 @@
 	* src/Channel.hpp:
 	* src/Channel.cpp:
 		- Added new object StatusIcons to manage user status icons.
-		- For now all users are added using normal chat icon.
+		- Users are added to chat window using a status icon.
 
 
 2004-08-20  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/08/29 22:16:07 $
+// $Revision: 1.9 $
+// $Date: 2004/08/30 00:38:09 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -106,7 +106,7 @@ public:
 	wxString GetValueFromHeader (wxString hdr, wxString name);
 
 	void SetUserList (wxString newlist);
-	void AddUser (wxString usr);
+	void AddUser (wxString usr, wxString status);
 	void RemoveUser (wxString usr);
 
 	void OnSend (wxCommandEvent& event);
