@@ -1,3 +1,9 @@
+sagscl (0.4.1-1) unstable; urgency=low
+
+  * New version with bugfixes. See ChangeLog and NEWS.
+
+ -- Pablo Carmona Amigo <pcarm@users.sourceforge.net>  Sun, 29 Aug 2004 22:09:16 -0400
+
 sagscl (0.4.0-1) unstable; urgency=low
 
   * New version with chat support. See ChangeLog and NEWS for details

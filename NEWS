@@ -1,5 +1,17 @@
-New version 0.4.0
+New version 0.4.1
 -----------------
+
+This new release includes:
+
+1) Fixes win32 bug which doesn't add chat tab to main notebook at
+   startup.
+2) Users are added to chat window using a status icon (admin or normal
+   user).
+3) New files for user identification on chat window's users list.
+
+
+Version 0.4.0
+-------------
 
 This new version includes the following changes:
 
