@@ -19,11 +19,12 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.2 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #include "Panels.hpp"
+#include "Ids.hpp"
 
 ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 	: wxPanel (parent, id)
@@ -36,20 +37,14 @@ ListPanel::ListPanel (wxWindow *parent, wxWindowID id)
 		       wxLEFT | wxRIGHT | wxTOP,
 		       7);
 
-	ProcessList = new wxListCtrl (this, -1, wxDefaultPosition, wxDefaultSize,
+	ProcessList = new wxListCtrl (this, Ids::ProcessSelected, wxDefaultPosition,
+				      wxDefaultSize,
 				      wxLC_REPORT | wxLC_NO_HEADER | wxLC_SINGLE_SEL);
 
 	ProcessList->InsertColumn (0, "", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
 
-	ProcessList->InsertItem (0, "Server1");
-	ProcessList->InsertItem (1, "Server2");
-	ProcessList->InsertItem (2, "Liga1");
-	ProcessList->InsertItem (3, "Liga2");
-	ProcessList->InsertItem (4, "Publico1");
-	ProcessList->InsertItem (5, "Publico2");
-
-	ProcessList->SetItemState (0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-	ProcessList->SetFocus ();
+	//ProcessList->SetItemState (0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+	//ProcessList->SetFocus ();
 
 	TopSizer->Add (ProcessList,
 		       1,
@@ -82,15 +77,8 @@ InfoPanel::InfoPanel (wxWindow *parent, wxWindowID id)
 	InfoList = new wxListCtrl (this, -1, wxDefaultPosition, wxDefaultSize,
 				   wxLC_REPORT);
 
-	InfoList->InsertColumn (0, "Variable", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
-	InfoList->InsertColumn (1, "Value", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
-
-	InfoList->InsertItem (0, "Server1"); InfoList->SetItem (0, 1, "Value1");
-	InfoList->InsertItem (1, "Server2"); InfoList->SetItem (1, 1, "Value2");
-	InfoList->InsertItem (2, "Liga1"); InfoList->SetItem (2, 1, "Value3");
-	InfoList->InsertItem (3, "Liga2"); InfoList->SetItem (3, 1, "Value4");
-	InfoList->InsertItem (4, "Publico1"); InfoList->SetItem (4, 1, "Value5");
-	InfoList->InsertItem (5, "Publico2"); InfoList->SetItem (5, 1, "Value6");
+	InfoList->InsertColumn (0, _("Name"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
+	InfoList->InsertColumn (1, _("Value"), wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE);
 
 	TopSizer->Add (InfoList,
 		       1,
@@ -107,4 +95,37 @@ InfoPanel::InfoPanel (wxWindow *parent, wxWindowID id)
 InfoPanel::~InfoPanel ()
 {
 	
+}
+
+void InfoPanel::SetInfo (wxString info)
+{
+	wxString name, value;
+	unsigned int i, j, eq_pos = 0, start, item;
+
+	InfoList->DeleteAllItems ();
+
+	for (i = 0, item = 0; i <= info.Length () - 1; ++i, ++item)
+	{
+		start = i;
+		eq_pos = 0;
+		for (j = i; info.GetChar (j) != '\n'; ++j)
+		{
+			++i;
+			if (info.GetChar (j) == '=')
+				eq_pos = (eq_pos == 0) ? j : eq_pos;
+			if (info.GetChar (j) == '\0')
+				continue;
+		}
+
+		if (eq_pos)
+		{
+			name = info.Mid (start, eq_pos - start);
+			value = info.Mid (eq_pos + 1, j - eq_pos - 1);
+			InfoList->InsertItem (item, name);
+			InfoList->SetItem (item, 1, value);
+		}
+	}
+
+	InfoList->SetColumnWidth (0, wxLIST_AUTOSIZE);
+	InfoList->SetColumnWidth (1, wxLIST_AUTOSIZE);
 }

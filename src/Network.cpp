@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.11 $
-// $Date: 2004/06/19 23:59:23 $
+// $Revision: 1.12 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #include <cstdio>
@@ -34,13 +34,6 @@
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
 #endif
-
-// definiciones de objetos estáticos
-//static wxMutex OutgoingMutex;
-//static wxMutex IncomingMutex;
-
-//List<Packet> Network::Outgoing;
-//List<Packet> Network::Incoming;
 
 Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 		  wxString username, wxString password)
@@ -132,6 +125,7 @@ int Network::Disconnect (bool exiting)
 	Exiting = (exiting) ? TRUE : FALSE;
 
 	// enviar un paquete de desconexión
+	// FIXME: esto bloquea la GUI!
 	if (SendPacket (new Packet (Session::MainIndex, Session::Disconnect)) < 0)
 		return -1;
 
@@ -291,7 +285,7 @@ void *Network::Entry (void)
 	unsigned int idx2;
 	bool send_now = FALSE, not_ask_for_logs = FALSE;
 	wxString hello_msg, pwdhash;
-	Packet *Pkt = NULL;
+	Packet *Pkt = NULL, *DeleteMe = NULL;
 
 	if (!Connected)
 		Connect ();
@@ -346,7 +340,7 @@ void *Network::Entry (void)
 				continue;
 			Pkt = Incoming[idx];
 
-			if (Pkt->GetIndex () == Sync::Index)
+			if (Pkt->IsSync ())
 			{
 				switch (Pkt->GetCommand ())
 				{
@@ -365,7 +359,7 @@ void *Network::Entry (void)
 					break;
 				}
 			}
-			else if (Pkt->GetIndex () == Auth::Index)
+			else if (Pkt->IsAuth ())
 			{
 				switch (Pkt->GetCommand ())
 				{
@@ -381,8 +375,7 @@ void *Network::Entry (void)
 					// los paquetes Session::Authorized
 				}
 			}
-			else if (Pkt->GetIndex () >= Session::MainIndex &&
-				 Pkt->GetIndex () <= Session::MaxIndex)
+			else if (Pkt->IsSession ())
 			{
 				switch (Pkt->GetCommand ())
 				{
@@ -416,7 +409,7 @@ void *Network::Entry (void)
 					// si no existía significa que es un nuevo proceso
 					// agregado al servidor, por lo que no deberíamos
 					// pedir los logs
-					idx2 =Pkt->GetIndex ();
+					idx2 = Pkt->GetIndex ();
 					if (ProcsReceived.Find (idx2) == NULL)
 						not_ask_for_logs = TRUE;
 					break;

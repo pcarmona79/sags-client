@@ -19,9 +19,12 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.hpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.3 $
+// $Date: 2004/06/22 02:44:29 $
 //
+
+#ifndef __PROCESS_HPP__
+#define __PROCESS_HPP__
 
 #include <wx/wx.h>
 #include "Console.hpp"
@@ -37,13 +40,19 @@ public:
 	unsigned int index;
 	wxString InfoString;
 
+	wxString GetName (void);
+	wxString GetType (void);
+
 	bool operator== (Process &P);
 };
 
-class ProcessList
+class ProcessTree
 {
 public:
 	List<Process> TheList;
 
 	Process *Index (unsigned int idx);
+	Process *operator[] (unsigned int n);
 };
+
+#endif // __PROCESS_HPP__

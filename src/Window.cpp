@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.16 $
-// $Date: 2004/06/19 23:59:23 $
+// $Revision: 1.17 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #include <wx/wx.h>
@@ -129,13 +129,17 @@ MainWindow::MainWindow (const wxString& title,
 	ProcListPanel = new ListPanel (PanelsWindow, -1);
 	ProcInfoPanel = new InfoPanel (PanelsWindow, -1);
 
-	PanelsWindow->SplitHorizontally (ProcListPanel, ProcInfoPanel, 0);
+	PanelsWindow->SplitHorizontally (ProcListPanel, ProcInfoPanel, 150);
 
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, -1);
 	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
 
 	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);
+
+	// conectamos la señal de la lista de procesos
+	Connect (Ids::ProcessSelected, wxEVT_COMMAND_LIST_ITEM_SELECTED,
+	         (wxObjectEventFunction) &MainWindow::OnProcessSelected);
 
 	// las dimensiones y la posición se podrían
 	// obtener de las opciones con AppConfig
@@ -399,6 +403,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 	wxString text;
 	static int bytes = 0;
 	Process *Proc = NULL, *NewProc = NULL;
+	wxListItem newitem;
 
 	switch (Pkt->GetCommand ())
 	{
@@ -453,8 +458,33 @@ void MainWindow::ProtoSession (Packet *Pkt)
 	case Session::ProcessInfo:
 
 		Proc = ProcList.Index (Pkt->GetIndex ());
-		if (Proc != NULL)
-			Proc->InfoString += Pkt->GetData ();
+		if (Proc == NULL)
+			break;
+
+		Proc->InfoString += Pkt->GetData ();
+
+		// hay que agregar a ProcListPanel
+		if (Pkt->GetSequence () == 1)
+		{
+			newitem.m_itemId = ProcListPanel->ProcessList->GetItemCount ();
+			newitem.m_text = Proc->GetName ();
+			newitem.m_data = Pkt->GetIndex ();
+			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_DATA;
+
+			ProcListPanel->ProcessList->InsertItem (newitem);
+
+			// ahora insertamos la página
+			MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
+				(wxNotebookPage *) Proc->ProcConsole,
+				wxString::Format (_("Process %d: "), Pkt->GetIndex ())
+					+ newitem.m_text,
+				//MainNotebook->GetPageCount () == 1 ? TRUE : FALSE);
+				FALSE);
+			Proc->ProcConsole->Hide ();
+
+			LoggingTab->Append (wxString::Format (_("Added page \"Process %d\""),
+							      Pkt->GetIndex ()));
+		}
 		break;
 
 	case Session::Authorized:
@@ -462,19 +492,31 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		if (Pkt->GetIndex () == 0)
 		{
 			// somos un administrador!
+			LoggingTab->Append (_("You are an administrator of this server"));
 			break;
 		}
-		
+
 		// creamos un nuevo proceso
 		NewProc = new Process (Pkt->GetIndex ());
 		NewProc->ProcConsole = new Console (MainNotebook, -1, Net, AppConfig,
 						    Pkt->GetIndex ());
-		MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
-					  (wxNotebookPage *) NewProc->ProcConsole,
-					  wxString::Format (_("Console %d"), Pkt->GetIndex ()),
-					  MainNotebook->GetPageCount () == 1 ? TRUE : FALSE);
 		ProcList.TheList << NewProc;
 		NewProc = NULL;
+		
+		LoggingTab->Append (wxString::Format (_("Creating new process with index %d"),
+						      Pkt->GetIndex ()));
+		break;
+
+	case Session::ProcessExits:
+
+		LoggingTab->Append (wxString::Format (_("Process %d exits: \"%s\""),
+						      Pkt->GetIndex (), Pkt->GetData ()));
+		break;
+
+	case Session::ProcessStart:
+
+		LoggingTab->Append (wxString::Format (_("Process %d start: \"%s\""),
+						      Pkt->GetIndex (), Pkt->GetData ()));
 		break;
 
 	case Session::Disconnect:
@@ -603,11 +645,60 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
-	// descubrir que consola se está mostrando
-	// para ejecutar SaveConsoleToFile en ella
-	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"), "", "", "*.*",
+	int nb_selected;
+	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
+						     "", "", "*.*",
 						     wxSAVE | wxOVERWRITE_PROMPT);
 
 	if (SaveDialog->ShowModal () == wxID_OK)
-		;//ProcList[i]->SaveConsoleToFile (SaveDialog->GetPath ());
+	{
+		nb_selected = MainNotebook->GetSelection ();
+		if (nb_selected != MainNotebook->GetPageCount () - 1)
+			ProcList[nb_selected]->ProcConsole->SaveConsoleToFile (SaveDialog->GetPath ());
+		else
+			LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
+	}
+}
+
+void MainWindow::OnProcessSelected (wxListEvent& event)
+{
+	int i, nb_selected;
+        wxListItem info;
+	Process *ProcessToShow;
+	wxNotebookPage *CurrentNB;
+
+        info.m_itemId = event.m_itemIndex;
+        info.m_col = 0;
+        info.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_DATA;
+
+	ProcListPanel->ProcessList->GetItem (info);
+
+	// primero obtener la consola dada por el índice,
+	// si se está mostrando, salimos, si no, escondemos
+	// la consola mostrada actualmente y mostramos la
+	// nueva
+
+	ProcessToShow = ProcList.Index (info.m_data);
+	nb_selected = MainNotebook->GetSelection ();
+
+	if (ProcessToShow->ProcConsole->IsShown ())
+	{
+		if (nb_selected != info.m_itemId)
+			MainNotebook->SetSelection (info.m_itemId);
+	}
+	else
+	{
+		// escondemos las páginas ya mostradas, excepto la
+		// última que es la de los logs
+		for (i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
+		{
+			CurrentNB = MainNotebook->GetPage (i);
+			if (CurrentNB->IsShown ())
+				CurrentNB->Hide ();
+		}
+
+		ProcessToShow->ProcConsole->Show ();
+		MainNotebook->SetSelection (info.m_itemId);
+		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
+	}
 }

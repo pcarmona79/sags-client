@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.9 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -50,7 +50,7 @@ private:
 	ListPanel *ProcListPanel;
 	InfoPanel *ProcInfoPanel;
 
-	ProcessList ProcList;
+	ProcessTree ProcList;
 
 public:
 	MainWindow (const wxString& title,
@@ -73,6 +73,7 @@ public:
 	void OnAbout (wxCommandEvent& event);
 	void OnConsoleFont (wxCommandEvent& event);
 	void OnConsoleSave (wxCommandEvent& event);
+	void OnProcessSelected (wxListEvent& event);
 
 	// señales de sockets
 	void OnSocketConnected (wxCommandEvent& event);

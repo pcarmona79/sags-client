@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.14 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.15 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #include <wx/fontdlg.h>
@@ -275,6 +275,11 @@ void Console::ChangeConsoleFont (void)
 		AppConfig->Write ("/Console/FontSize",
 				  (NewFontData.GetChosenFont ()).GetPointSize ());
 	}
+}
+
+bool Console::ScrollPages (int pages)
+{
+	Output->ScrollPages (pages);
 }
 
 void Console::OnSend (wxCommandEvent& WXUNUSED(event))

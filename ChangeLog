@@ -1,3 +1,33 @@
+2004-06-21  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/List.hpp:
+		- Added Remove() and Clear() from server's List.hpp.
+
+	* src/Window.cpp:
+		- Using process list to select the actual notebook tab to show.
+		- Updates process's information when selecting a process of the
+		list.
+
+	* src/Panels.hpp:
+	* src/Panels.cpp:
+		- New SetInfo() method for InfoPanel class.
+
+	* src/Process.hpp:
+	* src/Process.cpp:
+		- Added operator[].
+
+	* src/Protocol.cpp:
+		- Reduced message which shows data of network packet.
+
+
+2004-06-20  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Packet.hpp:
+	* src/Packet.cpp:
+		- Added methods IsSync(), IsAuth() and IsSession() to identify
+		the packet's type.
+
+
 2004-06-19  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Console.hpp:

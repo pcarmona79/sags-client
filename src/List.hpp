@@ -19,12 +19,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/List.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/05/21 22:18:28 $
+// $Revision: 1.2 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #ifndef __LIST_HPP__
 #define __LIST_HPP__
+
+#include <cassert>
 
 // Plantilla Node
 
@@ -94,7 +96,9 @@ public:
 	L* ExtractLast (void);
 	L* Find (L& d);
 	unsigned int Remove (L& d, bool repeat = FALSE);
+	unsigned int Remove (L *d, bool repeat = FALSE);
 	L Index (unsigned int n);
+	void Clear (void);
 
 	void operator<< (const L& d);
 	void operator<< (L *d);
@@ -272,6 +276,38 @@ unsigned int List<L>::Remove (L& d, bool repeat)
 }
 
 template <class L>
+unsigned int List<L>::Remove (L *d, bool repeat)
+{
+	Node<L> *Temp;
+	unsigned int del = 0;
+
+	for (Temp = First; Temp; Temp = Temp->Next)
+	{
+		if (*d == *Temp->Data)
+		{
+			if (Temp->Prev != NULL)
+				Temp->Prev->Next = Temp->Next;
+			else
+				First = Temp->Next;
+
+			if (Temp->Next != NULL)
+				Temp->Next->Prev = Temp->Prev;
+			else
+				Last = Temp->Prev;
+
+			delete Temp;
+			--Count;
+			++del;
+
+			if (!repeat)
+				break;
+		}
+	}
+
+	return del;
+}
+
+template <class L>
 L List<L>::Index (unsigned int n)
 {
 	Node<L> *Temp;
@@ -284,6 +320,22 @@ L List<L>::Index (unsigned int n)
 	}
 
 	return *Temp->Data;
+}
+
+template <class L>
+void List<L>::Clear (void)
+{
+	Node<L> *Temp = Last;
+
+	while (Last != NULL)
+	{
+		Temp = Last;
+		Last = Last->Prev;
+		delete Temp;
+		--Count;
+	}
+
+	assert (Count == 0);
 }
 
 template <class L>

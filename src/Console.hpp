@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.7 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #ifndef __CONSOLE_HPP__
@@ -58,6 +58,7 @@ public:
 	void ClearOutput (void);
 	void ClearInput (void);
 	void ChangeConsoleFont (void);
+	bool ScrollPages (int pages);
 
 	void OnSend (wxCommandEvent& event);
 };

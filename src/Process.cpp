@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.cpp,v $
-// $Revision: 1.2 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.3 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #include "Process.hpp"
@@ -42,13 +42,48 @@ Process::~Process ()
 	
 }
 
+wxString Process::GetName (void)
+{
+	int i, pos = InfoString.Index ("Name");
+	wxString name;
+
+	if (pos != wxNOT_FOUND)
+	{
+		for (i = pos + 5; InfoString.GetChar (i) != '\n'; ++i)
+			name += InfoString.Mid (i, 1);
+		return name;
+	}
+
+	return "";
+}
+
+wxString Process::GetType (void)
+{
+	int i, pos = InfoString.Index ("Type");
+	wxString name;
+
+	if (pos != wxNOT_FOUND)
+	{
+		for (i = pos + 5; InfoString.GetChar (i) != '\n'; ++i)
+			name += InfoString.Mid (i, 1);
+		return name;
+	}
+
+	return "";
+}
+
 bool Process::operator== (Process &P)
 {
 	return (this->index == P.index);
 }
 
-Process *ProcessList::Index (unsigned int idx)
+Process *ProcessTree::Index (unsigned int idx)
 {
 	Process Searched (idx);
 	return TheList.Find (Searched);
 };
+
+Process *ProcessTree::operator[] (unsigned int n)
+{
+	return TheList[n];
+}

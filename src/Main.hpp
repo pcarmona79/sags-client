@@ -19,16 +19,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.hpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/06/19 05:28:08 $
+// $Revision: 1.4 $
+// $Date: 2004/06/22 02:44:29 $
 //
 
 #ifndef __MAIN_HPP__
 #define __MAIN_HPP__
 
 #include <wx/wx.h>
-#include "Network.hpp"
-#include "Window.hpp"
 
 class Application : public wxApp
 {
