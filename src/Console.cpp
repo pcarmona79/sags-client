@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.4 $
-// $Date: 2004/04/17 22:00:14 $
+// $Revision: 1.5 $
+// $Date: 2004/04/18 17:14:46 $
 //
 
 #include "Console.hpp"
@@ -101,6 +101,9 @@ Console::Console (wxWindow *parent, wxWindowID id)
 
 	last_input.Empty ();
 	last_had_newline = FALSE;
+
+	// el foco debe estar en el widget de entrada
+	Input->SetFocus ();
 }
 
 Console::~Console ()
@@ -127,8 +130,7 @@ void Console::Add (wxString text, bool memorize)
 	if (!memorize && !last_input.IsEmpty ())
 		text.Replace (last_input, "", FALSE);
 
-	// borramos el primero y el último LF
-	//text.Trim (FALSE);
+	// borramos el último LF
 	text.Trim ();
 
 	// borrar caracteres especiales emitidos por servers de Q2
@@ -143,16 +145,22 @@ void Console::Add (wxString text, bool memorize)
 		text.Replace (str, "*");
 	}
 
+	// en win98 el widget de texto no hace bien el scroll
+	// por lo que lo forzaremos cambiando el foco antes
+	// de poner el texto
+	//Output->SetFocus ();
+
 	if (Output->GetLastPosition () > 0 && last_had_newline && !text.IsEmpty ())
 		Output->AppendText ("\n");
 
 	Output->AppendText (text);
 
-#ifdef _WIN32
-	// en win98 el widget de texto no hace bien el scroll
-	// por lo que lo forzaremos
-	Output->ShowPosition (Output->GetLastPosition ());
-#endif
+	// calcular cuantas líneas hemos agregado
+	int linesadded = text.Freq ('\n') + 1;
+	Output->ScrollLines (linesadded);
+
+	// el foco debe estar en el widget de entrada
+	Input->SetFocus ();
 
 	if (memorize)
 		last_input = text_copy;
