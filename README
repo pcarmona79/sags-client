@@ -11,7 +11,8 @@ interface to manage the game server remotely.
 
 The major features of the client are:
 
- - The client provides a direct interface to the game's console.
+ - The client provides a direct interface to the console of authorized
+   game servers.
 
  - You can change the console's font and the program remembers the
    value.

@@ -1,3 +1,18 @@
+2004-06-26  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* Released 0.3.1 version.
+
+	* src/Window.cpp:
+		- Notebook code for win32 has been separated from wxGTK code.
+		- On win32 we add consoles to the notebook only when a process
+		has been selected from the list.
+		- Shows percentage when downloading the process logs.
+
+	* src/Panels.cpp:
+		- #include <wx/cursor.h> has been moved down to not generate
+		warnings on win32 compilation.
+
+
 2004-06-23  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* Released SAGS Client 0.3.0.

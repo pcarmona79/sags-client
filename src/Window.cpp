@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.21 $
-// $Date: 2004/06/24 00:12:57 $
+// $Revision: 1.22 $
+// $Date: 2004/06/26 22:30:36 $
 //
 
 #include <wx/wx.h>
@@ -161,10 +161,17 @@ MainWindow::MainWindow (const wxString& title,
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, -1);
 
+#ifdef __WXMSW__
+	if (ShowLogs)
+		MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
+	else
+		LoggingTab->Hide ();
+#else
 	if (!ShowLogs)
 		LoggingTab->Hide ();
 
 	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
+#endif
 
 	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);
 
@@ -340,14 +347,26 @@ void MainWindow::OnAbout (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 {
+	// borrar las consolas del notebook
+#ifdef __WXMSW__
+	if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+		MainNotebook->DeletePage (0);
+#else
+	while (MainNotebook->GetPageCount () > 1)
+		MainNotebook->DeletePage (0);
+#endif
+	ProcList.TheList.Clear ();
+
+	// borrar la lista de procesos y la informacion
+	ProcListPanel->ProcessList->DeleteAllItems ();
+	ProcInfoPanel->InfoList->DeleteAllItems ();
+
 	wxString text = _("Connected to server. Authenticating...");
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
 
 	MenuItemDisconnect->Enable (TRUE);
-
-	// borrar las consolas del notebook
 }
 
 void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
@@ -390,12 +409,14 @@ void MainWindow::ProtoSync (Packet *Pkt)
 	switch (Pkt->GetCommand ())
 	{
 	case Sync::Hello:
+
 		text.Printf ("Sync::Hello (%d bytes): %s",
 			     Pkt->GetLength (), Pkt->GetData ());
 		LoggingTab->Append (text);
 		break;
 
 	case Sync::Version:
+
 		text.Printf ("Sync::Version (%d bytes): %s",
 			     Pkt->GetLength (), Pkt->GetData ());
 		LoggingTab->Append (text);
@@ -413,15 +434,14 @@ void MainWindow::ProtoAuth (Packet *Pkt)
 	switch (Pkt->GetCommand ())
 	{
 	case Auth::Password:
+
 		text.Printf ("Auth::Password (%d bytes): %s",
 			     Pkt->GetLength (), Pkt->GetData ());
 		LoggingTab->Append (text);
 		break;
 
 	case Auth::Successful:
-		text.Printf ("Auth::Successful (%d bytes): %s",
-			     Pkt->GetLength (), Pkt->GetData ());
-		LoggingTab->Append (text);
+
 		LoggingTab->Append (_("Logged in successfully."));
 		text = _("Getting process's log...");
 		SetStatusText (text, 1);
@@ -443,6 +463,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 	static int bytes = 0;
 	Process *Proc = NULL, *NewProc = NULL;
 	wxListItem newitem;
+	static unsigned int first_seq = 0;
 
 	switch (Pkt->GetCommand ())
 	{
@@ -476,10 +497,16 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		if (Proc != NULL)
 			Proc->ProcConsole->Add (Pkt->GetData ());
 
+		if (first_seq == 0)
+			first_seq = Pkt->GetSequence ();
+
 		bytes += Pkt->GetLength ();
-		text.Printf (_("Receiving logs for process %d: %.1f KB"),
-			     Pkt->GetIndex (), (float)(bytes) / 1024.0);
+		text.Printf (_("Receiving logs for process %d: %.1f KB (%.1f%%)"),
+			     Pkt->GetIndex (), (float)(bytes) / 1024.0,
+			     100.0 * ((float)first_seq + 1 - (float)Pkt->GetSequence ())
+			     / (float)first_seq);
 		SetStatusText (text, 1);
+		//LoggingTab->Append (text);
 
 		// si la secuencia es 1 entonces es el último paquete!
 		if (Pkt->GetSequence () == 1)
@@ -491,7 +518,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			text += _(" Server: [") + Net->GetAddress () + "]:"
 				+ Net->GetPort ();
 			SetStatusText (text, 1);
-			bytes = 0;
+			bytes = first_seq = 0;
 		}
 		break;
 
@@ -512,7 +539,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			newitem.m_mask = wxLIST_MASK_TEXT | wxLIST_MASK_DATA;
 
 			ProcListPanel->ProcessList->InsertItem (newitem);
-
+#ifdef __WXGTK__
 			// ahora insertamos la página
 			MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
 				(wxNotebookPage *) Proc->ProcConsole,
@@ -520,7 +547,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 					+ newitem.m_text,
 				FALSE);
 			Proc->ProcConsole->Hide ();
-
+#endif
 			LoggingTab->Append (wxString::Format (_("Added page \"Process %d\""),
 							      Pkt->GetIndex ()));
 		}
@@ -539,6 +566,9 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		NewProc = new Process (Pkt->GetIndex ());
 		NewProc->ProcConsole = new Console (MainNotebook, -1, Net, AppConfig,
 						    Pkt->GetIndex ());
+#ifdef __WXMSW__
+		NewProc->ProcConsole->Hide ();
+#endif
 		ProcList.TheList << NewProc;
 		NewProc = NULL;
 		
@@ -686,14 +716,14 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 {
 	wxFontData ActualFontData, NewFontData;
-	wxNotebookPage *FirstNB = NULL, *CurrentNB = NULL;
+	wxNotebookPage *FirstNB = NULL;
 	wxString FontName;
 	long FontSize;
-	int i;
+	unsigned int i;
 
 	// obtenemos la fuente actual usada
 
-	if (MainNotebook->GetPageCount () == 1)
+	if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
 	{
 		// no hay tabs de procesos
 #ifdef __WXMSW__
@@ -731,17 +761,15 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 		AppConfig->Write ("/Console/FontSize",
 				  (NewFontData.GetChosenFont ()).GetPointSize ());
 
-		for (i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
-		{
-			CurrentNB = MainNotebook->GetPage (i);
-			((Console*)CurrentNB)->SetConsoleFont (NewFontData.GetChosenFont ());
-		}
+		for (i = 0; i <= ProcList.TheList.GetCount () - 1; ++i)
+			ProcList[i]->ProcConsole->SetConsoleFont (NewFontData.GetChosenFont ());
 	}
 }
 
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
 	int nb_selected;
+	wxNotebookPage *CurrentNB;
 	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
 						     "", "", "*.*",
 						     wxSAVE | wxOVERWRITE_PROMPT);
@@ -749,16 +777,22 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 	if (SaveDialog->ShowModal () == wxID_OK)
 	{
 		nb_selected = MainNotebook->GetSelection ();
-		if (nb_selected != MainNotebook->GetPageCount () - 1)
-			ProcList[nb_selected]->ProcConsole->SaveConsoleToFile (SaveDialog->GetPath ());
-		else
+		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
 			LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
+		else
+		{
+			CurrentNB = MainNotebook->GetPage (nb_selected);
+			((Console *)(CurrentNB))->SaveConsoleToFile (SaveDialog->GetPath ());
+		}
 	}
 }
 
 void MainWindow::OnProcessSelected (wxListEvent& event)
 {
-	int i, nb_selected;
+#ifdef __WXGTK__
+	int i;
+#endif
+	int nb_selected;
         wxListItem info;
 	Process *ProcessToShow;
 	wxNotebookPage *CurrentNB;
@@ -779,11 +813,31 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 
 	if (ProcessToShow->ProcConsole->IsShown ())
 	{
+#ifdef __WXMSW__
+		if (nb_selected != 0)
+			MainNotebook->SetSelection (0);
+#else
 		if (nb_selected != info.m_itemId)
 			MainNotebook->SetSelection (info.m_itemId);
+#endif
 	}
 	else
 	{
+#ifdef __WXMSW__
+		// si se están mostrando los logs, no debe ser removido
+		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
+		{
+			CurrentNB = MainNotebook->GetPage (0);
+			CurrentNB->Hide ();
+			MainNotebook->RemovePage (0);
+		}
+
+		MainNotebook->InsertPage (0, (wxNotebookPage *) ProcessToShow->ProcConsole,
+					  wxString::Format (_("Process %d: "), info.m_data) +
+					  info.m_text);
+
+		MainNotebook->SetSelection (0);
+#else
 		// escondemos las páginas ya mostradas, excepto la
 		// última que es la de los logs
 		for (i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
@@ -795,6 +849,8 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 
 		ProcessToShow->ProcConsole->Show ();
 		MainNotebook->SetSelection (info.m_itemId);
+#endif
+
 		ProcInfoPanel->SetInfo (ProcessToShow->InfoString);
 #ifdef __WXGTK__
 		ProcessToShow->ProcConsole->ScrollToBottom ();
@@ -806,12 +862,20 @@ void MainWindow::OnShowLogs (wxCommandEvent& WXUNUSED(event))
 {
 	if (MenuItemShowLogs->IsChecked ())
 	{
+#ifdef __WXMSW__
+		MainNotebook->InsertPage (MainNotebook->GetPageCount (),
+					  (wxNotebookPage *) LoggingTab, _("Logs"));
+#else
 		LoggingTab->Show ();
+#endif
 		AppConfig->Write ("/Options/ShowLogs", 1l);
 	}
 	else
 	{
 		LoggingTab->Hide ();
+#ifdef __WXMSW__
+		MainNotebook->RemovePage (MainNotebook->GetPageCount () - 1);
+#endif
 		AppConfig->Write ("/Options/ShowLogs", 0l);
 	}
 }
