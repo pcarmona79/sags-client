@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Logs.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #include "Logs.hpp"
@@ -36,7 +36,7 @@ Logs::Logs (wxWindow *parent, wxWindowID id)
 				 -1,
 				 "",
 				 wxDefaultPosition,
-				 wxSize (400,300),
+				 wxDefaultSize, //(400, 300),
 				 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_LINEWRAP);
 
 	TopSizer->Add (Output,
@@ -44,7 +44,7 @@ Logs::Logs (wxWindow *parent, wxWindowID id)
 		       wxALIGN_CENTER_VERTICAL |
 		       wxEXPAND |
 		       wxALL,
-		       10);
+		       5);
 
 	SetAutoLayout (TRUE);
 	SetSizer (TopSizer);

@@ -18,33 +18,28 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
-// $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.cpp,v $
-// $Revision: 1.5 $
+// $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Panels.hpp,v $
+// $Revision: 1.1 $
 // $Date: 2004/06/19 05:28:08 $
 //
 
-#include "Main.hpp"
+#include <wx/wx.h>
+#include <wx/listctrl.h>
 
-#ifdef HAVE_CONFIG_H
-#  include <config.h>
-#endif
-
-IMPLEMENT_APP (Application)
-
-bool Application::OnInit (void)
+class ListPanel : public wxPanel
 {
-	AppLocale.Init (wxLANGUAGE_DEFAULT);
-#ifdef __WXMSW__
-	AppLocale.AddCatalogLookupPathPrefix ("locale");
-#endif
-	AppLocale.AddCatalog (GETTEXT_PACKAGE);
+public:
+	ListPanel (wxWindow *parent, wxWindowID id);
+	~ListPanel ();
 
-	MainWindow *AppWindow = new MainWindow (wxString::Format (_("SAGS Client %s"),
-								  VERSION),
-						wxDefaultPosition,
-						wxDefaultSize);
-	AppWindow->Show (TRUE);
-	SetTopWindow (AppWindow);
+	wxListCtrl *ProcessList;
+};
 
-	return TRUE;
-}
+class InfoPanel : public wxPanel
+{
+public:
+	InfoPanel (wxWindow *parent, wxWindowID id);
+	~InfoPanel ();
+
+	wxListCtrl *InfoList;
+};

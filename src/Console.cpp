@@ -19,19 +19,24 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.13 $
-// $Date: 2004/06/05 01:29:47 $
+// $Revision: 1.14 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
+#include <wx/fontdlg.h>
 #include "Console.hpp"
 #include "Ids.hpp"
-#include "Network.hpp"
 
-Console::Console (wxWindow *parent, wxWindowID id, wxFont ConsoleFont)
+Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
+		  unsigned int idx)
 	: wxPanel (parent, id)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
 	wxBoxSizer *InputSizer = new wxBoxSizer (wxHORIZONTAL);
+
+	Net = N;
+	AppConfig = AppCfg;
+	index = idx;
 
 	Output = new wxTextCtrl (this,
 				 -1,
@@ -39,6 +44,26 @@ Console::Console (wxWindow *parent, wxWindowID id, wxFont ConsoleFont)
 				 wxDefaultPosition,
 				 wxDefaultSize,
 				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_LINEWRAP);
+
+	// extraemos de la configuración el nombre de la
+	// fuente a usar en la consola
+	wxString FontName;
+	long FontSize;
+
+#ifdef __WXMSW__
+	if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
+		AppConfig->Write ("/Console/FontName", "Courier New");
+#else
+	if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
+		AppConfig->Write ("/Console/FontName", "fixed");
+#endif
+
+	if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
+		AppConfig->Write ("/Console/FontSize", 12);
+	
+	// creamos un wxFont con los valores leídos
+	wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
+			    wxNORMAL, FALSE, FontName);
 
 	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour, ConsoleFont);
 	ConsoleFont.SetWeight (wxBOLD);
@@ -97,6 +122,12 @@ Console::Console (wxWindow *parent, wxWindowID id, wxFont ConsoleFont)
 
 	// el foco debe estar en el widget de entrada
 	Input->SetFocus ();
+
+	// señales de la consola
+	Connect (Ids::Input, wxEVT_COMMAND_TEXT_ENTER,
+		 (wxObjectEventFunction) &Console::OnSend);
+	Connect (Ids::SendButton, wxEVT_COMMAND_BUTTON_CLICKED,
+		 (wxObjectEventFunction) &Console::OnSend);
 }
 
 Console::~Console ()
@@ -221,4 +252,45 @@ void Console::ClearOutput (void)
 void Console::ClearInput (void)
 {
 	Input->Clear ();
+}
+
+void Console::ChangeConsoleFont (void)
+{
+	wxFontData ActualFontData, NewFontData;
+
+	// obtenemos la fuente actual usada en ConsoleOutput
+	ActualFontData.SetInitialFont (GetConsoleFont ());
+	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
+
+	if (ConsoleFontDialog->ShowModal () == wxID_OK)
+	{
+		// obtener el wxFontData y usarlo para
+		// cambiar la fuente a ConsoleOutput
+		NewFontData = ConsoleFontDialog->GetFontData ();
+		SetConsoleFont (NewFontData.GetChosenFont ());
+
+		// los nuevos valores deben ser guardados en la configuración
+		AppConfig->Write ("/Console/FontName",
+				  (NewFontData.GetChosenFont ()).GetFaceName ());
+		AppConfig->Write ("/Console/FontSize",
+				  (NewFontData.GetChosenFont ()).GetPointSize ());
+	}
+}
+
+void Console::OnSend (wxCommandEvent& WXUNUSED(event))
+{
+	wxString data = Input->GetValue ();
+
+	ClearInput ();
+
+	if (data.Length () > 0 && Net != NULL)
+	{
+		data += "\n";
+		SetInputStyle ();
+		Add (data, TRUE);
+		SetOutputStyle ();
+
+		Net->AddBufferOut (index, Session::ConsoleInput, data.c_str ());
+		Net->Send (); // esto bloquea la GUI?
+	}
 }

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.hpp,v $
-// $Revision: 1.3 $
-// $Date: 2004/06/17 08:26:37 $
+// $Revision: 1.4 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #ifndef __NETWORK_HPP__
@@ -70,12 +70,14 @@ private:
 	bool Exiting;
 
 public:
-	Network (wxEvtHandler *parent,
-		 wxString address,
-		 wxString port,
-		 wxString username,
-		 wxString password);
+	Network ();
 	~Network ();
+
+	void Network::SetData (wxEvtHandler *parent,
+			       wxString address,
+			       wxString port,
+			       wxString username,
+			       wxString password);
 
 	void AddBuffer (List<Packet> &PktList, unsigned int idx,
 			unsigned int com, const char *data);

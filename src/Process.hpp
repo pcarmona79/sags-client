@@ -19,25 +19,31 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/06/18 01:11:23 $
+// $Revision: 1.2 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #include <wx/wx.h>
-#include <wx/listctrl.h>
 #include "Console.hpp"
 
 class Process
 {
-private:
-	unsigned int index;
-
 public:
 	Process (unsigned int idx = 0);
+	Process (Process &P);
 	~Process ();
 
 	Console *ProcConsole;
-	wxListCtrl *ProcInfo;
+	unsigned int index;
+	wxString InfoString;
 
 	bool operator== (Process &P);
+};
+
+class ProcessList
+{
+public:
+	List<Process> TheList;
+
+	Process *Index (unsigned int idx);
 };

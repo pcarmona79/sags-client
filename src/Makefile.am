@@ -24,6 +24,8 @@ sagscl_SOURCES = \
 		 Network.hpp  \
 		 Packet.cpp   \
 		 Packet.hpp   \
+		 Panels.cpp   \
+		 Panels.hpp   \
 		 Process.cpp  \
 		 Process.hpp  \
 		 Protocol.cpp \

@@ -19,19 +19,17 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.13 $
-// $Date: 2004/06/17 08:26:37 $
+// $Revision: 1.14 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #include <wx/wx.h>
 #include <wx/notebook.h>
 #include <wx/socket.h>
-#include <wx/fontdlg.h>
 #include <wx/filedlg.h>
 
 #include "Window.hpp"
 #include "Login.hpp"
-#include "Packet.hpp"
 #include "About.hpp"
 
 #if defined(__WXGTK__) || defined(__WXX11__) || defined(__WXMOTIF__) || defined(__WXMAC__)
@@ -53,9 +51,7 @@ MainWindow::MainWindow (const wxString& title,
 	wxMenu *MenuHelp = new wxMenu;
 
 	AppConfig = new wxConfig (PACKAGE);
-
-	// al comienzo no tenemos red
-	Net = NULL;
+	Net = new Network;
 
 #ifdef __WXMSW__
 	SetIcon (wxICON(A));
@@ -118,67 +114,52 @@ MainWindow::MainWindow (const wxString& title,
 	// creamos una barra de estado
 	CreateStatusBar (2);
 
-	// extraemos de la configuración el nombre de la
-	// fuente a usar en la consola
-	wxString FontName;
-	long FontSize;
+	NotebookWindow = new wxSplitterWindow (this, -1,
+					       wxDefaultPosition, wxDefaultSize,
+					       wxSP_NOBORDER | wxSP_LIVE_UPDATE);
+	NotebookWindow->SetMinimumPaneSize (3);
 
-#ifdef __WXMSW__
-	if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
-		AppConfig->Write ("/Console/FontName", "Courier New");
-#else
-	if (!AppConfig->Read ("/Console/FontName", &FontName, "fixed"))
-		AppConfig->Write ("/Console/FontName", "fixed");
-#endif
+	PanelsWindow = new wxSplitterWindow (NotebookWindow, -1,
+					     wxDefaultPosition, wxDefaultSize,
+					     wxSP_NOBORDER | wxSP_LIVE_UPDATE);
+	PanelsWindow->SetMinimumPaneSize (3);
 
-	if (!AppConfig->Read ("/Console/FontSize", &FontSize, 12))
-		AppConfig->Write ("/Console/FontSize", 12);
-	
-	// creamos un wxFont con los valores leídos
-	wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
-			    wxNORMAL, FALSE, FontName);
+	ProcListPanel = new ListPanel (PanelsWindow, -1);
+	ProcInfoPanel = new InfoPanel (PanelsWindow, -1);
 
-	wxNotebook *MainNotebook = new wxNotebook (this, -1);
-	ServerConsole = new Console (MainNotebook, -1, ConsoleFont);
+	PanelsWindow->SplitHorizontally (ProcListPanel, ProcInfoPanel, 0);
+
+	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, -1);
+	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
 
-	MainNotebook->AddPage ((wxNotebookPage *) ServerConsole,
-				_("Console"));
-	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab,
-				_("Logs"));
+	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);
 
-	// señales de la consola
-	Connect (Ids::Input, wxEVT_COMMAND_TEXT_ENTER,
-		 (wxObjectEventFunction) &MainWindow::OnSend);
-	Connect (Ids::SendButton, wxEVT_COMMAND_BUTTON_CLICKED,
-		 (wxObjectEventFunction) &MainWindow::OnSend);
-
+	// las dimensiones y la posición se podrían
+	// obtener de las opciones con AppConfig
+	SetSize (750, 500);
+	Centre ();
 }
 
 MainWindow::~MainWindow ()
 {
 	delete AppConfig;
 
-	if (Net != NULL)
-	{
+	if (Net->IsRunning ())
 		Net->Wait ();
-		Net->Delete ();
-		Net = NULL;
-	}
+	Net->Delete ();	
 }
 
 void MainWindow::Disconnect (void)
 {
 	Net->Wait ();
-	Net->Delete ();
-	Net = NULL;
+	//Net->Delete ();
+	//Net = NULL;
 	
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Disconnected."));
 
-	wxString windowtitle;
-	windowtitle.Printf (_("SAGS Client %s"), VERSION);
-	SetTitle (windowtitle);
+	SetTitle (wxString::Format (_("SAGS Client %s"), VERSION));
 }
 
 void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
@@ -188,9 +169,8 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 	char keystr[] = "/Login/Server";
 	int repeated = 5;
 
-	if (Net != NULL)
-		if (Net->IsConnected ())
-			return;
+	if (Net->IsConnected ())
+		return;
 
 	LoginDialog *Login = new LoginDialog (this, -1, _("Connect to..."),
 					      wxDefaultPosition, wxSize (200, 100));
@@ -215,11 +195,11 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 		SetStatusText (text, 1);
 		LoggingTab->Append (text);
 
-		Net = new Network ((wxEvtHandler *) this,
-				   Login->GetServer (),
-				   Login->GetPort (),
-				   Login->GetUsername (),
-				   Login->GetPassword ());
+		Net->SetData ((wxEvtHandler *) this,
+			      Login->GetServer (),
+			      Login->GetPort (),
+			      Login->GetUsername (),
+			      Login->GetPassword ());
 		Net->Create ();
 		Net->Run ();
 
@@ -259,29 +239,21 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnDisconnect (wxCommandEvent& WXUNUSED(event))
 {
-	if (Net != NULL)
+	if (Net->IsConnected ())
 	{
-		if (Net->IsConnected ())
-		{
-			Net->Disconnect (TRUE);
-			SetStatusText (_("Disconnecting..."), 1);
-			LoggingTab->Append (_("Disconnecting..."));
-			Disconnect ();
-		}
-		else
-			SetStatusText (_("Not connected"), 1);
+		Net->Disconnect (TRUE);
+		SetStatusText (_("Disconnecting..."), 1);
+		LoggingTab->Append (_("Disconnecting..."));
+		Disconnect ();
 	}
 	else
-	{
 		SetStatusText (_("Not connected"), 1);
-	}
 }
 
 void MainWindow::OnClose (wxCommandEvent& WXUNUSED(event))
 {
-	if (Net != NULL)
-		if (Net->IsConnected ())
-			Net->Disconnect (TRUE);
+	if (Net->IsConnected ())
+		Net->Disconnect (TRUE);
 
 	Destroy ();
 }
@@ -318,7 +290,7 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 
 	SetStatusText (text, 1);
 	LoggingTab->Append (text);
-	ServerConsole->ClearOutput ();
+	//ServerConsole->ClearOutput ();
 }
 
 void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
@@ -412,27 +384,38 @@ void MainWindow::ProtoSession (Packet *Pkt)
 {
 	wxString text;
 	static int bytes = 0;
+	Process *Proc = NULL, *NewProc = NULL;
 
 	switch (Pkt->GetCommand ())
 	{
 	case Session::ConsoleOutput:
+
 		// esto llena mucho el widget
-		//text.Printf ("Session::ConsoleOutput (%d bytes)",
-		//	     Pkt->GetLength ());
-		//LoggingTab->Append (text);
-		ServerConsole->Add (Pkt->GetData ());
+		text.Printf ("Session::ConsoleOutput on %d (%d bytes)",
+			     Pkt->GetIndex (), Pkt->GetLength ());
+		LoggingTab->Append (text);
+
+		Proc = ProcList.Index (Pkt->GetIndex ());
+		if (Proc != NULL)
+			Proc->ProcConsole->Add (Pkt->GetData ());
+
 		break;
 
 	case Session::ConsoleSuccess:
-		text.Printf ("Session::ConsoleSuccess");
+
+		text.Printf ("Session::ConsoleSuccess on %d", Pkt->GetIndex ());
 		LoggingTab->Append (text);
 		break;
 
 	case Session::ConsoleLogs:
+
 		text.Printf ("Session::ConsoleLogs (%d bytes)",
 			     Pkt->GetLength ());
 		LoggingTab->Append (text);
-		ServerConsole->Add (Pkt->GetData ());
+
+		Proc = ProcList.Index (Pkt->GetIndex ());
+		if (Proc != NULL)
+			Proc->ProcConsole->Add (Pkt->GetData ());
 
 		bytes += Pkt->GetLength ();
 		text.Printf (_("Receiving logs: %.1f KB"),
@@ -453,7 +436,35 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		}
 		break;
 
+	case Session::ProcessInfo:
+
+		Proc = ProcList.Index (Pkt->GetIndex ());
+		if (Proc != NULL)
+			Proc->InfoString += Pkt->GetData ();
+		break;
+
+	case Session::Authorized:
+
+		if (Pkt->GetIndex () == 0)
+		{
+			// somos un administrador!
+			break;
+		}
+		
+		// creamos un nuevo proceso
+		NewProc = new Process (Pkt->GetIndex ());
+		NewProc->ProcConsole = new Console (MainNotebook, -1, Net, AppConfig,
+						    Pkt->GetIndex ());
+		MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
+					  (wxNotebookPage *) NewProc->ProcConsole,
+					  wxString::Format ("Console %d", Pkt->GetIndex ()),
+					  MainNotebook->GetPageCount () == 1 ? TRUE : FALSE);
+		ProcList.TheList << NewProc;
+		NewProc = NULL;
+		break;
+
 	case Session::Disconnect:
+
 		text.Printf ("Session::Disconnect");
 		LoggingTab->Append (text);
 		Disconnect ();
@@ -571,53 +582,18 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 		      wxOK | wxICON_ERROR, this);
 }
 
-void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
-{
-	wxString data = ServerConsole->Input->GetValue ();
-
-	ServerConsole->ClearInput ();
-
-	if (data.Length () > 0 && Net != NULL)
-	{
-		data += "\n";
-		ServerConsole->SetInputStyle ();
-		ServerConsole->Add (data, TRUE);
-		ServerConsole->SetOutputStyle ();
-
-		// para mientras pedimos el del proceso 1
-		Net->AddBufferOut (1, Session::ConsoleInput, data.c_str ());
-		Net->Send (); // esto bloquea la GUI?
-	}
-}
-
 void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 {
-	wxFontData ActualFontData, NewFontData;
-
-	// obtenemos la fuente actual usada en ConsoleOutput
-	ActualFontData.SetInitialFont (ServerConsole->GetConsoleFont ());
-	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
-
-	if (ConsoleFontDialog->ShowModal () == wxID_OK)
-	{
-		// obtener el wxFontData y usarlo para
-		// cambiar la fuente a ConsoleOutput
-		NewFontData = ConsoleFontDialog->GetFontData ();
-		ServerConsole->SetConsoleFont (NewFontData.GetChosenFont ());
-
-		// los nuevos valores deben ser guardados en la configuración
-		AppConfig->Write ("/Console/FontName",
-				  (NewFontData.GetChosenFont ()).GetFaceName ());
-		AppConfig->Write ("/Console/FontSize",
-				  (NewFontData.GetChosenFont ()).GetPointSize ());
-	}
+	// cambiar la fuente para todas las consolas
 }
 
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
+	// descubrir que consola se está mostrando
+	// para ejecutar SaveConsoleToFile en ella
 	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"), "", "", "*.*",
 						     wxSAVE | wxOVERWRITE_PROMPT);
 
 	if (SaveDialog->ShowModal () == wxID_OK)
-		ServerConsole->SaveConsoleToFile (SaveDialog->GetPath ());
+		;//ProcList[i]->SaveConsoleToFile (SaveDialog->GetPath ());
 }

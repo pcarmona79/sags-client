@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.8 $
-// $Date: 2004/06/18 01:11:23 $
+// $Revision: 1.9 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #include <cstdio>
@@ -35,15 +35,9 @@
 #  include <config.h>
 #endif
 
-Network::Network (wxEvtHandler *parent, wxString address, wxString port,
-		  wxString username, wxString password)
-	: wxThread (wxTHREAD_JOINABLE)
+Network::Network () : wxThread (wxTHREAD_JOINABLE)
 {
-	EvtParent = parent;
-	Address = address;
-	Port = port;
-	Username = username;
-	Password = password;
+	EvtParent = (wxEvtHandler*) NULL;
 	Connected = FALSE;
 	Exiting = FALSE;
 }
@@ -51,6 +45,16 @@ Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 Network::~Network ()
 {
 	
+}
+
+void Network::SetData (wxEvtHandler *parent, wxString address, wxString port,
+		       wxString username, wxString password)
+{
+	EvtParent = parent;
+	Address = address;
+	Port = port;
+	Username = username;
+	Password = password;	
 }
 
 void Network::AddBuffer (List<Packet> &PktList, unsigned int idx,
@@ -307,7 +311,7 @@ void *Network::Entry (void)
 				switch (Incoming[0]->GetCommand ())
 				{
 				case Sync::Hello:
-					// ahora menejamos la versión 2
+					// ahora manejamos la versión 2
 					// del protocolo
 					Outgoing << new Packet (Sync::Index, Sync::Version,
 								1, 1, "2");

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/06/17 08:26:37 $
+// $Revision: 1.8 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -28,19 +28,29 @@
 
 #include <wx/wx.h>
 #include <wx/config.h>
-
-#include "Console.hpp"
+#include <wx/splitter.h>
+#include "Panels.hpp"
 #include "Logs.hpp"
 #include "Ids.hpp"
 #include "Network.hpp"
+#include "Process.hpp"
 
 class MainWindow : public wxFrame
 {
 private:
-	Console *ServerConsole;
-	Logs *LoggingTab;
-	Network *Net;
 	wxConfig *AppConfig;
+	Network *Net;
+
+	Logs *LoggingTab;
+	wxNotebook *MainNotebook;
+
+	wxSplitterWindow *PanelsWindow;
+	wxSplitterWindow *NotebookWindow;
+
+	ListPanel *ProcListPanel;
+	InfoPanel *ProcInfoPanel;
+
+	ProcessList ProcList;
 
 public:
 	MainWindow (const wxString& title,
@@ -61,7 +71,6 @@ public:
 	void OnQuit (wxCommandEvent& event);
 	void OnHelp (wxCommandEvent& event);
 	void OnAbout (wxCommandEvent& event);
-	void OnSend (wxCommandEvent& event);
 	void OnConsoleFont (wxCommandEvent& event);
 	void OnConsoleSave (wxCommandEvent& event);
 

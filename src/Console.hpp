@@ -19,14 +19,16 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/05/29 21:47:23 $
+// $Revision: 1.6 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #ifndef __CONSOLE_HPP__
 #define __CONSOLE_HPP__
 
 #include <wx/wx.h>
+#include <wx/config.h>
+#include "Network.hpp"
 
 class Console : public wxPanel
 {
@@ -38,12 +40,14 @@ private:
 	wxString last_input;
 	wxTextAttr *OutputStyle;
 	wxTextAttr *InputStyle;
+	Network *Net;
+	wxConfig *AppConfig;
+	unsigned int index;
 
 public:
-	Console (wxWindow *parent, wxWindowID id, wxFont ConsoleFont);
+	Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
+		 unsigned int idx);
 	~Console ();
-
-	friend class MainWindow;
 
 	void Add (wxString text, bool memorize = FALSE);
 	void SetInputStyle (void);
@@ -53,6 +57,9 @@ public:
 	bool SaveConsoleToFile (const wxString& filename);
 	void ClearOutput (void);
 	void ClearInput (void);
+	void ChangeConsoleFont (void);
+
+	void OnSend (wxCommandEvent& event);
 };
 
 #endif // __CONSOLE_HPP__

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Process.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/06/18 01:11:23 $
+// $Revision: 1.2 $
+// $Date: 2004/06/19 05:28:08 $
 //
 
 #include "Process.hpp"
@@ -29,7 +29,12 @@ Process::Process (unsigned int idx)
 {
 	index = idx;
 	ProcConsole = NULL;
-	ProcInfo = NULL;
+}
+
+Process::Process (Process &P)
+{
+	index = P.index;
+	ProcConsole = NULL;
 }
 
 Process::~Process ()
@@ -41,3 +46,9 @@ bool Process::operator== (Process &P)
 {
 	return (this->index == P.index);
 }
+
+Process *ProcessList::Index (unsigned int idx)
+{
+	Process Searched (idx);
+	return TheList.Find (Searched);
+};
