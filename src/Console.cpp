@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/04/17 02:14:39 $
 //
 
 #include "Console.hpp"
@@ -112,6 +112,8 @@ void Console::Add (wxString text, bool memorize)
 {
 	bool have_newline;
 	wxString text_copy = text;
+	int i;
+	char str[2];
 
 	if (text.Last () == '\n')
 		have_newline = TRUE;
@@ -129,6 +131,18 @@ void Console::Add (wxString text, bool memorize)
 	//text.Trim (FALSE);
 	text.Trim ();
 
+	// borrar caracteres especiales emitidos por servers de Q2
+	for (i = 1; i < 32; ++i)
+	{
+		str[0] = (char) i;
+		str[1]= '\0';
+
+		if (str[0] == '\n')
+			continue;
+		
+		text.Replace (str, "*");
+	}
+
 	if (Output->GetLastPosition () > 0 && last_had_newline && !text.IsEmpty ())
 		Output->AppendText ("\n");
 
@@ -140,4 +154,37 @@ void Console::Add (wxString text, bool memorize)
 		last_input.Empty ();
 
 	last_had_newline = have_newline;
+}
+
+void Console::SetInputStyle (void)
+{
+	Output->SetDefaultStyle (*InputStyle);
+}
+
+void Console::SetOutputStyle (void)
+{
+	Output->SetDefaultStyle (*OutputStyle);
+}
+
+const wxFont& Console::GetConsoleFont (void)
+{
+	return (Output->GetDefaultStyle ()).GetFont ();
+}
+
+void Console::SetConsoleFont (wxFont newfont)
+{
+	wxTextAttr *LastStyle = NULL;
+	wxTextAttr *NewOutputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
+	newfont.SetWeight (wxBOLD);
+	wxTextAttr *NewInputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
+
+	LastStyle = OutputStyle;
+	OutputStyle = NewOutputStyle;
+	delete LastStyle;
+	LastStyle = InputStyle;
+	InputStyle = NewInputStyle;
+	delete LastStyle;
+
+	Output->SetDefaultStyle (*OutputStyle);
+	Output->SetStyle (0, Output->GetLastPosition (), *OutputStyle);
 }

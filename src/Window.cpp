@@ -19,13 +19,14 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/04/17 02:14:39 $
 //
 
 #include <wx/wx.h>
 #include <wx/notebook.h>
 #include <wx/socket.h>
+#include <wx/fontdlg.h>
 
 #include "Window.hpp"
 #include "Login.hpp"
@@ -38,6 +39,7 @@ MainWindow::MainWindow (const wxString& title,
 {
 	wxMenuBar *MenuBar = new wxMenuBar;
 	wxMenu *MenuSession = new wxMenu;
+	wxMenu *MenuEdit = new wxMenu;
 	wxMenu *MenuHelp = new wxMenu;
 
 	// al comienzo no tenemos red
@@ -53,6 +55,9 @@ MainWindow::MainWindow (const wxString& title,
 	MenuSession->AppendSeparator ();
 	MenuSession->Append (Ids::Quit, _("E&xit"), _("Exit the application"));
 
+	// menú Edit
+	MenuEdit->Append (Ids::ConsoleFont, _("&Font..."), _("Change console's font"));
+
 	// menú Help
 	MenuHelp->Append (Ids::Help, _("&Contents"), _("Show help contents"));
 	MenuHelp->AppendSeparator ();
@@ -60,6 +65,7 @@ MainWindow::MainWindow (const wxString& title,
 
 	// agregamos a la barra de menús
 	MenuBar->Append (MenuSession, _("&Session"));
+	MenuBar->Append (MenuEdit, _("&Edit"));
 	MenuBar->Append (MenuHelp, _("&Help"));
 	SetMenuBar (MenuBar);
 
@@ -74,6 +80,8 @@ MainWindow::MainWindow (const wxString& title,
 		 (wxObjectEventFunction) &MainWindow::OnDisconnect);
 	Connect (Ids::Quit, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnQuit);
+	Connect (Ids::ConsoleFont, wxEVT_COMMAND_MENU_SELECTED,
+		 (wxObjectEventFunction) &MainWindow::OnConsoleFont);
 	Connect (Ids::Help, wxEVT_COMMAND_MENU_SELECTED,
 		 (wxObjectEventFunction) &MainWindow::OnHelp);
 	Connect (Ids::About, wxEVT_COMMAND_MENU_SELECTED,
@@ -244,9 +252,10 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 				break;
 
 			case Pckt::SessionConsoleOutput:
-				text.Printf ("SessionConsoleOutput (%d bytes)",
-					     Pkt->GetLength ());
-				LoggingTab->Append (text);
+				// esto llena mucho el widget
+				//text.Printf ("SessionConsoleOutput (%d bytes)",
+				//	     Pkt->GetLength ());
+				//LoggingTab->Append (text);
 				ServerConsole->Add (Pkt->GetData ());
 				break;
 
@@ -316,7 +325,7 @@ void MainWindow::OnRead (wxCommandEvent& WXUNUSED(event))
 	if (Ans != NULL)
 	{
 		Net->AddOut (Ans);
-		Net->Send (); // esto bloquea la GUI :(
+		Net->Send (); // esto bloquea la GUI?
 	}
 }
 
@@ -350,13 +359,29 @@ void MainWindow::OnSend (wxCommandEvent& WXUNUSED(event))
 	if (data.Length () > 0 && Net != NULL)
 	{
 		data += "\n";
-		ServerConsole->Output->SetDefaultStyle (*ServerConsole->InputStyle);
+		ServerConsole->SetInputStyle ();
 		ServerConsole->Add (data, TRUE);
-		ServerConsole->Output->SetDefaultStyle (*ServerConsole->OutputStyle);
-
+		ServerConsole->SetOutputStyle ();
 
 		Pkt = new Packet (Pckt::SessionConsoleInput, data.c_str ());
 		Net->AddOut (Pkt);
-		Net->Send (); // esto bloquea la GUI :(
+		Net->Send (); // esto bloquea la GUI?
+	}
+}
+
+void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
+{
+	wxFontData ActualFontData, NewFontData;
+
+	// obtenemos la fuente actual usada en ConsoleOutput
+	ActualFontData.SetInitialFont (ServerConsole->GetConsoleFont ());
+	wxFontDialog *ConsoleFontDialog = new wxFontDialog (this, ActualFontData);
+
+	if (ConsoleFontDialog->ShowModal () == wxID_OK)
+	{
+		// obtener el wxFontData y usarlo para
+		// cambiar la fuente a ConsoleOutput
+		NewFontData = ConsoleFontDialog->GetFontData ();
+		ServerConsole->SetConsoleFont (NewFontData.GetChosenFont ());
 	}
 }

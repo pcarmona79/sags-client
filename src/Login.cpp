@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Login.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/04/17 02:14:39 $
 //
 
 #include "Login.hpp"
@@ -34,10 +34,11 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 	wxBoxSizer *UsernameSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *PasswordSizer = new wxBoxSizer (wxHORIZONTAL);
 	wxBoxSizer *ButtonSizer = new wxBoxSizer (wxHORIZONTAL);
+	wxButton *OkButton = new wxButton (this, wxID_OK, _("OK"));
 
 	Server = new wxComboBox (this,
 				 -1,
-				 "127.0.0.1",
+				 "",
 				 wxDefaultPosition,
 				 wxDefaultSize);
 
@@ -133,7 +134,7 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 		       wxALL,
 		       0);
 
-	ButtonSizer->Add (new wxButton (this, wxID_OK, _("OK")),
+	ButtonSizer->Add (OkButton,
 			  0,
 			  wxALIGN_CENTER_VERTICAL |
 			  wxALIGN_CENTER_HORIZONTAL |
@@ -158,6 +159,8 @@ LoginDialog::LoginDialog (wxWindow *parent, wxWindowID id, const wxString& title
 	SetSizer (TopSizer);
 	TopSizer->Fit (this);
 	TopSizer->SetSizeHints (this);
+
+	OkButton->SetDefault ();
 	Centre ();
 }
 

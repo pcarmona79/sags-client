@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Main.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/04/17 02:14:39 $
 //
 
 #include "Main.hpp"
@@ -31,8 +31,8 @@ IMPLEMENT_APP (Application)
 bool Application::OnInit (void)
 {
 	MainWindow *AppWindow = new MainWindow ("Secure Administrator of Game Servers",
-						wxPoint (70, 50), wxSize (650, 500));
-
+						wxDefaultPosition, wxSize (650, 500));
+//wxPoint (70, 50)
 	AppWindow->Show (TRUE);
 	SetTopWindow (AppWindow);
 

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.hpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/04/13 22:01:53 $
+// $Revision: 1.2 $
+// $Date: 2004/04/17 02:14:39 $
 //
 
 #ifndef __CONSOLE_HPP__
@@ -46,6 +46,10 @@ public:
 	friend class MainWindow;
 
 	void Add (wxString text, bool memorize = FALSE);
+	void SetInputStyle (void);
+	void SetOutputStyle (void);
+	const wxFont& GetConsoleFont (void);
+	void SetConsoleFont (wxFont newfont);
 };
 
 #endif // __CONSOLE_HPP__
