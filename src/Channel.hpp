@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.hpp,v $
-// $Revision: 1.5 $
-// $Date: 2004/08/14 00:23:24 $
+// $Revision: 1.6 $
+// $Date: 2004/08/17 02:29:48 $
 //
 
 #ifndef __CHANNEL_HPP__
@@ -55,16 +55,15 @@ private:
 	unsigned int index;
 	wxNotebook *ParentNB;
 
-	bool last_had_newline;
-	wxString last_input;
 	wxString Username;
+	bool last_had_newline;
 
 public:
 	Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		 unsigned int idx = 0);
 	~Channel ();
 
-	void Add (wxString text, bool memorize = FALSE);
+	void Add (wxString text);
 	void AddMessage (wxString usr, wxString txt);
 	void AddAction (wxString usr, wxString txt);
 	void AddNotice (wxString usr, wxString txt);
@@ -93,7 +92,11 @@ public:
 
 	unsigned int GetIndex (void);
 	void SetNetwork (Network *N);
+
 	void ProcessMessage (Packet *Pkt);
+	wxString ExtractHeader (wxString msg);
+	wxString ExtractBody (wxString msg);
+	wxString GetValueFromHeader (wxString hdr, wxString name);
 
 	void OnSend (wxCommandEvent& event);
 };

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.33 $
-// $Date: 2004/08/14 00:23:24 $
+// $Revision: 1.34 $
+// $Date: 2004/08/17 02:29:48 $
 //
 
 #include <wx/wx.h>
@@ -526,9 +526,11 @@ void MainWindow::ProtoAuth (Packet *Pkt)
 void MainWindow::ProtoSession (Packet *Pkt)
 {
 	wxString text;
+	static wxString tempdata;
 	static int bytes = 0;
 	Process *Proc = NULL, *NewProc = NULL;
 	wxListItem newitem;
+	long ext_item;
 	static unsigned int first_seq = 0;
 
 	switch (Pkt->GetCommand ())
@@ -583,11 +585,19 @@ void MainWindow::ProtoSession (Packet *Pkt)
 		if (Proc == NULL)
 			break;
 
-		Proc->InfoString += Pkt->GetData ();
+		tempdata += Pkt->GetData ();
 
 		// hay que agregar a ProcListPanel
 		if (Pkt->GetSequence () == 1)
 		{
+			Proc->InfoString = tempdata;
+			tempdata.Empty ();
+
+			ext_item = ProcListPanel->ProcessList->FindItem (-1,
+									 Pkt->GetIndex ());
+			if (ext_item >= 0)
+				break;
+
 			newitem.m_itemId = ProcListPanel->ProcessList->GetItemCount ();
 			newitem.m_text = Proc->GetName ();
 			newitem.m_data = Pkt->GetIndex ();
@@ -723,6 +733,15 @@ void MainWindow::ProtoError (Packet *Pkt)
 		LoggingTab->Append (text);
 		Disconnect ();
 		wxMessageBox (_("Server is shutting down.\nDisconnected."),
+			      _("Error"),
+			      wxOK | wxICON_ERROR, this);
+		return;
+
+	case Error::LoggedFromOtherPlace:
+		text.Printf ("Error::LoggedFromOtherPlace");
+		LoggingTab->Append (text);
+		Disconnect ();
+		wxMessageBox (_("User logged in from other place.\nDisconnected."),
 			      _("Error"),
 			      wxOK | wxICON_ERROR, this);
 		return;

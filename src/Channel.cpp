@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.6 $
-// $Date: 2004/08/14 00:23:24 $
+// $Revision: 1.7 $
+// $Date: 2004/08/17 02:29:48 $
 //
 
 #include "Channel.hpp"
@@ -28,6 +28,10 @@
 #include <wx/fontdlg.h>
 #include <wx/notebook.h>
 #include <wx/colour.h>
+
+#ifdef __WXMSW__
+#  include "Console.hpp"
+#endif
 
 Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 		  unsigned int idx)
@@ -158,9 +162,6 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	TopSizer->Fit (this);
 	TopSizer->SetSizeHints (this);
 
-	last_input.Empty ();
-	last_had_newline = FALSE;
-
 	// el foco debe estar en el widget de entrada
 	Input->SetFocus ();
 
@@ -176,13 +177,9 @@ Channel::~Channel ()
 
 }
 
-void Channel::Add (wxString text, bool memorize)
+void Channel::Add (wxString text)
 {
 	bool have_newline;
-	wxString text_copy;
-	int n = 0;
-	unsigned char c;
-	char str[2];
 
 	if (text.Last () == '\n')
 		have_newline = TRUE;
@@ -192,34 +189,11 @@ void Channel::Add (wxString text, bool memorize)
 	// borramos todos los CR's
 	text.Replace ("\r", "");
 
-	// borramos el texto repetido
-	text_copy = text;
-	if (!memorize && !last_input.IsEmpty ())
-		n = text.Replace (last_input, "", FALSE);
-
 	// borramos el primer y el último LF
-	//if (text.GetChar (0) == '\n')
-	//	text.Remove (0, 1);
+	if (text.GetChar (0) == '\n')
+		text.Remove (0, 1);
 	if (text.Last () == '\n')
 		text.RemoveLast ();
-
-	// borrar caracteres especiales emitidos por servers de Q2
-	for (c = 1; c < 32; ++c)
-	{
-		str[0] = c;
-		str[1] = '\0';
-
-		if (str[0] == '\n')
-			continue;
-
-		text.Replace (str, "*");
-	}
-	for (c = 128; c < 160; ++c)
-	{
-		str[0] = c;
-		str[1] = '\0';
-		text.Replace (str, "*");
-	}
 
 #ifdef __WXMSW__
 	// en win98 el widget de texto no hace bien el scroll
@@ -238,22 +212,21 @@ void Channel::Add (wxString text, bool memorize)
 #ifdef __WXMSW__
 	// el foco debe estar en el widget de entrada, pero
 	// de la consola que esta seccionada
+	wxNotebookPage *CurrentNBP;
+
 	if (ParentNB->GetPageCount () > 0)
 	{
-		if (!MenuItemShowLogs->IsChecked () || ParentNB->GetPageCount () != 1)
-			((Channel *)(ParentNB->GetPage (0)))->InputSetFocus ();
+		CurrentNBP = ParentNB->GetPage (ParentNB->GetSelection ());
+
+		if (CurrentNBP->GetId () != Ids::WindowChat &&
+		    CurrentNBP->GetId () != Ids::WindowLogs)
+			((Console *)CurrentNBP)->InputSetFocus ();
 		else
 			Input->SetFocus ();
 	}
 	else
-			Input->SetFocus ();
+		Input->SetFocus ();
 #endif
-
-	if (memorize)
-		last_input = text_copy;
-	else
-		if (n > 0)
-			last_input.Empty ();
 
 	last_had_newline = have_newline;
 }
@@ -299,7 +272,7 @@ void Channel::AddNotice (wxString usr, wxString txt)
 void Channel::AddJoin (wxString usr)
 {
 	SetJoinLeaveStyle ();
-	Add (wxString::Format (_("---> %s has joined to the channel\n"), usr.c_str ()));
+	Add (wxString::Format (_("---> %s has joined the channel\n"), usr.c_str ()));
 	SetTextStyle ();
 }
 
@@ -417,8 +390,6 @@ bool Channel::SaveChannelToFile (const wxString& filename)
 void Channel::ClearOutput (void)
 {
 	Output->Clear ();
-	last_input.Empty ();
-	last_had_newline = FALSE;
 }
 
 void Channel::ClearInput (void)
@@ -489,5 +460,121 @@ void Channel::SetNetwork (Network *N)
 
 void Channel::ProcessMessage (Packet *Pkt)
 {
-	
+	wxString header, body, from_user;
+
+	switch (Pkt->GetCommand ())
+	{
+	case Session::ChatUserList:
+
+		break;
+
+	case Session::ChatTopic:
+
+		break;
+
+	case Session::ChatJoin:
+
+		AddJoin (Pkt->GetData ());
+		break;
+
+	case Session::ChatLeave:
+
+		AddLeave (Pkt->GetData ());
+		break;
+
+	case Session::ChatMessage:
+	case Session::ChatAction:
+	case Session::ChatNotice:
+
+		header = ExtractHeader (Pkt->GetData ());
+		body = ExtractBody (Pkt->GetData ());
+		from_user = GetValueFromHeader (header, "From");
+
+		if (from_user == Username)
+			break;
+
+		switch (Pkt->GetCommand ())
+		{
+		case Session::ChatMessage:
+			AddMessage (from_user, body);
+			break;
+		case Session::ChatAction:
+			AddAction (from_user, body);
+			break;
+		case Session::ChatNotice:
+			AddNotice (from_user, body);
+			break;
+		}
+
+		break;
+
+	case Session::ChatPrivMessage:
+	case Session::ChatPrivAction:
+	case Session::ChatPrivNotice:
+
+		// no están aun implementados
+		break;
+
+	default:
+		break;
+	}
+}
+
+wxString Channel::ExtractHeader (wxString msg)
+{
+	wxString header;
+	int n;
+
+	if (!msg.IsEmpty ())
+	{
+		for (n = 0; msg.GetChar (n) != '\0'; ++n)
+			if (msg.GetChar (n) == '\n' &&
+			    msg.GetChar (n + 1) == '\n')
+				break;
+
+		//if (msg.GetChar (n) != '\0')
+		//	++n;
+
+		header = msg.Mid (0, n + 1);
+		return header;
+	}
+
+	return wxEmptyString;
+}
+
+wxString Channel::ExtractBody (wxString msg)
+{
+	wxString body;
+	int n;
+
+	if (!msg.IsEmpty ())
+	{
+		for (n = 0; msg.GetChar (n) != '\0'; ++n)
+			if (msg.GetChar (n) == '\n' &&
+			    msg.GetChar (n + 1) == '\n')
+				break;
+
+		body = msg.Mid (n + 2, wxSTRING_MAXLEN);
+		return body;
+	}
+
+	return wxEmptyString;
+}
+
+wxString Channel::GetValueFromHeader (wxString hdr, wxString name)
+{
+	int n, i, newlinepos, colonpos = 0;
+
+	n = hdr.First (name + ":");
+
+	if (n > 0 && hdr.GetChar (n - 1) != '\n')
+		return wxEmptyString;
+
+	for (i = n; hdr.GetChar (i) != '\n' && hdr.GetChar (i) != '\0'; ++i)
+		if (hdr.GetChar (i) == ':')
+			colonpos = i;
+
+	newlinepos = i;
+
+	return hdr.Mid (colonpos + 2, newlinepos - colonpos - 2);
 }

@@ -1,3 +1,35 @@
+2004-08-16  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Window.cpp:
+		- Manages Error::LoggedFromOtherPlace.
+		- After get the process's info we check if we already added the
+		process to wxListCtrl.
+		- Added static string on ProtoSession() to better manipulation
+		of process's information.
+
+	* src/Network.cpp:
+		- Manages Error::LoggedFromOtherPlace.
+		- After get a Session::ProcessStart we send a
+		Session::ProcessGetInfo and set to not get console's logs.
+
+	* src/Channel.cpp:
+		- Now we can parse a chat message and display it rightly on
+		chat window.
+
+
+2004-08-15  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* win32/sagscl.dev:
+		- Added Config.cpp and Config.hpp to project file.
+
+	* src/Channel.cpp:
+		- Added methods to deal with headers and bodies of messages.
+		- Fixed method to select the current notebook page (win32).
+
+	* src/Console.cpp:
+		- Fixed method to select the current notebook page (win32).
+
+
 2004-08-13  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Channel.hpp:

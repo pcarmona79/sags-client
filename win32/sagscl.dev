@@ -1,7 +1,7 @@
 [Project]
 FileName=sagscl.dev
 Name=sagscl
-UnitCount=29
+UnitCount=31
 Type=0
 Ver=1
 ObjFiles=
@@ -329,6 +329,26 @@ BuildCmd=
 
 [Unit29]
 FileName=..\src\Channel.hpp
+CompileCpp=1
+Folder=sagscl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\src\Config.cpp
+CompileCpp=1
+Folder=sagscl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit31]
+FileName=..\src\Config.hpp
 CompileCpp=1
 Folder=sagscl
 Compile=1

@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.17 $
-// $Date: 2004/08/13 00:55:37 $
+// $Revision: 1.18 $
+// $Date: 2004/08/17 02:29:48 $
 //
 
 #include <cstdio>
@@ -198,6 +198,7 @@ int Network::Receive (void)
 			case Error::LoginFailed:
 			case Error::AuthTimeout:
 			case Error::ServerQuit:
+			case Error::LoggedFromOtherPlace:
 				Unlock (IncomingMutex);
 				return 1;
 		}
@@ -416,13 +417,14 @@ void *Network::Entry (void)
 					break;
 
 				case Session::ProcessStart:
-					// ver si el índice existía antes
-					// si no existía significa que es un nuevo proceso
-					// agregado al servidor, por lo que no deberíamos
-					// pedir los logs
-					idx2 = Pkt->GetIndex ();
-					if (ProcsReceived.Find (idx2) == NULL)
-						not_ask_for_logs = TRUE;
+					// si recibimos uno de estos paquetes
+					// no deberíamos pedir los logs pero sí
+					// pedir info del proceso
+					not_ask_for_logs = TRUE;
+					Outgoing << new Packet (Pkt->GetIndex (),
+								Session::ProcessGetInfo);
+					send_now = TRUE;
+
 					break;
 				}
 			}
