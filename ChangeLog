@@ -1,8 +1,25 @@
+2004-08-09  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
+
+	* src/Console.cpp:
+		- Fixing Add() method.
+
+	* src/Window.cpp:
+		- Chat tab is added on the constructor of MainWindow class.
+		- Adapted method to show a process's console on GTK+ to admit a
+		new tab for the chat.
+		- The user can change the chat's font.
+
+	* src/Channel.hpp:
+	* src/Channel.cpp:
+		- Removed some unused variables.
+
+
 2004-08-08  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 
 	* src/Channel.hpp:
 	* src/Channel.cpp:
 		- New files.
+		- Contains Channel class to manage the chat messages.
 
 
 2004-08-07  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>

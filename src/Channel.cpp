@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Channel.cpp,v $
-// $Revision: 1.1 $
-// $Date: 2004/08/08 20:57:59 $
+// $Revision: 1.2 $
+// $Date: 2004/08/10 03:17:15 $
 //
 
 #include "Channel.hpp"
@@ -29,7 +29,7 @@
 #include <wx/notebook.h>
 
 Channel::Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
-		  wxMenuItem *ShowLogs, unsigned int idx)
+		  unsigned int idx)
 	: wxPanel (parent, id)
 {
 	wxBoxSizer *TopSizer = new wxBoxSizer (wxVERTICAL);
@@ -39,7 +39,6 @@ Channel::Channel (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 	AppConfig = AppCfg;
 	index = idx;
 	ParentNB = (wxNotebook *) parent;
-	MenuItemShowLogs = ShowLogs;
 
 	Output = new wxTextCtrl (this,
 				 -1,

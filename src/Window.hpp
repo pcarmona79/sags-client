@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.hpp,v $
-// $Revision: 1.12 $
-// $Date: 2004/06/30 03:47:07 $
+// $Revision: 1.13 $
+// $Date: 2004/08/10 03:17:15 $
 //
 
 #ifndef __WINDOW_HPP__
@@ -34,6 +34,7 @@
 #include "Ids.hpp"
 #include "Network.hpp"
 #include "Process.hpp"
+#include "Channel.hpp"
 
 class MainWindow : public wxFrame
 {
@@ -58,6 +59,8 @@ private:
 	wxMenuItem *MenuItemProcessKill;
 	wxMenuItem *MenuItemProcessLaunch;
 	wxMenuItem *MenuItemProcessRestart;
+
+	Channel *GeneralChannel;
 
 public:
 	MainWindow (const wxString& title,

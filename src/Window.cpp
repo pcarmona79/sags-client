@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Window.cpp,v $
-// $Revision: 1.28 $
-// $Date: 2004/07/07 00:06:19 $
+// $Revision: 1.29 $
+// $Date: 2004/08/10 03:17:15 $
 //
 
 #include <wx/wx.h>
@@ -188,6 +188,7 @@ MainWindow::MainWindow (const wxString& title,
 
 	MainNotebook = new wxNotebook (NotebookWindow, -1);
 	LoggingTab = new Logs (MainNotebook, -1);
+	GeneralChannel = new Channel (MainNotebook, -1, Net, AppConfig);
 
 #ifdef __WXMSW__
 	if (ShowLogs)
@@ -201,14 +202,17 @@ MainWindow::MainWindow (const wxString& title,
 	MainNotebook->AddPage ((wxNotebookPage *) LoggingTab, _("Logs"));
 #endif
 
+	MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
+				  (wxNotebookPage *) GeneralChannel, _("Chat"), TRUE);
+
 	NotebookWindow->SplitVertically (PanelsWindow, MainNotebook, 150);
 
 	// conectamos la señal de la lista de procesos
 	Connect (Ids::ProcessSelected, wxEVT_COMMAND_LIST_ITEM_SELECTED,
 	         (wxObjectEventFunction) &MainWindow::OnProcessSelected);
 
-	// las dimensiones y la posición se podrían
-	// obtener de las opciones con AppConfig
+	// TODO: las dimensiones y la posición se podrían
+	//       obtener de las opciones con AppConfig
 	SetSize (750, 500);
 	Centre ();
 }
@@ -263,9 +267,11 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 			AppConfig->Write (Key, "");
 		if (!Value.IsEmpty ())
 			Login->AddServer (Value);
+#ifdef __WXMSW__
+		if (i == 1)
+			Login->SetServerValue (Value);
+#endif
 	}
-
-	//Login->SetServerValue ("");
 
 	if (Login->ShowModal () == wxID_OK)
 	{
@@ -383,7 +389,8 @@ void MainWindow::OnSocketConnected (wxCommandEvent& WXUNUSED(event))
 			MainNotebook->DeletePage (0);
 	}
 #else
-	while (MainNotebook->GetPageCount () > 1)
+	// en 0.4 tenemos una pestaña más
+	while (MainNotebook->GetPageCount () > 2)
 		MainNotebook->DeletePage (0);
 #endif
 	ProcList.TheList.Clear ();
@@ -503,11 +510,6 @@ void MainWindow::ProtoSession (Packet *Pkt)
 	{
 	case Session::ConsoleOutput:
 
-		// esto llena mucho el widget
-		//text.Printf ("Session::ConsoleOutput on %d (%d bytes)",
-		//	     Pkt->GetIndex (), Pkt->GetLength ());
-		//LoggingTab->Append (text);
-
 		Proc = ProcList.Index (Pkt->GetIndex ());
 		if (Proc != NULL)
 			Proc->ProcConsole->Add (Pkt->GetData ());
@@ -522,11 +524,6 @@ void MainWindow::ProtoSession (Packet *Pkt)
 
 	case Session::ConsoleLogs:
 
-		// esto también llena mucho el widget
-		//text.Printf ("Session::ConsoleLogs on %d (%d bytes)",
-		//	     Pkt->GetIndex (), Pkt->GetLength ());
-		//LoggingTab->Append (text);
-
 		Proc = ProcList.Index (Pkt->GetIndex ());
 		if (Proc != NULL)
 			Proc->ProcConsole->Add (Pkt->GetData ());
@@ -540,7 +537,6 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			     100.0 * ((float)first_seq + 1 - (float)Pkt->GetSequence ())
 			     / (float)first_seq);
 		SetStatusText (text, 1);
-		//LoggingTab->Append (text);
 
 		// si la secuencia es 1 entonces es el último paquete!
 		if (Pkt->GetSequence () == 1)
@@ -577,13 +573,14 @@ void MainWindow::ProtoSession (Packet *Pkt)
 			ProcListPanel->ProcessList->InsertItem (newitem);
 #ifdef __WXGTK__
 			// ahora insertamos la página
-			MainNotebook->InsertPage (MainNotebook->GetPageCount () - 1,
+			// en 0.4 ya tenemos dos pestañas agregadas
+			MainNotebook->InsertPage (MainNotebook->GetPageCount () - 2,
 				(wxNotebookPage *) Proc->ProcConsole,
 				wxString::Format (_("Process %d: "), Pkt->GetIndex ())
 					+ newitem.m_text,
 				FALSE);
 			Proc->ProcConsole->Hide ();
-			MainNotebook->SetSelection (MainNotebook->GetPageCount () - 1);
+			//MainNotebook->SetSelection (MainNotebook->GetPageCount () - 1);
 #endif
 			LoggingTab->Append (wxString::Format (_("Added page \"Process %d\""),
 							      Pkt->GetIndex ()));
@@ -781,13 +778,18 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 	wxString FontName;
 	long FontSize;
 	unsigned int i;
+	bool changing_console_font = TRUE;
+
+	// FIXME: todo esto debiera hacerse en una ventana de configuración
 
 	// obtenemos la fuente actual usada
 	if (MainNotebook->GetPageCount () > 0)
 	{
-		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
+		if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 2 &&
+		    MainNotebook->GetSelection () == MainNotebook->GetPageCount () - 1)
 		{
-			// no hay tabs de procesos
+			// la pestaña de logs esta seleccionada
+			// seleccionamos la fuente de las consolas
 #ifdef __WXMSW__
 			if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
 				AppConfig->Write ("/Console/FontName", "Courier New");
@@ -803,15 +805,39 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 					    wxNORMAL, FALSE, FontName);
 			ActualFontData.SetInitialFont (ConsoleFont);
 		}
+		else if (MenuItemShowLogs->IsChecked () &&
+			 MainNotebook->GetSelection () == MainNotebook->GetPageCount () - 2)
+		{
+			// la pestaña de chat
+			// seleccionamos la fuente del canal de chat
+#ifdef __WXMSW__
+			if (!AppConfig->Read ("/Channel/FontName", &FontName, "Courier New"))
+				AppConfig->Write ("/Chat/FontName", "Courier New");
+#else
+			if (!AppConfig->Read ("/Channel/FontName", &FontName, "fixed"))
+				AppConfig->Write ("/Chat/FontName", "fixed");
+#endif
+			if (!AppConfig->Read ("/Channel/FontSize", &FontSize, 12))
+				AppConfig->Write ("/Chat/FontSize", 12);
+
+			// creamos un wxFont con los valores leídos
+			wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
+					    wxNORMAL, FALSE, FontName);
+			ActualFontData.SetInitialFont (ConsoleFont);
+			changing_console_font = FALSE;
+		}
 		else
 		{
+			// una pestaña de proceso
+			// seleccionamos la fuente de las consolas
 			FirstNB = MainNotebook->GetPage (0);
 			ActualFontData.SetInitialFont (((Console*)FirstNB)->GetConsoleFont ());
 		}
 	}
 	else
 	{
-		// no hay ningun tab
+		// no hay ningún tab
+		// seleccionamos la fuente de las consolas
 #ifdef __WXMSW__
 		if (!AppConfig->Read ("/Console/FontName", &FontName, "Courier New"))
 			AppConfig->Write ("/Console/FontName", "Courier New");
@@ -837,13 +863,25 @@ void MainWindow::OnConsoleFont (wxCommandEvent& WXUNUSED(event))
 		NewFontData = ConsoleFontDialog->GetFontData ();
 
 		// los nuevos valores deben ser guardados en la configuración
-		AppConfig->Write ("/Console/FontName",
-				  (NewFontData.GetChosenFont ()).GetFaceName ());
-		AppConfig->Write ("/Console/FontSize",
-				  (NewFontData.GetChosenFont ()).GetPointSize ());
+		if (changing_console_font)
+		{
+			AppConfig->Write ("/Console/FontName",
+					  (NewFontData.GetChosenFont ()).GetFaceName ());
+			AppConfig->Write ("/Console/FontSize",
+					  (NewFontData.GetChosenFont ()).GetPointSize ());
 
-		for (i = 0; i <= ProcList.TheList.GetCount () - 1; ++i)
-			ProcList[i]->ProcConsole->SetConsoleFont (NewFontData.GetChosenFont ());
+			for (i = 0; i <= ProcList.TheList.GetCount () - 1; ++i)
+				ProcList[i]->ProcConsole->SetConsoleFont (NewFontData.GetChosenFont ());
+		}
+		else
+		{
+			AppConfig->Write ("/Channel/FontName",
+					  (NewFontData.GetChosenFont ()).GetFaceName ());
+			AppConfig->Write ("/Channel/FontSize",
+					  (NewFontData.GetChosenFont ()).GetPointSize ());
+
+			GeneralChannel->SetChannelFont (NewFontData.GetChosenFont ());
+		}
 	}
 }
 
@@ -863,6 +901,7 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 #ifdef __WXMSW__
 			if (MenuItemShowLogs->IsChecked () && MainNotebook->GetPageCount () == 1)
 #else
+			// TODO: falta detectar la pestaña de chat
 			if (MenuItemShowLogs->IsChecked () && nb_selected == MainNotebook->GetPageCount () - 1)
 #endif
 				LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());
@@ -929,9 +968,9 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 
 		MainNotebook->SetSelection (0);
 #else
-		// escondemos las páginas ya mostradas, excepto la
-		// última que es la de los logs
-		for (i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
+		// escondemos las páginas ya mostradas, excepto las
+		// últimas que son la del chat y los logs
+		for (i = 0; i < MainNotebook->GetPageCount () - 2; ++i)
 		{
 			CurrentNB = MainNotebook->GetPage (i);
 			if (CurrentNB->IsShown ())
@@ -994,7 +1033,7 @@ void MainWindow::OnProcessKill (wxCommandEvent& WXUNUSED(event))
 #ifdef __WXMSW__
 		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
 #else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
 #endif
 		{
 			CurrentNB = MainNotebook->GetPage (nb_selected);
@@ -1016,7 +1055,7 @@ void MainWindow::OnProcessLaunch (wxCommandEvent& WXUNUSED(event))
 #ifdef __WXMSW__
 		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
 #else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
 #endif
 		{
 			CurrentNB = MainNotebook->GetPage (nb_selected);
@@ -1039,7 +1078,7 @@ void MainWindow::OnProcessRestart (wxCommandEvent& WXUNUSED(event))
 #ifdef __WXMSW__
 		if (!MenuItemShowLogs->IsChecked () || MainNotebook->GetPageCount () != 1)
 #else
-		if (!MenuItemShowLogs->IsChecked () || nb_selected != MainNotebook->GetPageCount () - 1)
+		if (!MenuItemShowLogs->IsChecked () || nb_selected < MainNotebook->GetPageCount () - 2)
 #endif
 		{
 			CurrentNB = MainNotebook->GetPage (nb_selected);
