@@ -15,12 +15,21 @@ BuildRoot:	/var/tmp/%{name}-%{version}
 Docdir:		%{_docdir}
 
 Requires: 	openssl >= 0.9.7a
-Requires:	wx-base >= 2.4.2
-Requires: 	wx-gtk2 >= 2.4.2
+Requires:	wxBase >= 2.4.2
+Requires: 	wxGTK >= 2.4.2
+
+# This is for wxWidgets with GTK2. Before uncomment the following lines
+# comment the two lines above.
+#Requires:	wx-base >= 2.5.1
+#Requires: 	wx-gtk2 >= 2.5.1
 
 BuildRequires: 	openssl-devel >= 0.9.7a
-BuildRequires: 	wx-base-devel >= 2.4.2
-BuildRequires: 	wx-gtk2-devel >= 2.4.2
+BuildRequires: 	wxBase-devel >= 2.4.2
+BuildRequires: 	wxGTK-devel >= 2.4.2
+
+# This is for wxWidgets with GTK2
+#BuildRequires: 	wx-base-devel >= 2.5.1
+#BuildRequires: 	wx-gtk2-devel >= 2.5.1
 
 Distribution:	Any
 Packager:	Pablo Carmona Amigo <pcarm@users.sourceforge.net>

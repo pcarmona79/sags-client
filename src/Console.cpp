@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Console.cpp,v $
-// $Revision: 1.12 $
-// $Date: 2004/06/01 05:34:23 $
+// $Revision: 1.13 $
+// $Date: 2004/06/05 01:29:47 $
 //
 
 #include "Console.hpp"
@@ -107,7 +107,7 @@ Console::~Console ()
 void Console::Add (wxString text, bool memorize)
 {
 	bool have_newline;
-	wxString text_copy, rstr;
+	wxString text_copy;
 	int n = 0;
 	unsigned char c;
 	char str[2];
@@ -140,15 +140,13 @@ void Console::Add (wxString text, bool memorize)
 		if (str[0] == '\n')
 			continue;
 
-		rstr.Printf ("[%02x]", c);
-		text.Replace (str, rstr.c_str ());
+		text.Replace (str, "*");
 	}
 	for (c = 128; c < 160; ++c)
 	{
 		str[0] = c;
 		str[1] = '\0';
-		rstr.Printf ("[%02x]", c);
-		text.Replace (str, rstr.c_str ());
+		text.Replace (str, "*");
 	}
 
 	// en win98 el widget de texto no hace bien el scroll
