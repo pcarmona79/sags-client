@@ -17,6 +17,14 @@
 		- Starting adaptation to version 2 of network protocol.
 		- Added new methods to control the protocol's sections.
 
+	* src/doc/tutorial-0.2es/index.html:
+		- Changed encoding to UTF-8.
+
+	* src/Process.hpp:
+	* src/Process.cpp:
+		- New files.
+		- Contains a class to representing a process.
+
 
 2004-06-15  Pablo Carmona Amigo  <pcarm@users.sourceforge.net>
 

@@ -9,23 +9,25 @@ bin_PROGRAMS = sagscl
 
 sagscl_SOURCES = \
 		 About.cpp    \
-		 Console.cpp  \
-		 Login.cpp    \
-		 Logs.cpp     \
-		 Main.cpp     \
-		 Network.cpp  \
-		 Packet.cpp   \
-		 Protocol.cpp \
-		 Window.cpp   \
 		 About.hpp    \
+		 Console.cpp  \
 		 Console.hpp  \
 		 Ids.hpp      \
 		 List.hpp     \
+		 Login.cpp    \
 		 Login.hpp    \
+		 Logs.cpp     \
 		 Logs.hpp     \
+		 Main.cpp     \
 		 Main.hpp     \
+		 Network.cpp  \
 		 Network.hpp  \
+		 Packet.cpp   \
 		 Packet.hpp   \
+		 Process.cpp  \
+		 Process.hpp  \
+		 Protocol.cpp \
 		 Protocol.hpp \
+		 Window.cpp   \
 		 Window.hpp
 

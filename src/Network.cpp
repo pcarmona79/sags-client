@@ -19,8 +19,8 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 //
 // $Source: /home/pablo/Desarrollo/sags-cvs/client/src/Network.cpp,v $
-// $Revision: 1.7 $
-// $Date: 2004/06/17 08:26:37 $
+// $Revision: 1.8 $
+// $Date: 2004/06/18 01:11:23 $
 //
 
 #include <cstdio>
@@ -335,6 +335,28 @@ void *Network::Entry (void)
 
 					// ahora hay que esperar que lleguen
 					// los paquetes Session::Authorized
+				}
+			}
+			else if (Incoming[0]->GetIndex () >= Session::MainIndex &&
+				 Incoming[0]->GetIndex () <= Session::MaxIndex)
+			{
+				switch (Incoming[0]->GetCommand ())
+				{
+				case Session::Authorized:
+					Outgoing << new Packet (Incoming[0]->GetIndex (),
+								Session::ProcessGetInfo);
+					send_now = TRUE;
+					break;
+
+				case Session::ProcessInfo:
+					if (Incoming[0]->GetSequence () == 1)
+					{
+						Outgoing << new Packet (
+								Incoming[0]->GetIndex(),
+								Session::ConsoleNeedLogs);
+						send_now = TRUE;
+					}
+					break;
 				}
 			}
 			OutgoingMutex.Unlock ();
