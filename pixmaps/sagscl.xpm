@@ -1,5 +1,5 @@
 /* XPM */
-static char * sagscl_xpm[] = {
+static const char * sagscl_xpm[] = {
 "32 32 164 2",
 "  	c None",
 ". 	c #545454",

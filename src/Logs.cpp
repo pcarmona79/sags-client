@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -37,7 +37,7 @@ Logs::Logs (wxWindow *parent, wxWindowID id)
 				 "",
 				 wxDefaultPosition,
 				 wxDefaultSize,
-				 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_LINEWRAP);
+				 wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_BESTWRAP);
 
 	TopSizer->Add (Output,
 		       1,
@@ -64,7 +64,7 @@ void Logs::Append (const wxString& text)
 
 	if (Output->GetLastPosition () > 0)
 		Output->AppendText ("\n");
-		
+
 	Output->AppendText (Time);
 	Output->AppendText (text);
 }

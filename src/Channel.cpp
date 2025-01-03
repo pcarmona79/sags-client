@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 				 "",
 				 wxDefaultPosition,
 				 wxDefaultSize,
-				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_LINEWRAP);
+				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_BESTWRAP);
 
 	// extraemos de la configuración el nombre de la
 	// fuente a usar en la consola
@@ -532,30 +532,30 @@ void Channel::OnSend (wxCommandEvent& WXUNUSED(event))
 		// buscamos comandos /me y /notice
 		if (data.First ("/me ") == 0)
 		{
-			data = data.Mid (4, wxSTRING_MAXLEN);
+			data = data.Mid(4);
 			AddAction (Username, data);
 			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 			Net->AddBufferOut (index, Session::ChatAction, data.c_str ());
 		}
 		else if (data.First ("/notice ") == 0)
 		{
-			data = data.Mid (8, wxSTRING_MAXLEN);
+			data = data.Mid(8);
 			AddNotice (Username, data);
 			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 			Net->AddBufferOut (index, Session::ChatNotice, data.c_str ());
 		}
 		else if (data.First ("/topic ") == 0)
 		{
-			data = data.Mid (7, wxSTRING_MAXLEN);
+			data = data.Mid(7);
 			data = "Content-Type: text/plain; charset=UTF-8\n\n" + data;
 			Net->AddBufferOut (index, Session::ChatTopicChange, data.c_str ());
 		}
 		else if (data.First ("/to ") == 0)
 		{
-			data = data.Mid (4, wxSTRING_MAXLEN);
+			data = data.Mid(4);
 			to_end = data.First (" ");
-			to = data.Mid (0, to_end);
-			data = data.Mid (to_end + 1, wxSTRING_MAXLEN);
+			to = data.Mid(0, to_end);
+			data = data.Mid(to_end + 1);
 			AddPrivMessage (_("To: ") + to, data);
 			data = "To: " + to + "\n" +
 			       "Content-Type: text/plain; charset=UTF-8\n\n" +
@@ -653,8 +653,8 @@ void Channel::ProcessMessage (Packet *Pkt)
 
 		if (colon_pos >= 0)
 		{
-			nick = all.Mid (0, colon_pos);
-			stat = all.Mid (colon_pos + 1, wxSTRING_MAXLEN);
+			nick = all.Mid(0, colon_pos);
+			stat = all.Mid(colon_pos + 1);
 		}
 		else
 		{
@@ -756,7 +756,7 @@ wxString Channel::ExtractHeader (wxString msg)
 		//if (msg.GetChar (n) != '\0')
 		//	++n;
 
-		header = msg.Mid (0, n + 1);
+		header = msg.Mid(0, n + 1);
 		return header;
 	}
 
@@ -775,7 +775,7 @@ wxString Channel::ExtractBody (wxString msg)
 			    msg.GetChar (n + 1) == '\n')
 				break;
 
-		body = msg.Mid (n + 2, wxSTRING_MAXLEN);
+		body = msg.Mid(n + 2);
 		return body;
 	}
 
@@ -799,7 +799,7 @@ wxString Channel::GetValueFromHeader (wxString hdr, wxString name)
 
 	newlinepos = i;
 
-	return hdr.Mid (colonpos + 2, newlinepos - colonpos - 2);
+	return hdr.Mid(colonpos + 2, newlinepos - colonpos - 2);
 }
 
 void Channel::SetUserList (wxString newlist)
@@ -817,13 +817,13 @@ void Channel::SetUserList (wxString newlist)
 	{
 		if (newlist.GetChar (i) == '\n')
 		{
-			all = newlist.Mid (last_pos, i - last_pos);
+			all = newlist.Mid(last_pos, i - last_pos);
 			colon_pos = all.Find (':');
 
 			if (colon_pos >= 0)
 			{
-				nick = all.Mid (0, colon_pos);
-				stat = all.Mid (colon_pos + 1, wxSTRING_MAXLEN);
+				nick = all.Mid(0, colon_pos);
+				stat = all.Mid(colon_pos + 1);
 			}
 			else
 			{

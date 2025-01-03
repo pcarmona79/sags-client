@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 class Protocol
 {
 protected:
-	SSL_METHOD *method;
+	const SSL_METHOD *method;
 	SSL_CTX *context;
 	SSL *ssl;
 #ifdef _WIN32

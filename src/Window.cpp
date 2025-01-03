@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -277,7 +277,7 @@ MainWindow::~MainWindow ()
 	{
 		if (Net->IsRunning ())
 			Net->Wait ();
-		Net->Delete ();	
+		Net->Delete ();
 	}
 }
 
@@ -286,7 +286,7 @@ void MainWindow::Disconnect (void)
 	Net->Wait ();
 	Net->Delete ();
 	Net = NULL;
-	
+
 	SetStatusText (_("Disconnected"), 1);
 	LoggingTab->Append (_("Disconnected."));
 
@@ -302,7 +302,7 @@ void MainWindow::Disconnect (void)
 
 	GeneralChannel->SetAdminMode (FALSE);
 	GeneralChannel->SetNetwork (NULL);
-	
+
 	for (int i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
 		if ((MainNotebook->GetPage (i))->GetId () != Ids::WindowChat &&
 		    (MainNotebook->GetPage (i))->GetId () != Ids::WindowLogs)
@@ -384,7 +384,7 @@ void MainWindow::OnConnect (wxCommandEvent& WXUNUSED(event))
 			if (!AntValue.IsEmpty ())
 				AppConfig->Write (Key, AntValue);
 		}
-		
+
 		MenuItemConnect->Enable (FALSE);
 	}
 
@@ -569,7 +569,7 @@ void MainWindow::OnSocketRead (wxCommandEvent& WXUNUSED(event))
 			ProtoSession (Pkt);
 	}
 
-	delete Pkt;	
+	delete Pkt;
 }
 
 void MainWindow::ProtoSync (Packet *Pkt)
@@ -758,7 +758,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 #endif
 		ProcList.TheList << NewProc;
 		NewProc = NULL;
-		
+
 		LoggingTab->Append (wxString::Format (_("Creating new process with index %d"),
 						      Pkt->GetIndex ()));
 		break;
@@ -786,7 +786,7 @@ void MainWindow::ProtoSession (Packet *Pkt)
 				if (!MenuItemProcessMaintenance->IsChecked ())
 				{
 					MenuItemProcessMaintenance->Check (TRUE);
-					MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+					MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode ON"));
 				}
 			}
 		}
@@ -806,11 +806,11 @@ void MainWindow::ProtoSession (Packet *Pkt)
 				if (MenuItemProcessMaintenance->IsChecked ())
 				{
 					MenuItemProcessMaintenance->Check (FALSE);
-					MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+					MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode OFF"));
 				}
 			}
 		}
-		
+
 		LoggingTab->Append (wxString::Format (_("Process %d has maintenance mode OFF"),
 						      Pkt->GetIndex ()));
 		break;
@@ -1004,12 +1004,12 @@ void MainWindow::OnSocketFailRead (wxCommandEvent& WXUNUSED(event))
 void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 {
 	wxFileDialog *SaveDialog;
-	
+
 	if (ProcessShown != NULL)
 	{
 		SaveDialog = new wxFileDialog (this, _("Save to file"),
 					       "", "", "*.*",
-					       wxSAVE | wxOVERWRITE_PROMPT);
+					       wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
 		if (SaveDialog->ShowModal () == wxID_OK)
 			ProcessShown->ProcConsole->SaveConsoleToFile (SaveDialog->GetPath ());
@@ -1096,12 +1096,12 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 		// cambiamos el menú de mantenimiento
 		if (ProcessToShow->MaintenanceMode)
 		{
-			MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+			MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode ON"));
 			MenuItemProcessMaintenance->Check (TRUE);
 		}
 		else
 		{
-			MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+			MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode OFF"));
 			MenuItemProcessMaintenance->Check (FALSE);
 		}
 	}
@@ -1165,7 +1165,7 @@ void MainWindow::OnProcessKill (wxCommandEvent& WXUNUSED(event))
 		if (CurrentNB->GetId () != Ids::WindowChat &&
 		    CurrentNB->GetId () != Ids::WindowLogs)
 		{
-			
+
 			idx = ((Console *)(CurrentNB))->GetIndex ();
 			Net->AddOut (idx, Session::ProcessKill);
 			Net->Send ();
@@ -1230,12 +1230,12 @@ void MainWindow::OnProcessMaintenance (wxCommandEvent& WXUNUSED(event))
 
 			if (MenuItemProcessMaintenance->IsChecked ())
 			{
-				MenuItemProcessMaintenance->SetText (_("&Maintenance mode ON"));
+				MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode ON"));
 				Net->AddOut (idx, Session::MaintenanceOn);
 			}
 			else
 			{
-				MenuItemProcessMaintenance->SetText (_("&Maintenance mode OFF"));
+				MenuItemProcessMaintenance->SetItemLabel(_("&Maintenance mode OFF"));
 				Net->AddOut (idx, Session::MaintenanceOff);
 			}
 
@@ -1260,7 +1260,7 @@ void MainWindow::OnSaveChat (wxCommandEvent& WXUNUSED(event))
 {
 	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
 						     "", "", "*.*",
-						     wxSAVE | wxOVERWRITE_PROMPT);
+						     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
 	if (SaveDialog->ShowModal () == wxID_OK)
 		GeneralChannel->SaveChannelToFile (SaveDialog->GetPath ());
@@ -1272,7 +1272,7 @@ void MainWindow::OnSaveLogs (wxCommandEvent& WXUNUSED(event))
 {
 	wxFileDialog *SaveDialog = new wxFileDialog (this, _("Save to file"),
 						     "", "", "*.*",
-						     wxSAVE | wxOVERWRITE_PROMPT);
+						     wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
 	if (SaveDialog->ShowModal () == wxID_OK)
 		LoggingTab->SaveOutputToFile (SaveDialog->GetPath ());

@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -29,6 +29,7 @@
 #include <wx/wx.h>
 #include <wx/config.h>
 #include <wx/listctrl.h>
+#include <wx/notebook.h>
 #include "Network.hpp"
 #include "Icons.hpp"
 

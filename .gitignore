@@ -1,0 +1,17 @@
+*~
+*.o
+Makefile
+.deps/
+.libs/
+autom4te.cache/
+config.h
+config.log
+config.status
+configure.lineno
+libtool
+sagscl.spec
+sagscl.iss
+src/sagscl
+stamp-h1
+po/Makefile.in
+po/POTFILES

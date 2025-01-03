@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 				 "",
 				 wxDefaultPosition,
 				 wxDefaultSize,
-				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_LINEWRAP);
+				 wxTE_RICH | wxTE_MULTILINE | wxTE_READONLY | wxTE_BESTWRAP);
 
 	// extraemos de la configuración el nombre de la
 	// fuente a usar en la consola
@@ -65,7 +65,7 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 	if (!AppConfig->Read ("/Console/FontSize", &FontSize, 13))
 		AppConfig->Write ("/Console/FontSize", 13);
 #endif
-	
+
 	// creamos un wxFont con los valores leídos
 	wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
 			    wxNORMAL, FALSE, FontName);

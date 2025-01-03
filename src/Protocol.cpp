@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -45,7 +45,7 @@ Protocol::Protocol ()
 #endif
 	OpenSSL_add_all_algorithms ();
 	SSL_load_error_strings ();
-	method = SSLv3_client_method ();
+	method = SSLv23_client_method ();
 	context = SSL_CTX_new (method);
 	ssl = SSL_new (context);
 }
@@ -170,7 +170,7 @@ int Protocol::SendPacket (Packet *Pkt)
 	strncpy (minidata, Pkt->GetData (), 18);
 	if (strlen (Pkt->GetData ()) > 18)
 		strncat (minidata, "...", 3);
-	
+
 	printf ("Packet to send: IDX: %02X COM: %02X SEQ: %d LEN: %d DATA: \"%s\"\n",
 		Pkt->GetIndex (), Pkt->GetCommand (), Pkt->GetSequence (),
 		Pkt->GetLength (), minidata);
@@ -209,7 +209,7 @@ Packet *Protocol::RecvPacket (void)
 	}
 
 	Pkt = new Packet (header);
-	
+
 	memset (minidata, 0, 21);
 	strncpy (minidata, Pkt->GetData (), 17);
 	if (strlen (Pkt->GetData ()) > 17)

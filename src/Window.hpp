@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -28,6 +28,8 @@
 
 #include <wx/wx.h>
 #include <wx/config.h>
+#include <wx/menuitem.h>
+#include <wx/notebook.h>
 #include <wx/splitter.h>
 #include "Panels.hpp"
 #include "Logs.hpp"
@@ -79,7 +81,7 @@ public:
 	void ProtoAuth (Packet *Pkt);
 	void ProtoSession (Packet *Pkt);
 	void ProtoError (Packet *Pkt);
-	
+
 	// manejadores de señales
 	void OnConnect (wxCommandEvent& event);
 	void OnDisconnect (wxCommandEvent& event);

@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -50,7 +50,7 @@ Network::Network (wxEvtHandler *parent, wxString address, wxString port,
 
 Network::~Network ()
 {
-	
+
 }
 
 void Network::Lock (wxMutex &mtx)
@@ -168,7 +168,7 @@ int Network::Send (void)
 			// paquete no se envió
 			perror ("SendPacket");
 			Unlock (OutgoingMutex);
-			return -1; 
+			return -1;
 		}
 
 		total += bytes;
@@ -277,7 +277,8 @@ wxString Network::GetMD5 (wxString password)
 	md5_password_hex = new char [2 * MD5_DIGEST_LENGTH + 1];
 	memset (md5_password_hex, 0, 2 * MD5_DIGEST_LENGTH + 1);
 
-	MD5 ((unsigned char *) password.c_str (), password.Length (),
+	const std::string utf8password = password.utf8_string();
+	MD5 ((unsigned char *) utf8password.c_str(), utf8password.length(),
 	     (unsigned char *) md5_password);
 
 	for ( i = 0; i < MD5_DIGEST_LENGTH; ++i ) {

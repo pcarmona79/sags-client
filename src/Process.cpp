@@ -1,7 +1,7 @@
 //
 // SAGS - Secure Administrator of Game Servers
 // Copyright (C) 2004 Pablo Carmona Amigo
-// 
+//
 // This file is part of SAGS Client.
 //
 // SAGS Client is free software; you can redistribute it and/or modify
@@ -41,12 +41,12 @@ Process::Process (Process &P)
 
 Process::~Process ()
 {
-	
+
 }
 
 wxString Process::GetName (void)
 {
-	int i, pos = InfoString.Index ("Name");
+	int i, pos = InfoString.Find("Name");
 	wxString name;
 
 	if (pos != wxNOT_FOUND)
@@ -61,7 +61,7 @@ wxString Process::GetName (void)
 
 wxString Process::GetType (void)
 {
-	int i, pos = InfoString.Index ("Type");
+	int i, pos = InfoString.Find("Type");
 	wxString name;
 
 	if (pos != wxNOT_FOUND)
