@@ -76,6 +76,9 @@ private:
 	void Lock (wxMutex &mtx);
 	void Unlock (wxMutex &mtx);
 
+	// para calcular MD5
+	unsigned char* calculateMD5(unsigned char *buf, unsigned int bufsize);
+
 public:
 	Network (wxEvtHandler *parent,
 		 wxString address,

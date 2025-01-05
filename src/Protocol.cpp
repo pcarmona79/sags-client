@@ -63,7 +63,7 @@ int Protocol::Connect (const char *address, const char *port)
 {
 #ifdef _WIN32
 	int error;
-	BIO_METHOD *bio_method;
+	const BIO_METHOD *bio_method;
 
 	bio_method = BIO_s_connect ();
 	bio_server = BIO_new (bio_method);

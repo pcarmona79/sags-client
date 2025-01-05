@@ -63,9 +63,11 @@ AboutDialog::AboutDialog (wxWindow *parent, const wxString& title, const wxStrin
 	wxStaticText *BigLabel = new wxStaticText (this, -1, bigtext);
 	wxFont LastFont = BigLabel->GetFont ();
 #ifdef __WXMSW__
-	wxFont BigFont (LastFont.GetPointSize () + 2, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
+	wxFont BigFont (LastFont.GetPointSize () + 2, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			wxFONTWEIGHT_BOLD, FALSE);
 #else
-	wxFont BigFont (LastFont.GetPointSize () + 6, wxDEFAULT, wxNORMAL, wxBOLD, FALSE);
+	wxFont BigFont (LastFont.GetPointSize () + 6, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			wxFONTWEIGHT_BOLD, FALSE);
 #endif
 	BigLabel->SetFont (BigFont);
 	

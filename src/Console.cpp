@@ -67,11 +67,11 @@ Console::Console (wxWindow *parent, wxWindowID id, Network *N, wxConfig *AppCfg,
 #endif
 
 	// creamos un wxFont con los valores leídos
-	wxFont ConsoleFont (FontSize, wxDEFAULT, wxNORMAL,
-			    wxNORMAL, FALSE, FontName);
+	wxFont ConsoleFont (FontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			    wxFONTWEIGHT_NORMAL, FALSE, FontName);
 
 	OutputStyle = new wxTextAttr (wxNullColour, wxNullColour, ConsoleFont);
-	ConsoleFont.SetWeight (wxBOLD);
+	ConsoleFont.SetWeight (wxFONTWEIGHT_BOLD);
 	InputStyle = new wxTextAttr (wxNullColour, wxNullColour, ConsoleFont);
 
 	Output->SetDefaultStyle (*OutputStyle);
@@ -274,7 +274,7 @@ void Console::SetConsoleFont (wxFont newfont)
 {
 	wxTextAttr *LastStyle = NULL;
 	wxTextAttr *NewOutputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
-	newfont.SetWeight (wxBOLD);
+	newfont.SetWeight (wxFONTWEIGHT_BOLD);
 	wxTextAttr *NewInputStyle = new wxTextAttr (wxNullColour, wxNullColour, newfont);
 
 	LastStyle = OutputStyle;

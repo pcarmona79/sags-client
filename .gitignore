@@ -15,3 +15,5 @@ src/sagscl
 stamp-h1
 po/Makefile.in
 po/POTFILES
+.vs/
+x64/

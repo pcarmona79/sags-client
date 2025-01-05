@@ -78,12 +78,12 @@ ConfigDialog::ConfigDialog (wxConfig *AppCfg, ProcessTree *ProcLst, Channel *Gen
 #endif
 
 	// creamos un wxFont con los valores leídos
-	wxFont ConsoleFont (ConsoleFontSize, wxDEFAULT, wxNORMAL,
-			    wxNORMAL, FALSE, ConsoleFontName);
+	wxFont ConsoleFont (ConsoleFontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			    wxFONTWEIGHT_NORMAL, FALSE, ConsoleFontName);
 	ConsoleFontData.SetInitialFont (ConsoleFont);
 
-	wxFont ChannelFont (ChannelFontSize, wxDEFAULT, wxNORMAL,
-			    wxNORMAL, FALSE, ChannelFontName);
+	wxFont ChannelFont (ChannelFontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			    wxFONTWEIGHT_NORMAL, FALSE, ChannelFontName);
 	ChannelFontData.SetInitialFont (ChannelFont);
 
 	ButtonConsoleFont = new wxButton (this, Ids::ConfigConsoleFont, ConsoleFontName +

@@ -28,6 +28,7 @@
 #include <cmath>
 #include <wx/socket.h>
 #include <openssl/md5.h>
+#include <openssl/evp.h>
 
 #include "Network.hpp"
 
@@ -76,6 +77,26 @@ void Network::Unlock (wxMutex &mtx)
 	}
 	if (val == wxMUTEX_UNLOCKED)
 		printf ("mtx.Unlock () == wxMUTEX_UNLOCKED\n");
+}
+
+unsigned char* Network::calculateMD5(unsigned char* buf, unsigned int bufsize) {
+	EVP_MD_CTX* mdctx;
+	unsigned char* md5Digest;
+	unsigned int md5DigestLen = EVP_MD_size(EVP_md5());
+
+	// MD5_Init
+	mdctx = EVP_MD_CTX_new();
+	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+
+	// MD5_Update
+	EVP_DigestUpdate(mdctx, buf, bufsize);
+
+	// MD5_Final
+	md5Digest = (unsigned char*) OPENSSL_malloc(md5DigestLen);
+	EVP_DigestFinal_ex(mdctx, md5Digest, &md5DigestLen);
+	EVP_MD_CTX_free(mdctx);
+
+	return md5Digest;
 }
 
 void Network::AddBuffer (List<Packet> &PktList, unsigned int idx,
@@ -267,19 +288,16 @@ Packet *Network::Get (void)
 
 wxString Network::GetMD5 (wxString password)
 {
-	char *md5_password;
+	unsigned char *md5_password;
 	char *md5_password_hex;
 	char hexadecimal[3];
 	int i;
 
-	md5_password = new char [MD5_DIGEST_LENGTH + 1];
-	memset (md5_password, 0, MD5_DIGEST_LENGTH + 1);
 	md5_password_hex = new char [2 * MD5_DIGEST_LENGTH + 1];
 	memset (md5_password_hex, 0, 2 * MD5_DIGEST_LENGTH + 1);
 
 	const std::string utf8password = password.utf8_string();
-	MD5 ((unsigned char *) utf8password.c_str(), utf8password.length(),
-	     (unsigned char *) md5_password);
+	md5_password = calculateMD5 ((unsigned char *) utf8password.c_str(), utf8password.length());
 
 	for ( i = 0; i < MD5_DIGEST_LENGTH; ++i ) {
 		memset (hexadecimal, 0, 3);

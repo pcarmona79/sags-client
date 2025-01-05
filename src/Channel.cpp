@@ -79,8 +79,8 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 #endif
 
 	// creamos un wxFont con los valores leídos
-	wxFont ChannelFont (FontSize, wxDEFAULT, wxNORMAL,
-			    wxNORMAL, FALSE, FontName);
+	wxFont ChannelFont (FontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+			    wxFONTWEIGHT_NORMAL, FALSE, FontName);
 	TextStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
 	ActionStyle = new wxTextAttr (wxColour ("ORANGE"), wxNullColour, ChannelFont);
 	NoticeStyle = new wxTextAttr (wxColour ("PURPLE"), wxNullColour, ChannelFont);
@@ -88,7 +88,7 @@ Channel::Channel (wxWindow *parent, wxWindowID id, wxConfig *AppCfg,
 	TopicStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour, ChannelFont);
 	NickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
 	MyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, ChannelFont);
-	ChannelFont.SetWeight (wxBOLD);
+	ChannelFont.SetWeight (wxFONTWEIGHT_BOLD);
 	LimiterStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour, ChannelFont);
 	MyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour, ChannelFont);
 	PrivateStyle = new wxTextAttr (wxColour ("RED"), wxNullColour, ChannelFont);
@@ -448,7 +448,7 @@ void Channel::SetChannelFont (wxFont newfont)
 						    newfont);
 	wxTextAttr *NewNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
 	wxTextAttr *NewMyNickStyle = new wxTextAttr (wxColour ("BLACK"), wxNullColour, newfont);
-	newfont.SetWeight (wxBOLD);
+	newfont.SetWeight (wxFONTWEIGHT_BOLD);
 	wxTextAttr *NewLimiterStyle = new wxTextAttr (wxColour ("MEDIUM BLUE"), wxNullColour,
 						      newfont);
 	wxTextAttr *NewMyLimiterStyle = new wxTextAttr (wxColour ("GREEN"), wxNullColour,
