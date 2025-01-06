@@ -93,8 +93,6 @@ public:
 	void SetLimiterStyle (void);
 	void SetMyLimiterStyle (void);
 	void SetPrivateStyle (void);
-
-	const wxFont& GetChannelFont (void);
 	void SetChannelFont (wxFont newfont);
 
 	bool SaveChannelToFile (const wxString& filename);

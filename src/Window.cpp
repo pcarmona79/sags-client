@@ -303,7 +303,7 @@ void MainWindow::Disconnect (void)
 	GeneralChannel->SetAdminMode (FALSE);
 	GeneralChannel->SetNetwork (NULL);
 
-	for (int i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
+	for (unsigned int i = 0; i < MainNotebook->GetPageCount () - 1; ++i)
 		if ((MainNotebook->GetPage (i))->GetId () != Ids::WindowChat &&
 		    (MainNotebook->GetPage (i))->GetId () != Ids::WindowLogs)
 			((Console *) MainNotebook->GetPage (i))->SetNetwork (NULL);
@@ -1020,11 +1020,8 @@ void MainWindow::OnConsoleSave (wxCommandEvent& WXUNUSED(event))
 
 void MainWindow::OnProcessSelected (wxListEvent& event)
 {
-#ifdef __WXGTK__
-	int i;
-#endif
 	int nb_selected;
-        wxListItem info;
+	wxListItem info;
 	Process *ProcessToShow;
 	wxNotebookPage *CurrentNB;
 
@@ -1077,7 +1074,7 @@ void MainWindow::OnProcessSelected (wxListEvent& event)
 #else
 		// escondemos las páginas ya mostradas, excepto las
 		// últimas que son la del chat y los logs
-		for (i = 0; i < MainNotebook->GetPageCount () - 2; ++i)
+		for (unsigned int i = 0; i < MainNotebook->GetPageCount () - 2; ++i)
 		{
 			CurrentNB = MainNotebook->GetPage (i);
 			if (CurrentNB->IsShown ())

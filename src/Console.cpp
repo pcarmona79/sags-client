@@ -265,11 +265,6 @@ void Console::SetOutputStyle (void)
 	Output->SetDefaultStyle (*OutputStyle);
 }
 
-const wxFont& Console::GetConsoleFont (void)
-{
-	return (Output->GetDefaultStyle ()).GetFont ();
-}
-
 void Console::SetConsoleFont (wxFont newfont)
 {
 	wxTextAttr *LastStyle = NULL;

@@ -303,7 +303,7 @@ wxString Network::GetMD5 (wxString password)
 		memset (hexadecimal, 0, 3);
 		snprintf (hexadecimal, 3, "%02x", *(md5_password + i));
 		hexadecimal[2] = '\0';
-		strncat (md5_password_hex, hexadecimal, sizeof (hexadecimal));
+		strncat (md5_password_hex, hexadecimal, 3);
 	}
 
 	wxString retstr = md5_password_hex;

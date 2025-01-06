@@ -55,7 +55,6 @@ public:
 	void Add (wxString text, bool memorize = FALSE);
 	void SetInputStyle (void);
 	void SetOutputStyle (void);
-	const wxFont& GetConsoleFont (void);
 	void SetConsoleFont (wxFont newfont);
 	bool SaveConsoleToFile (const wxString& filename);
 	void ClearOutput (void);

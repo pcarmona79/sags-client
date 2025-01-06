@@ -429,11 +429,6 @@ void Channel::SetPrivateStyle (void)
 	Output->SetDefaultStyle (*PrivateStyle);
 }
 
-const wxFont& Channel::GetChannelFont (void)
-{
-	return (Output->GetDefaultStyle ()).GetFont ();
-}
-
 void Channel::SetChannelFont (wxFont newfont)
 {
 	wxTextAttr *LastStyle = NULL;
